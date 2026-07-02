@@ -3,11 +3,13 @@
 import { useState } from 'react'
 import { cn, formatDelta, isDeltaGood, getStatLabel } from '@/lib/utils'
 import { CategoryTag } from './CategoryTag'
+import { IntelligenceBriefing } from './IntelligenceBriefing'
 import type { CrisisEvent, StatDelta } from '@/types/game'
 
 interface CrisisCardProps {
   event: CrisisEvent
   month: number
+  gameId: string
   onChoose: (choiceIndex: number) => void
   disabled?: boolean
 }
@@ -36,7 +38,7 @@ function EffectPreview({ effects }: { effects: StatDelta }) {
   )
 }
 
-export function CrisisCard({ event, month, onChoose, disabled }: CrisisCardProps) {
+export function CrisisCard({ event, month, gameId, onChoose, disabled }: CrisisCardProps) {
   const [selected, setSelected] = useState<number | null>(null)
 
   const handleChoose = (index: number) => {
@@ -74,6 +76,8 @@ export function CrisisCard({ event, month, onChoose, disabled }: CrisisCardProps
         <p className="mt-3 text-[15px] leading-relaxed text-[var(--color-paper-dim)]">
           {event.description}
         </p>
+
+        <IntelligenceBriefing gameId={gameId} event={event} />
 
         <div className="mt-6 space-y-2">
           <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">

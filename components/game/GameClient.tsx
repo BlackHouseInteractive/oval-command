@@ -216,6 +216,7 @@ export function GameClient({ initialGame, initialEvent }: GameClientProps) {
           <CrisisCard
             event={event}
             month={game.currentMonth}
+            gameId={game.id}
             onChoose={handleChoice}
             disabled={submitting}
           />

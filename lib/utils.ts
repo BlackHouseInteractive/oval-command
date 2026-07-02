@@ -150,6 +150,25 @@ export function getTermYear(month: number): number {
 }
 
 // ============================================================
+// DETERMINISTIC SEEDING
+// ============================================================
+
+/**
+ * Simple deterministic string hash (djb2 variant). Used to derive stable,
+ * non-random-looking values (e.g. intel confidence %) from identifiers like
+ * (gameId, eventId) so the same pair always produces the same result across
+ * reloads, without persisting anything new.
+ */
+export function hashSeed(...parts: string[]): number {
+  const input = parts.join(':')
+  let hash = 5381
+  for (let i = 0; i < input.length; i++) {
+    hash = (hash * 33) ^ input.charCodeAt(i)
+  }
+  return Math.abs(hash >>> 0)
+}
+
+// ============================================================
 // NPC AVATAR COLOR CLASSES
 // ============================================================
 
