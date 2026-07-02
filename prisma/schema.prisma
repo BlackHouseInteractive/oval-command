@@ -73,8 +73,14 @@ model Game {
   approvalHistory Json       @default("[]")
   legacyScore     Int?
   currentEventId  String?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  createdAt       DateTime   @default(now()) @db.Timestamp(3)
+  // Capped at millisecond precision because turn/law routes use this column
+  // for optimistic locking (WHERE updatedAt: <value read via Prisma>) — Postgres's
+  // default timestamp precision is microseconds, but JS Date (and therefore
+  // Prisma's read-back value) only holds milliseconds, so an update's WHERE
+  // clause would never match its own previous write and every turn past the
+  // first would fail with a false "already processed" conflict.
+  updatedAt       DateTime   @updatedAt @db.Timestamp(3)
   user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   logs            GameLog[]
 }
