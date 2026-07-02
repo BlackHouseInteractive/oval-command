@@ -9,7 +9,7 @@
     "avatarColor": "blue",
     "personality": {
       "archetype": "The Ambitious Loyalist",
-      "description": "A former governor with her own national ambitions. Fiercely loyal when she believes in the mission \u2014 calculating when she doesn't. She's watching every decision you make, partly because she cares, partly because she's taking notes for 2028.",
+      "description": "A former governor with her own national ambitions. Fiercely loyal when she believes in the mission — calculating when she doesn't. She's watching every decision you make, partly because she cares, partly because she's taking notes for 2028.",
       "traits": [
         "politically shrewd",
         "quietly ambitious",
@@ -58,11 +58,11 @@
       ],
       "medium": [
         "The base needs to hear from you directly. Let me set up a tour.",
-        "I'm hearing concerns about the direction on [issue]. Worth a conversation.",
+        "I'm hearing concerns from the caucus about where this is headed. Worth a conversation.",
         "We should talk before the next press conference. I have thoughts."
       ],
       "low": [
-        "I'm going to need to speak my own mind on [issue]. I hope you understand.",
+        "I'm going to need to speak my own mind on this one. I hope you understand.",
         "My team is handling some of my own commitments this cycle. Necessary.",
         "I supported this decision. I want that on the record."
       ],
@@ -89,7 +89,7 @@
     "avatarColor": "gray",
     "personality": {
       "archetype": "The Honest Operator",
-      "description": "Twenty years in Washington. He's seen four administrations from the inside and knows exactly how they all went wrong. He'll tell you the truth even when you don't want to hear it. Especially then. He has no personal agenda beyond making this work \u2014 which makes him invaluable and occasionally brutal.",
+      "description": "Twenty years in Washington. He's seen four administrations from the inside and knows exactly how they all went wrong. He'll tell you the truth even when you don't want to hear it. Especially then. He has no personal agenda beyond making this work — which makes him invaluable and occasionally brutal.",
       "traits": [
         "bluntly honest",
         "operationally brilliant",
@@ -105,13 +105,13 @@
     "triggers": {
       "onLowRelationship": {
         "threshold": 40,
-        "event": "Chief of Staff begins routing fewer options through the Oval Office \u2014 decisions slow",
+        "event": "Chief of Staff begins routing fewer options through the Oval Office — decisions slow",
         "congressSupportDelta": -3,
         "approvalDelta": -2
       },
       "onVeryLowRelationship": {
         "threshold": 25,
-        "event": "Chief of Staff submits resignation \u2014 you must decide whether to accept",
+        "event": "Chief of Staff submits resignation — you must decide whether to accept",
         "specialEvent": "cos_resignation"
       },
       "onHighRelationship": {
@@ -138,7 +138,7 @@
       ],
       "medium": [
         "I need five minutes. There's something you need to hear before the briefing.",
-        "The [issue] decision is going to cost us. I want to show you the numbers.",
+        "That last decision is going to cost us. I want to show you the numbers.",
         "Congress is getting harder to manage. We need to trade something for something."
       ],
       "low": [
@@ -170,7 +170,7 @@
     "avatarColor": "purple",
     "personality": {
       "archetype": "The Hawk Who Knows the Cost",
-      "description": "Forty years in uniform. Two wars. He doesn't want conflict \u2014 he's seen too much of it. But he believes weakness invites aggression, and he'll push military options when he thinks the alternative is worse. He respects decisiveness above everything. Indecision is the thing he cannot forgive.",
+      "description": "Forty years in uniform. Two wars. He doesn't want conflict — he's seen too much of it. But he believes weakness invites aggression, and he'll push military options when he thinks the alternative is worse. He respects decisiveness above everything. Indecision is the thing he cannot forgive.",
       "traits": [
         "decisive",
         "hawkish but not reckless",
@@ -221,8 +221,8 @@
       ],
       "medium": [
         "We're stretched thinner than the public understands. The budget conversation needs to happen.",
-        "I'm hearing from field commanders that [situation] is more volatile than reported.",
-        "The [country] situation needs a decision. A non-decision is a decision."
+        "I'm hearing from field commanders that things are more volatile than reported.",
+        "The situation overseas needs a decision. A non-decision is a decision."
       ],
       "low": [
         "I'll follow your orders. I want that clear. But I have serious reservations.",
@@ -230,7 +230,7 @@
         "I've written a memo. It's on your desk. Please read it."
       ],
       "critical": [
-        "If we don't act in [region] soon, we won't have the option. That's not a threat. That's a fact.",
+        "If we don't act soon, we won't have the option. That's not a threat. That's a fact.",
         "The Joint Chiefs asked me to convey their concern. Formally.",
         "I've been a soldier my whole life. This is the most frustrated I've been in 40 years."
       ]
@@ -253,7 +253,7 @@
     "avatarColor": "green",
     "personality": {
       "archetype": "The Fiscal Realist",
-      "description": "Former Fed governor and Harvard economics professor. She took the job because she believed in the mission \u2014 but she has a breaking point around fiscal responsibility and she's not shy about where it is. She's the person in the room most likely to say the unpopular true thing.",
+      "description": "Former Fed governor and Harvard economics professor. She took the job because she believed in the mission — but she has a breaking point around fiscal responsibility and she's not shy about where it is. She's the person in the room most likely to say the unpopular true thing.",
       "traits": [
         "analytically rigorous",
         "politically naive in the best way",
@@ -300,12 +300,12 @@
       "high": [
         "The fundamentals are stronger than the headlines. Here's what the data actually shows.",
         "I've found some room in the budget. Not much. But some.",
-        "The markets are responding well to the [policy]. Credit where it's due."
+        "The markets are responding well to your last move. Credit where it's due."
       ],
       "medium": [
         "The debt trajectory concerns me. I want to show you a chart before the next decision.",
         "We can afford this. Once. Not twice. Be clear about that going in.",
-        "The Fed is watching [indicator] closely. We should probably be watching it too."
+        "The Fed is watching the inflation numbers closely. We should probably be watching them too."
       ],
       "low": [
         "I need to be direct. The spending pace is not sustainable. I've been saying this.",
@@ -336,7 +336,7 @@
     "avatarColor": "coral",
     "personality": {
       "archetype": "The Rule-of-Law Purist",
-      "description": "Former federal judge. He took the AG job with one condition: you never ask him to do something that crosses a legal line. He's your firewall against scandal \u2014 and also your constraint on things you might want to do. He's not political and has no interest in becoming so.",
+      "description": "Former federal judge. He took the AG job with one condition: you never ask him to do something that crosses a legal line. He's your firewall against scandal — and also your constraint on things you might want to do. He's not political and has no interest in becoming so.",
       "traits": [
         "legally meticulous",
         "completely apolitical",
@@ -352,13 +352,13 @@
     "triggers": {
       "onLowRelationship": {
         "threshold": 35,
-        "event": "AG refuses to drop investigation into administration allies \u2014 public standoff",
+        "event": "AG refuses to drop investigation into administration allies — public standoff",
         "approvalDelta": -4,
         "scandalWorsens": true
       },
       "onVeryLowRelationship": {
         "threshold": 20,
-        "event": "AG resigns citing 'political interference in DOJ independence' \u2014 massive scandal",
+        "event": "AG resigns citing 'political interference in DOJ independence' — massive scandal",
         "approvalDelta": -14,
         "unrestDelta": 12,
         "activeScandals": 1
@@ -382,17 +382,17 @@
     "monthlyDialogue": {
       "high": [
         "The DOJ is operating with full independence. That's how it should be.",
-        "I flagged something in the [department] review. Nothing urgent. You'll see my memo.",
-        "The legal framework on [issue] is cleaner than your opponents are saying. I can explain why."
+        "I flagged something in this month's review. Nothing urgent. You'll see my memo.",
+        "The legal framework here is cleaner than your opponents are saying. I can explain why."
       ],
       "medium": [
-        "I need to be clear about what we can and can't do on [issue] legally.",
-        "There's a legal risk in the [policy] approach I want you to understand before you commit.",
+        "I need to be clear about what we can and can't do here, legally.",
+        "There's a legal risk in that approach I want you to understand before you commit.",
         "The investigation is going where the evidence goes. That's all I can tell you."
       ],
       "low": [
-        "I'm going to ask you directly: is there anything I should know about [matter]?",
-        "What was asked of me last week \u2014 I need you to understand I can't do that.",
+        "I'm going to ask you directly: is there anything I should know about?",
+        "What was asked of me last week — I need you to understand I can't do that.",
         "The DOJ will not be used as a political tool. That's not a negotiation."
       ],
       "critical": [
@@ -419,7 +419,7 @@
     "avatarColor": "amber",
     "personality": {
       "archetype": "The Transactional Power Player",
-      "description": "She didn't get the Speaker's gavel by accident. She trades favors, collects chits, and remembers every single one of them. She's not ideological \u2014 she's practical. She wants to stay Speaker and she wants her members to stay in office. If your agenda helps with that, you have an ally. If it doesn't, you have a problem.",
+      "description": "She didn't get the Speaker's gavel by accident. She trades favors, collects chits, and remembers every single one of them. She's not ideological — she's practical. She wants to stay Speaker and she wants her members to stay in office. If your agenda helps with that, you have an ally. If it doesn't, you have a problem.",
       "traits": [
         "transactional",
         "ruthlessly practical",
@@ -465,19 +465,19 @@
     },
     "monthlyDialogue": {
       "high": [
-        "I've got the votes for [bill] if you want to move it this month.",
+        "I've got the votes for your priority bill if you want to move it this month.",
         "My members are with you on this one. Don't make me regret telling you that.",
-        "I need something from you on [issue]. Nothing unreasonable. Let's talk."
+        "I need something from you in return. Nothing unreasonable. Let's talk."
       ],
       "medium": [
         "I can bring it to the floor. Whether it passes is another question.",
-        "My caucus is nervous about [policy]. You need to make some calls.",
+        "My caucus is nervous about your last move. You need to make some calls.",
         "There are five votes I can get you. Ten is going to cost something."
       ],
       "low": [
         "I'm not in a position to move on this right now. My members won't go for it.",
         "You need to understand the political reality in the House before you make promises.",
-        "We should talk before you say anything else publicly about [issue]."
+        "We should talk before you say anything else publicly about this."
       ],
       "critical": [
         "I've told my members I'm not moving this forward. That's final.",
@@ -503,7 +503,7 @@
     "avatarColor": "blue",
     "personality": {
       "archetype": "The Institutionalist",
-      "description": "Thirty years in the Senate. He genuinely loves the institution \u2014 its history, its norms, its capacity for deliberation. He'll fight for your agenda if he believes in it, but he'll resist anything that breaks the rules he's spent his career building. He's the hardest person in Washington to move and the most valuable ally when you do.",
+      "description": "Thirty years in the Senate. He genuinely loves the institution — its history, its norms, its capacity for deliberation. He'll fight for your agenda if he believes in it, but he'll resist anything that breaks the rules he's spent his career building. He's the hardest person in Washington to move and the most valuable ally when you do.",
       "traits": [
         "deeply institutional",
         "slow to commit but reliable when he does",
@@ -547,18 +547,18 @@
     },
     "monthlyDialogue": {
       "high": [
-        "I can get you sixty votes on [bill]. It'll take three weeks. Can you give me three weeks?",
+        "I can get you sixty votes on your bill. It'll take three weeks. Can you give me three weeks?",
         "The Senate is ready to work. That doesn't happen often. Let's use it.",
         "I've been here long enough to know when something real is happening. This feels real."
       ],
       "medium": [
-        "I'm going to need something in return for [vote]. Not asking for much. But something.",
-        "The [bill] is going to need changes. Substantial ones. My members won't take it as written.",
+        "I'm going to need something in return for this one. Not asking for much. But something.",
+        "That bill is going to need changes. Substantial ones. My members won't take it as written.",
         "Give me time to work this. Don't put it on television before I've had a chance to count."
       ],
       "low": [
         "I can't move my caucus on this. I've tried.",
-        "You've made my job considerably harder with [decision]. I need you to understand that.",
+        "You've made my job considerably harder with that last call. I need you to understand that.",
         "The Senate has its own timeline. That's not a threat. It's a fact."
       ],
       "critical": [
@@ -585,7 +585,7 @@
     "avatarColor": "red",
     "personality": {
       "archetype": "The Relentless Antagonist",
-      "description": "He's running against you in month 48 and he knows it. Everything is a campaign event. Every crisis is an opportunity. He's not evil \u2014 he genuinely believes you're wrong about everything \u2014 but he's also a creature of political combat who is very, very good at it. Underestimate him at your peril.",
+      "description": "He's running against you in month 48 and he knows it. Everything is a campaign event. Every crisis is an opportunity. He's not evil — he genuinely believes you're wrong about everything — but he's also a creature of political combat who is very, very good at it. Underestimate him at your peril.",
       "traits": [
         "relentlessly competitive",
         "genuinely ideological",
@@ -601,14 +601,14 @@
     "triggers": {
       "onVeryLowRelationship": {
         "threshold": 15,
-        "effect": "Garrett becomes maximally aggressive \u2014 introduces censure motions, holds daily press conferences",
+        "effect": "Garrett becomes maximally aggressive — introduces censure motions, holds daily press conferences",
         "approvalDelta": -3,
         "unrestDelta": 3,
         "congressSupportDelta": -5
       },
       "onHighRelationship": {
         "threshold": 55,
-        "benefit": "Garrett occasionally crosses aisle on bipartisan bills \u2014 improves passage odds",
+        "benefit": "Garrett occasionally crosses aisle on bipartisan bills — improves passage odds",
         "bipartisanBonus": 10
       }
     },
@@ -626,19 +626,19 @@
     },
     "monthlyDialogue": {
       "high": [
-        "I don't agree with your methods. But on [issue], I'll give you the vote.",
+        "I don't agree with your methods. But on this one, I'll give you the vote.",
         "Let's be clear: this isn't friendship. It's one bill. Don't read into it.",
         "The American people deserve results. Sometimes that means working across the aisle."
       ],
       "medium": [
-        "This administration has failed on [issue] and the American people know it.",
-        "We'll be watching [policy] closely. Very closely.",
-        "I'm prepared to work together on [bipartisan issue]. That offer expires."
+        "This administration has failed on this and the American people know it.",
+        "We'll be watching your next move closely. Very closely.",
+        "I'm prepared to work together, if the terms are right. That offer expires."
       ],
       "low": [
         "Every American deserves better than what this administration has delivered.",
-        "We've introduced legislation to investigate [decision]. The facts will come out.",
-        "The [crisis] response was a failure. We're going to make sure voters know it."
+        "We've introduced legislation to investigate your last decision. The facts will come out.",
+        "Your response to the last crisis was a failure. We're going to make sure voters know it."
       ],
       "critical": [
         "I've announced my intention to run for president. I think the country needs a change.",
@@ -663,7 +663,7 @@
     "avatarColor": "purple",
     "personality": {
       "archetype": "The Relentless Journalist",
-      "description": "Thirty years covering the White House. She's seen every political trick and isn't impressed by any of them. She doesn't have an ideological agenda \u2014 she has a journalism agenda, which is worse. She's going to ask the question you don't want asked. Your job is to have a good answer.",
+      "description": "Thirty years covering the White House. She's seen every political trick and isn't impressed by any of them. She doesn't have an ideological agenda — she has a journalism agenda, which is worse. She's going to ask the question you don't want asked. Your job is to have a good answer.",
       "traits": [
         "ideologically neutral but relentlessly probing",
         "deeply respected",
@@ -685,7 +685,7 @@
       },
       "onHighRelationship": {
         "threshold": 75,
-        "benefit": "Fontaine's coverage is fair and contextual \u2014 scandal damage reduced by 20%",
+        "benefit": "Fontaine's coverage is fair and contextual — scandal damage reduced by 20%",
         "scandalReduction": 0.2
       }
     },
@@ -702,17 +702,17 @@
     "monthlyDialogue": {
       "high": [
         "I appreciate the access. My viewers do too.",
-        "The [policy] story is more complicated than my colleagues are making it. I want to get it right.",
+        "The story on your last move is more complicated than my colleagues are making it. I want to get it right.",
         "I'll be fair. I always am. But my next segment is going to raise some questions you should be ready for."
       ],
       "medium": [
         "I've requested an interview three times. My producers are getting restless.",
-        "The [issue] story isn't going away. You should probably get ahead of it.",
+        "That story isn't going away. You should probably get ahead of it.",
         "I'm reporting what I can confirm. Right now I can confirm a lot."
       ],
       "low": [
-        "My network has obtained documents related to [matter]. I'm giving you 24 hours to respond.",
-        "I have sources inside [department] who are talking. Extensively.",
+        "My network has obtained documents I think you'll want to see before we run with them. I'm giving you 24 hours to respond.",
+        "I have sources inside your administration who are talking. Extensively.",
         "My job is to ask the questions. Your job is to answer them. That arrangement isn't working."
       ],
       "critical": [
@@ -739,7 +739,7 @@
     "avatarColor": "teal",
     "personality": {
       "archetype": "The Pragmatic Multilateralist",
-      "description": "The leader of America's most important European ally. She believes in the transatlantic relationship but she's not sentimental about it \u2014 it has to deliver results. She's been burned by previous American administrations making promises they didn't keep, and she has a long memory. Earn her trust and you gain the most valuable diplomatic asset in the world.",
+      "description": "The leader of America's most important European ally. She believes in the transatlantic relationship but she's not sentimental about it — it has to deliver results. She's been burned by previous American administrations making promises they didn't keep, and she has a long memory. Earn her trust and you gain the most valuable diplomatic asset in the world.",
       "traits": [
         "pragmatic",
         "deeply committed to multilateral institutions",
@@ -755,7 +755,7 @@
     "triggers": {
       "onLowRelationship": {
         "threshold": 30,
-        "event": "Allied leader begins building European strategic autonomy \u2014 reduces US influence in NATO decisions",
+        "event": "Allied leader begins building European strategic autonomy — reduces US influence in NATO decisions",
         "globalReputationDelta": -6,
         "securityDelta": -4
       },
@@ -781,22 +781,22 @@
     "monthlyDialogue": {
       "high": [
         "The transatlantic relationship is in the best shape it's been in twenty years. I mean that.",
-        "I've spoken to the other G7 leaders. We are prepared to act alongside you on [issue].",
+        "I've spoken to the other G7 leaders. We are prepared to act alongside you on this.",
         "You should know: the European Council discussed you last week. The assessment was positive."
       ],
       "medium": [
-        "I need to understand your intentions on [matter] before the summit.",
+        "I need to understand your intentions before the summit.",
         "My coalition partners are asking questions I'd like to be able to answer.",
-        "The [decision] was difficult for us to explain to our parliament. I need more notice."
+        "Your last decision was difficult for us to explain to our parliament. I need more notice."
       ],
       "low": [
-        "I have to be honest: the [action] has complicated things significantly on this side of the Atlantic.",
-        "My government is under pressure to respond to [decision]. I'm trying to buy you time.",
+        "I have to be honest: your last move has complicated things significantly on this side of the Atlantic.",
+        "My government is under pressure to respond to your last decision. I'm trying to buy you time.",
         "I've defended this relationship to skeptics in my own party. It's becoming harder."
       ],
       "critical": [
-        "I will not be able to attend the summit if [issue] is not addressed first.",
-        "What was said in [meeting] has reached the press. I need to know what happened.",
+        "I will not be able to attend the summit if this is not addressed first.",
+        "What was said in our last call has reached the press. I need to know what happened.",
         "Europe is having a serious conversation about a future that does not center on Washington. I thought you should know."
       ]
     },
@@ -818,7 +818,7 @@
     "avatarColor": "red",
     "personality": {
       "archetype": "The Patient Opportunist",
-      "description": "He's been in power for twenty-two years. He's outlasted four American presidents and he plans to outlast you. He doesn't want war \u2014 war is expensive and unpredictable. He wants to expand influence, test resolve, and exploit weakness where he finds it. Every decision you make, he's calculating what it means for him.",
+      "description": "He's been in power for twenty-two years. He's outlasted four American presidents and he plans to outlast you. He doesn't want war — war is expensive and unpredictable. He wants to expand influence, test resolve, and exploit weakness where he finds it. Every decision you make, he's calculating what it means for him.",
       "traits": [
         "patient",
         "opportunistic",
@@ -834,13 +834,13 @@
     "triggers": {
       "onVeryLowRelationship": {
         "threshold": 15,
-        "effect": "Adversary nation escalates provocations \u2014 additional security threat events fire",
+        "effect": "Adversary nation escalates provocations — additional security threat events fire",
         "securityDelta": -5,
         "additionalThreatEvents": 2
       },
       "onMediumRelationship": {
         "threshold": 45,
-        "benefit": "Adversary reduces provocations temporarily \u2014 security events decrease by 1 per cycle",
+        "benefit": "Adversary reduces provocations temporarily — security events decrease by 1 per cycle",
         "threatReduction": 1
       }
     },
@@ -859,21 +859,21 @@
     "monthlyDialogue": {
       "high": [
         "There is no reason our nations cannot coexist productively. I have always believed this.",
-        "The [crisis] offers an opportunity for cooperation, if both sides are willing.",
+        "The current situation offers an opportunity for cooperation, if both sides are willing.",
         "I propose a direct channel between our offices. Useful for misunderstandings."
       ],
       "medium": [
-        "The [action] was noted here. We are evaluating our response.",
-        "I want to be direct: [policy] will have consequences for the bilateral relationship.",
-        "We have interests in [region]. I assume you understand this."
+        "Your last move was noted here. We are evaluating our response.",
+        "I want to be direct: this will have consequences for the bilateral relationship.",
+        "We have interests in the region. I assume you understand this."
       ],
       "low": [
-        "The [decision] leaves us no choice but to reconsider our position on [matter].",
+        "Your last decision leaves us no choice but to reconsider our position.",
         "Your country tests our patience. We are patient people.",
-        "What was done in [action] will be remembered."
+        "What you have done will be remembered."
       ],
       "critical": [
-        "I have ordered [military exercise / action] in response to the continued provocations.",
+        "I have ordered military exercises in response to the continued provocations.",
         "America has mistaken restraint for weakness. We will correct that impression.",
         "The relationship between our countries has reached a critical inflection point."
       ]
@@ -896,7 +896,7 @@
     "avatarColor": "coral",
     "personality": {
       "archetype": "The Principled Outsider",
-      "description": "She doesn't want to be in politics. She wants to change it. She leads the most effective grassroots organization in the country and she's deeply skeptical of power \u2014 including yours. She can mobilize 50,000 people on the street or 5 million signatures online. Win her over and you have the most powerful volunteer operation in America. Lose her and every progressive cause has a megaphone pointed at you.",
+      "description": "She doesn't want to be in politics. She wants to change it. She leads the most effective grassroots organization in the country and she's deeply skeptical of power — including yours. She can mobilize 50,000 people on the street or 5 million signatures online. Win her over and you have the most powerful volunteer operation in America. Lose her and every progressive cause has a megaphone pointed at you.",
       "traits": [
         "idealistic but strategically sophisticated",
         "completely unbought",
@@ -919,7 +919,7 @@
       },
       "onHighRelationship": {
         "threshold": 75,
-        "benefit": "Coalition volunteers mobilize to support your reelection \u2014 base support bonus",
+        "benefit": "Coalition volunteers mobilize to support your reelection — base support bonus",
         "baseSupportBonus": 12,
         "approvalBonus": 5
       }
@@ -941,21 +941,21 @@
     "monthlyDialogue": {
       "high": [
         "We're telling our members: show up for this president. That's not something I say lightly.",
-        "The [policy] was the right call. I want you to know I said that publicly.",
+        "That was the right call. I want you to know I said that publicly.",
         "We have 3 million people ready to knock doors for you. Don't waste them."
       ],
       "medium": [
-        "I need to see action on [issue] before my members start asking questions I can't answer.",
-        "The [decision] was a disappointment. I'm being honest with you because I still think you can do better.",
+        "I need to see action on this before my members start asking questions I can't answer.",
+        "That last decision was a disappointment. I'm being honest with you because I still think you can do better.",
         "My coalition is patient. But patient has a limit."
       ],
       "low": [
-        "I can't ask my people to wait any longer on [issue]. I'm not going to ask them.",
-        "The [action] is something I cannot defend to the communities I represent. I'm not going to try.",
+        "I can't ask my people to wait any longer on this. I'm not going to ask them.",
+        "What you just did is something I cannot defend to the communities I represent. I'm not going to try.",
         "We're planning actions. I'm telling you because I still believe you'll respond. Maybe I'm wrong."
       ],
       "critical": [
-        "We're organizing nationally against [policy]. I'm not doing this to hurt you. I'm doing it because it's right.",
+        "We're organizing nationally against your last move. I'm not doing this to hurt you. I'm doing it because it's right.",
         "The communities I work with have been patient for four years. That's over now.",
         "I once believed this administration would be different. I'm still hoping I was right."
       ]
