@@ -1,5 +1,4 @@
 import { redirect, notFound } from 'next/navigation'
-import Link from 'next/link'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { EVENTS, LAWS } from '@/lib/game-engine'
@@ -41,21 +40,13 @@ export default async function HistoryPage({ params }: PageProps) {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-10">
-      <div className="flex items-baseline justify-between">
-        <div>
-          <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-brass)]">
-            The Record
-          </div>
-          <h1 className="mt-1 font-[family-name:var(--font-display)] text-2xl font-semibold text-[var(--color-paper)]">
-            Presidential History
-          </h1>
+      <div>
+        <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-brass)]">
+          The Record
         </div>
-        <Link
-          href={`/game/${id}`}
-          className="font-mono text-xs text-[var(--color-paper-faint)] hover:text-[var(--color-paper)]"
-        >
-          ← Back
-        </Link>
+        <h1 className="mt-1 font-[family-name:var(--font-display)] text-2xl font-semibold text-[var(--color-paper)]">
+          Presidential History
+        </h1>
       </div>
 
       {game.logs.length === 0 && (

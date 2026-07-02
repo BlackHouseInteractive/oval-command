@@ -1,5 +1,4 @@
 import { redirect, notFound } from 'next/navigation'
-import Link from 'next/link'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { dbToGame } from '@/lib/db-helpers'
@@ -37,21 +36,13 @@ export default async function CabinetPage({ params }: PageProps) {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-10">
-      <div className="flex items-baseline justify-between">
-        <div>
-          <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-brass)]">
-            Administration
-          </div>
-          <h1 className="mt-1 font-[family-name:var(--font-display)] text-2xl font-semibold text-[var(--color-paper)]">
-            The People Around You
-          </h1>
+      <div>
+        <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-brass)]">
+          Administration
         </div>
-        <Link
-          href={`/game/${game.id}`}
-          className="font-mono text-xs text-[var(--color-paper-faint)] hover:text-[var(--color-paper)]"
-        >
-          ← Back
-        </Link>
+        <h1 className="mt-1 font-[family-name:var(--font-display)] text-2xl font-semibold text-[var(--color-paper)]">
+          The People Around You
+        </h1>
       </div>
 
       <p className="mt-3 text-sm text-[var(--color-paper-dim)]">

@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { DashboardHeader } from '@/components/game/DashboardHeader'
 import { TermProgress } from '@/components/game/TermProgress'
 import { StatCard } from '@/components/game/StatCard'
@@ -127,28 +126,8 @@ export function GameClient({ initialGame, initialEvent }: GameClientProps) {
         approval={game.stats.approval}
       />
 
-      <div className="mt-5 flex items-center gap-2">
-        <div className="flex-1">
-          <TermProgress currentMonth={game.currentMonth} />
-        </div>
-        <Link
-          href={`/game/${game.id}/history`}
-          className="whitespace-nowrap rounded-sm border border-[var(--color-border-strong)] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-paper-dim)] transition-colors hover:border-[var(--color-brass-dim)] hover:text-[var(--color-paper)]"
-        >
-          History →
-        </Link>
-        <Link
-          href={`/game/${game.id}/cabinet`}
-          className="whitespace-nowrap rounded-sm border border-[var(--color-border-strong)] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-paper-dim)] transition-colors hover:border-[var(--color-brass-dim)] hover:text-[var(--color-paper)]"
-        >
-          Cabinet →
-        </Link>
-        <Link
-          href={`/game/${game.id}/congress`}
-          className="whitespace-nowrap rounded-sm border border-[var(--color-border-strong)] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-paper-dim)] transition-colors hover:border-[var(--color-brass-dim)] hover:text-[var(--color-paper)]"
-        >
-          Congress →
-        </Link>
+      <div className="mt-5">
+        <TermProgress currentMonth={game.currentMonth} />
       </div>
 
       {game.activeConflicts.length > 0 && (
