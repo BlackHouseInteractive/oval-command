@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { LawCard } from '@/components/game/LawCard'
 import { HeadlineTicker } from '@/components/game/HeadlineTicker'
+import { RoomAtmosphere } from '@/components/game/RoomAtmosphere'
 import { cn } from '@/lib/utils'
 import type { Game, Law, Headline } from '@/types/game'
 
@@ -99,6 +100,7 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
   if (result) {
     return (
       <main className="mx-auto max-w-2xl px-6 py-12">
+        <RoomAtmosphere color="var(--color-cat-congress)" />
         <div className="rounded-sm border border-[var(--color-border-strong)] bg-[var(--color-surface)]">
           <div className="brief-rule" />
           <div className="p-6 text-center">
@@ -140,6 +142,7 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-10">
+      <RoomAtmosphere color="var(--color-cat-congress)" />
       <div>
         <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-cat-congress)]">
           Congress

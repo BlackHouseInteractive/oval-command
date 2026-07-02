@@ -14,6 +14,7 @@ import { ApprovalChart } from '@/components/game/ApprovalChart'
 import { ConflictBanner } from '@/components/game/ConflictBanner'
 import { SecondaryStats } from '@/components/game/SecondaryStats'
 import { LegislativeAlert } from '@/components/game/LegislativeAlert'
+import { RoomAtmosphere } from '@/components/game/RoomAtmosphere'
 import { computeLegacyScore, checkGameOver } from '@/lib/game-engine'
 import { getAdvisorRecommendations } from '@/lib/advisor-engine'
 import type { Game, CrisisEvent, TurnResult, ProcessTurnResponse } from '@/types/game'
@@ -101,6 +102,7 @@ export function GameClient({ initialGame, initialEvent }: GameClientProps) {
     const archetype = view.phase === 'gameover' ? view.result.archetype : undefined
     return (
       <main className="mx-auto max-w-2xl px-6 py-12">
+        <RoomAtmosphere color="var(--color-brass)" />
         <LegacyScreen
           legacy={legacy}
           reason={reason}
@@ -119,6 +121,7 @@ export function GameClient({ initialGame, initialEvent }: GameClientProps) {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-10">
+      <RoomAtmosphere color="var(--color-brass)" />
       <DashboardHeader
         presidentName={game.presidentName}
         party={game.party}
