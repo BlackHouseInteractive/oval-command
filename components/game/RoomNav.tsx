@@ -21,9 +21,15 @@ const ROOMS: RoomDef[] = [
   { id: 'diplomatic-office', label: 'Diplomatic Office', href: (id) => `/game/${id}/diplomatic-office` },
 ]
 
-export function RoomNav({ gameId }: { gameId: string }) {
+interface BreakingEvent {
+  id: string
+  title: string
+}
+
+export function RoomNav({ gameId, breakingEvent }: { gameId: string; breakingEvent?: BreakingEvent | null }) {
   const pathname = usePathname()
   const ovalOfficeHref = `/game/${gameId}`
+  const isOvalOffice = pathname === ovalOfficeHref
 
   return (
     <nav className="mx-auto max-w-2xl px-6 pt-6">
@@ -31,7 +37,7 @@ export function RoomNav({ gameId }: { gameId: string }) {
         {ROOMS.map(room => {
           const href = room.href(gameId)
           const isActive = room.id === 'oval-office'
-            ? pathname === ovalOfficeHref
+            ? isOvalOffice
             : pathname.startsWith(href)
 
           return (
@@ -50,6 +56,20 @@ export function RoomNav({ gameId }: { gameId: string }) {
           )
         })}
       </div>
+
+      {breakingEvent && !isOvalOffice && (
+        <Link
+          href={ovalOfficeHref}
+          className="mt-3 flex animate-pulse items-center justify-between rounded-sm border border-[var(--color-bad)] bg-[var(--color-bad-dim)]/30 px-3 py-2 transition-opacity hover:opacity-90"
+        >
+          <span className="font-mono text-[11px] uppercase tracking-[0.05em] text-[var(--color-bad)]">
+            🚨 Breaking: {breakingEvent.title}
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-bad)]">
+            Respond in the Oval Office →
+          </span>
+        </Link>
+      )}
     </nav>
   )
 }

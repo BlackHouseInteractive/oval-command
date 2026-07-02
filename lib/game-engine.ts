@@ -338,6 +338,15 @@ export function isEventEligible(event: CrisisEvent, game: Game, opts: { ignoreRe
   return true
 }
 
+// Rare, low-weight events double as "this is a big deal" narratively — weight
+// is otherwise used only for random-selection odds in weightedRandom() below.
+// Reused by the room-nav shell and CrisisCard to flag "breaking" events.
+export const BREAKING_EVENT_WEIGHT_THRESHOLD = 3
+
+export function isBreakingEvent(event: CrisisEvent): boolean {
+  return event.weight <= BREAKING_EVENT_WEIGHT_THRESHOLD
+}
+
 export function pickEvent(game: Game): CrisisEvent | null {
   const eligible = EVENTS.filter(event => isEventEligible(event, game))
 

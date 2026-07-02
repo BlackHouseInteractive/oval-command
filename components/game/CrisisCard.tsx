@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { cn, formatDelta, isDeltaGood, getStatLabel } from '@/lib/utils'
+import { isBreakingEvent } from '@/lib/game-engine'
 import { CategoryTag } from './CategoryTag'
 import { IntelligenceBriefing } from './IntelligenceBriefing'
 import type { CrisisEvent, StatDelta } from '@/types/game'
@@ -40,6 +41,7 @@ function EffectPreview({ effects }: { effects: StatDelta }) {
 
 export function CrisisCard({ event, month, gameId, onChoose, disabled }: CrisisCardProps) {
   const [selected, setSelected] = useState<number | null>(null)
+  const breaking = isBreakingEvent(event)
 
   const handleChoose = (index: number) => {
     if (disabled) return
@@ -48,13 +50,23 @@ export function CrisisCard({ event, month, gameId, onChoose, disabled }: CrisisC
   }
 
   return (
-    <div className="rounded-sm border border-[var(--color-border-strong)] bg-[var(--color-surface)]">
-      <div className="brief-rule" />
+    <div
+      className={cn(
+        'rounded-sm border bg-[var(--color-surface)]',
+        breaking ? 'border-[var(--color-bad)]' : 'border-[var(--color-border-strong)]'
+      )}
+    >
+      <div className={breaking ? undefined : 'brief-rule'} style={breaking ? { height: 2, background: 'var(--color-bad)' } : undefined} />
       <div className="p-6">
         <div className="flex items-center justify-between">
           <CategoryTag category={event.category} />
-          <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--color-paper-faint)]">
-            Month {month} Briefing
+          <span
+            className={cn(
+              'font-mono text-[10px] uppercase tracking-[0.1em]',
+              breaking ? 'animate-pulse text-[var(--color-bad)]' : 'text-[var(--color-paper-faint)]'
+            )}
+          >
+            {breaking ? '🚨 Breaking News' : `Month ${month} Briefing`}
           </span>
         </div>
 
