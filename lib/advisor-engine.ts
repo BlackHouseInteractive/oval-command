@@ -325,8 +325,3 @@ export function getAdvisorRecommendations(game: Game, limit = 4): AdvisorRecomme
 
   return deduplicated.slice(0, limit)
 }
-
-/** Convenience: is there at least one critical issue right now? */
-export function hasCriticalAdvisory(game: Game): boolean {
-  return RULES.some(r => r.severity === 'critical' && r.condition(game))
-}

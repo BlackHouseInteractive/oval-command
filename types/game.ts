@@ -409,8 +409,3 @@ export interface ProcessTurnResponse {
   result:       TurnResult
   nextEvent?:   CrisisEvent | null
 }
-
-export interface GetGameResponse {
-  game:          Game
-  currentEvent?: CrisisEvent | null
-}
