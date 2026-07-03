@@ -3,7 +3,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { dbToGame, gameToDbUpdate, toJson } from '@/lib/db-helpers'
 import { getLawById, resolveLawPassage, applyLawPassage, canUseNpcAbility } from '@/lib/law-engine'
-import { computePassiveDrift, applyDelta, pickEvent } from '@/lib/game-engine'
+import { computePassiveDrift, applyDelta, pickEvent, checkGameOver, computeLegacyScore } from '@/lib/game-engine'
 import { generateLawHeadline } from '@/lib/headlines'
 import { checkAndEnqueueChains, resolveDueConsequences } from '@/lib/cascade-engine'
 import type { Headline } from '@/lib/headlines'
@@ -105,6 +105,12 @@ export async function POST(req: NextRequest, { params }: Params) {
       currentMonth:        nextMonthNumber,
       approvalHistory:     [...updatedGame.approvalHistory, Math.round(driftedStats.approval)],
       updatedAt:           new Date().toISOString(),
+    }
+
+    const gameOver = checkGameOver(updatedGame)
+    if (gameOver) {
+      updatedGame.status = gameOver === 'TERM_COMPLETE' ? 'COMPLETE' : 'GAMEOVER'
+      updatedGame.legacyScore = computeLegacyScore(updatedGame).total
     }
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Law could not be processed'
