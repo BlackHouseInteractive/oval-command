@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { cn, formatDelta, isDeltaGood, getStatLabel } from '@/lib/utils'
 import { isBreakingEvent, getEventCallback } from '@/lib/game-engine'
+import { getEventBackground } from '@/lib/event-backgrounds'
 import { CategoryTag } from './CategoryTag'
 import { IntelligenceBriefing } from './IntelligenceBriefing'
 import type { CrisisEvent, StatDelta } from '@/types/game'
@@ -51,13 +52,35 @@ export function CrisisCard({ event, month, gameId, flags, onChoose, disabled }: 
     onChoose(index)
   }
 
+  const backgroundImage = getEventBackground(event.category)
+
   return (
-    <div
-      className={cn(
-        'rounded-sm border bg-[var(--color-surface)]',
-        breaking ? 'border-[var(--color-bad)]' : 'border-[var(--color-border-strong)]'
-      )}
-    >
+    <>
+      {/* Background image — fills the screen behind the briefing */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-10"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
+
+      {/* Dark overlay to make text readable — darkest in center where the card sits */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-10"
+        style={{
+          background: 'radial-gradient(ellipse 65% 50% at 50% 52%, rgba(3,5,10,0.78) 0%, rgba(3,5,10,0.45) 60%, rgba(3,5,10,0.25) 100%)',
+        }}
+      />
+
+      <div
+        className={cn(
+          'rounded-sm border bg-[var(--color-surface)]',
+          breaking ? 'border-[var(--color-bad)]' : 'border-[var(--color-border-strong)]'
+        )}
+      >
       <div className={breaking ? undefined : 'brief-rule'} style={breaking ? { height: 2, background: 'var(--color-bad)' } : undefined} />
       <div className="p-6">
         <div className="flex items-center justify-between">
@@ -130,6 +153,7 @@ export function CrisisCard({ event, month, gameId, flags, onChoose, disabled }: 
           ))}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
