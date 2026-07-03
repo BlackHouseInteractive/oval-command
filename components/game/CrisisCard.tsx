@@ -75,6 +75,15 @@ export function CrisisCard({ event, month, gameId, flags, onChoose, disabled }: 
         }}
       />
 
+      {/* Edge vignette — darkens the page chrome (nav, header, stat cards) that
+          sits outside the center overlay and has no opaque background of its own */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-10"
+        style={{
+          background: 'radial-gradient(120% 90% at 50% 50%, transparent 40%, rgba(2,3,7,0.7) 80%, rgba(2,3,7,0.92) 100%)',
+        }}
+      />
+
       <div
         className={cn(
           'rounded-sm border bg-[var(--color-surface)]',
