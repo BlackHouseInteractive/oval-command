@@ -1,0 +1,5 @@
+# Normalize all text files to LF in the repository, regardless of the
+# local core.autocrlf setting — this project deploys to Linux (Vercel) and
+# mixed line endings were causing every commit to show package-lock.json
+# and a handful of source files as spuriously "modified" with zero real diff.
+* text=auto eol=lf
