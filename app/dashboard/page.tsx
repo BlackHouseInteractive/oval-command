@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { auth } from '@/lib/auth'
+import { auth, signOut } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { monthToDate } from '@/lib/utils'
 import { SiteNav } from '@/components/SiteNav'
@@ -97,6 +97,35 @@ function OvalOfficeEntry() {
       overflow: 'hidden',
       fontFamily: 'Georgia, serif',
     }}>
+      {/* Sign out — the only way off this screen otherwise is /new-game, which
+          isn't an escape route if the session itself is the problem (e.g. a
+          stale session pointing at a deleted account). */}
+      <form
+        action={async () => {
+          'use server'
+          await signOut({ redirectTo: '/login' })
+        }}
+        style={{ position: 'absolute', top: 20, right: 20, zIndex: 1 }}
+      >
+        <button
+          type="submit"
+          style={{
+            background: 'transparent',
+            border: '1px solid rgba(232,228,217,0.35)',
+            borderRadius: 2,
+            color: '#E8E4D9',
+            fontFamily: 'monospace',
+            fontSize: 10,
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
+            padding: '6px 10px',
+            cursor: 'pointer',
+          }}
+        >
+          Sign Out
+        </button>
+      </form>
+
       {/* Background image */}
       <div style={{
         position: 'absolute',
