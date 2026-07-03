@@ -143,6 +143,12 @@ export interface CrisisEvent {
    */
   isHistorical?:      boolean
   historicalContext?: string  // e.g. "Inspired by the 1962 Cuban Missile Crisis."
+  /**
+   * Optional narrative callbacks — when the player has the given flag set
+   * (from an earlier, unrelated choice), the matching text renders as a
+   * "Your history:" line on this briefing. First matching entry wins.
+   */
+  callbacks?: Array<{ flag: string; text: string }>
 }
 
 // ============================================================

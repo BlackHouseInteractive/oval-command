@@ -217,6 +217,7 @@ export function GameClient({ initialGame, initialEvent }: GameClientProps) {
             event={event}
             month={game.currentMonth}
             gameId={game.id}
+            flags={game.flags}
             onChoose={handleChoice}
             disabled={submitting}
           />

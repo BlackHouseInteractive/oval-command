@@ -10,6 +10,12 @@
     "sets_flags": [],
     "requires_flags": [],
     "weight": 10,
+    "callbacks": [
+      {
+        "flag": "missile_crisis_quarantine",
+        "text": "Relations with Moscow never fully thawed after you held the line during the missile standoff — old suspicions like this die hard."
+      }
+    ],
     "choices": [
       {
         "index": 0,
@@ -85,6 +91,12 @@
     "sets_flags": [],
     "requires_flags": [],
     "weight": 10,
+    "callbacks": [
+      {
+        "flag": "at_war",
+        "text": "Investors have been jumpy since the war began — a market this on-edge doesn't need much of an excuse to fall."
+      }
+    ],
     "choices": [
       {
         "index": 0,
@@ -496,6 +508,12 @@
     "sets_flags": [],
     "requires_flags": [],
     "weight": 7,
+    "callbacks": [
+      {
+        "flag": "security_expanded",
+        "text": "The security apparatus you expanded after the attempt on your life is the reason this plot was caught in time."
+      }
+    ],
     "choices": [
       {
         "index": 0,
@@ -661,6 +679,12 @@
     "sets_flags": [],
     "requires_flags": [],
     "weight": 8,
+    "callbacks": [
+      {
+        "flag": "sanctions_war",
+        "text": "The sanctions regime you built is part of why energy markets are this jumpy — adversaries squeezed have found ways to squeeze back."
+      }
+    ],
     "choices": [
       {
         "index": 0,
@@ -866,6 +890,12 @@
     "sets_flags": [],
     "requires_flags": [],
     "weight": 6,
+    "callbacks": [
+      {
+        "flag": "executive_overreach",
+        "text": "Your critics still invoke 'executive overreach' every time you exercise authority like this — this nomination will be no different."
+      }
+    ],
     "choices": [
       {
         "index": 0,
@@ -1303,6 +1333,12 @@
     "sets_flags": [],
     "requires_flags": [],
     "weight": 8,
+    "callbacks": [
+      {
+        "flag": "troops_deployed",
+        "text": "The cost of keeping troops deployed abroad hasn't stopped compounding — Congress is bringing it up again in this fight."
+      }
+    ],
     "choices": [
       {
         "index": 0,
@@ -1865,6 +1901,12 @@
     "sets_flags": [],
     "requires_flags": [],
     "weight": 7,
+    "callbacks": [
+      {
+        "flag": "pandemic_active",
+        "text": "Rural hospitals never fully recovered their footing after the pandemic strained them past capacity — this closure wave traces straight back to that spring."
+      }
+    ],
     "choices": [
       {
         "index": 0,
@@ -2062,6 +2104,12 @@
     "sets_flags": [],
     "requires_flags": [],
     "weight": 15,
+    "callbacks": [
+      {
+        "flag": "war_ended",
+        "text": "However voters feel about everything else, they haven't forgotten how the war ended — for better or worse, it's still the headline of your presidency."
+      }
+    ],
     "choices": [
       {
         "index": 0,
@@ -2262,6 +2310,12 @@
     "sets_flags": [],
     "requires_flags": [],
     "weight": 7,
+    "callbacks": [
+      {
+        "flag": "tapes_released",
+        "text": "Congress hasn't forgotten how those tapes leaked — every hearing on tech oversight since has circled back to who controls what gets released and when."
+      }
+    ],
     "choices": [
       {
         "index": 0,
@@ -2985,6 +3039,12 @@
     "sets_flags": [],
     "requires_flags": [],
     "weight": 6,
+    "callbacks": [
+      {
+        "flag": "military_aid_sent",
+        "text": "Choosing military aid over deployment abroad bought you real credibility as a measured actor — allies at this summit remember that restraint."
+      }
+    ],
     "choices": [
       {
         "index": 0,
@@ -3549,6 +3609,12 @@
     "sets_flags": [],
     "requires_flags": [],
     "weight": 7,
+    "callbacks": [
+      {
+        "flag": "middle_east_deal",
+        "text": "The normalization deal reshaped the region's alliances — this crisis is one of the messier downstream consequences nobody predicted at the signing ceremony."
+      }
+    ],
     "choices": [
       {
         "index": 0,
@@ -3803,6 +3869,12 @@
     "sets_flags": [],
     "requires_flags": [],
     "weight": 5,
+    "callbacks": [
+      {
+        "flag": "gun_control_push",
+        "text": "The gun law you fought for was born the day an assassin nearly ended your presidency. Losing it in court doesn't erase why you pushed it."
+      }
+    ],
     "choices": [
       {
         "index": 0,
@@ -5131,6 +5203,12 @@
     "sets_flags": [],
     "requires_flags": [],
     "weight": 6,
+    "callbacks": [
+      {
+        "flag": "iran_deal",
+        "text": "Allies who doubted the Iran deal you struck are watching closely to see if this summit vindicates or undermines it."
+      }
+    ],
     "choices": [
       {
         "index": 0,
@@ -5196,6 +5274,12 @@
     "sets_flags": [],
     "requires_flags": [],
     "weight": 6,
+    "callbacks": [
+      {
+        "flag": "regional_peace_deal_signed",
+        "text": "The diplomatic capital from your peace deal bought real goodwill at the UN — it may not be enough today, but it's the reason you're even in the room."
+      }
+    ],
     "choices": [
       {
         "index": 0,

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { cn, formatDelta, isDeltaGood, getStatLabel } from '@/lib/utils'
-import { isBreakingEvent } from '@/lib/game-engine'
+import { isBreakingEvent, getEventCallback } from '@/lib/game-engine'
 import { CategoryTag } from './CategoryTag'
 import { IntelligenceBriefing } from './IntelligenceBriefing'
 import type { CrisisEvent, StatDelta } from '@/types/game'
@@ -11,6 +11,7 @@ interface CrisisCardProps {
   event: CrisisEvent
   month: number
   gameId: string
+  flags: Record<string, boolean>
   onChoose: (choiceIndex: number) => void
   disabled?: boolean
 }
@@ -39,9 +40,10 @@ function EffectPreview({ effects }: { effects: StatDelta }) {
   )
 }
 
-export function CrisisCard({ event, month, gameId, onChoose, disabled }: CrisisCardProps) {
+export function CrisisCard({ event, month, gameId, flags, onChoose, disabled }: CrisisCardProps) {
   const [selected, setSelected] = useState<number | null>(null)
   const breaking = isBreakingEvent(event)
+  const callback = getEventCallback(event, flags)
 
   const handleChoose = (index: number) => {
     if (disabled) return
@@ -88,6 +90,12 @@ export function CrisisCard({ event, month, gameId, onChoose, disabled }: CrisisC
         <p className="mt-3 text-[15px] leading-relaxed text-[var(--color-paper-dim)]">
           {event.description}
         </p>
+
+        {callback && (
+          <p className="mt-2 text-[13px] italic leading-snug text-[var(--color-paper-faint)]">
+            {callback}
+          </p>
+        )}
 
         <IntelligenceBriefing gameId={gameId} event={event} />
 

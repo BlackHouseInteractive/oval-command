@@ -347,6 +347,12 @@ export function isBreakingEvent(event: CrisisEvent): boolean {
   return event.weight <= BREAKING_EVENT_WEIGHT_THRESHOLD
 }
 
+/** First callback whose flag is set, or null. Render-time only — no state mutation. */
+export function getEventCallback(event: CrisisEvent, flags: Record<string, boolean>): string | null {
+  const match = event.callbacks?.find(c => flags[c.flag])
+  return match?.text ?? null
+}
+
 export function pickEvent(game: Game): CrisisEvent | null {
   const eligible = EVENTS.filter(event => isEventEligible(event, game))
 
