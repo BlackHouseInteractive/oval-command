@@ -207,7 +207,7 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
               canUseSpeakerAbility={canUseSpeakerAbility && !alreadyPassed && !blocked}
               onPropose={handlePropose}
               disabled={submitting}
-              confirmSkipWarning={pendingProposal?.lawId === law.id}
+              pendingProposal={pendingProposal}
               pendingBriefingTitle={pendingBriefingTitle}
             />
           </div>

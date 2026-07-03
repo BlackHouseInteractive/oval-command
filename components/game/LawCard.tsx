@@ -19,7 +19,7 @@ interface LawCardProps {
   canUseSpeakerAbility: boolean
   onPropose: (lawId: string, useNpcAbility?: 'senate_leader' | 'speaker') => void
   disabled?: boolean
-  confirmSkipWarning?: boolean
+  pendingProposal?: { lawId: string; useNpcAbility?: 'senate_leader' | 'speaker' } | null
   pendingBriefingTitle?: string | null
 }
 
@@ -45,12 +45,20 @@ export function LawCard({
   canUseSpeakerAbility,
   onPropose,
   disabled,
-  confirmSkipWarning,
+  pendingProposal,
   pendingBriefingTitle,
 }: LawCardProps) {
   const onPassEntries = Object.entries(law.effects.onPass).filter(([, v]) => v !== 0) as [string, number][]
   const costInfo = COST_LABEL[law.cost]
   const catInfo = LAW_CATEGORY_ICON[law.category]
+
+  // Each button (plain propose, Senate whip, Speaker fast-track) arms its
+  // own confirmation independently — armed(undefined) is the plain button,
+  // matching CongressClient's isConfirmed check exactly so a click on one
+  // button can never be silently swallowed by a different button's armed state.
+  const armed = (ability?: 'senate_leader' | 'speaker') =>
+    pendingProposal?.lawId === law.id && pendingProposal?.useNpcAbility === ability
+  const anyArmedForThisLaw = pendingProposal?.lawId === law.id
 
   return (
     <div className="rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
@@ -99,7 +107,7 @@ export function LawCard({
         </p>
       )}
 
-      {confirmSkipWarning && pendingBriefingTitle && (
+      {anyArmedForThisLaw && pendingBriefingTitle && (
         <p className="mt-3 text-[11px] text-[var(--color-warn)]">
           Skips &ldquo;{pendingBriefingTitle}&rdquo; without a response. Click again to confirm.
         </p>
@@ -129,13 +137,13 @@ export function LawCard({
                 disabled={disabled}
                 className={cn(
                   'rounded-sm border px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.05em] transition-colors disabled:opacity-40',
-                  confirmSkipWarning
+                  armed('senate_leader')
                     ? 'border-[var(--color-warn)] text-[var(--color-warn)] hover:bg-[var(--color-surface-2)]'
                     : 'border-[var(--color-brass-dim)] text-[var(--color-brass)] hover:bg-[var(--color-surface-2)]'
                 )}
                 title="Senate Leader guarantees passage (once per term)"
               >
-                {confirmSkipWarning ? 'Confirm — Use Vote Whip' : 'Use Vote Whip'}
+                {armed('senate_leader') ? 'Confirm — Use Vote Whip' : 'Use Vote Whip'}
               </button>
             )}
             {canUseSpeakerAbility && (
@@ -144,13 +152,13 @@ export function LawCard({
                 disabled={disabled}
                 className={cn(
                   'rounded-sm border px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.05em] transition-colors disabled:opacity-40',
-                  confirmSkipWarning
+                  armed('speaker')
                     ? 'border-[var(--color-warn)] text-[var(--color-warn)] hover:bg-[var(--color-surface-2)]'
                     : 'border-[var(--color-brass-dim)] text-[var(--color-brass)] hover:bg-[var(--color-surface-2)]'
                 )}
                 title="Speaker fast-tracks passage (once per term)"
               >
-                {confirmSkipWarning ? 'Confirm — Fast Track' : 'Fast Track'}
+                {armed('speaker') ? 'Confirm — Fast Track' : 'Fast Track'}
               </button>
             )}
             <button
@@ -158,12 +166,12 @@ export function LawCard({
               disabled={disabled}
               className={cn(
                 'rounded-sm border px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-40',
-                confirmSkipWarning
+                armed(undefined)
                   ? 'border-[var(--color-warn)] bg-[var(--color-surface-2)] text-[var(--color-warn)]'
                   : 'border-[var(--color-border-strong)] bg-[var(--color-surface-2)] text-[var(--color-paper)] hover:border-[var(--color-brass-dim)]'
               )}
             >
-              {confirmSkipWarning ? 'Confirm — Skip Briefing' : 'Propose'}
+              {armed(undefined) ? 'Confirm — Skip Briefing' : 'Propose'}
             </button>
           </div>
         )}
