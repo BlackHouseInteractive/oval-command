@@ -45,12 +45,17 @@ const DEESCALATION_FLAGS = new Set([
   'ceasefire_negotiations',
 ])
 
-// Flags that end the conflict entirely (remove from activeConflicts)
+// Flags that end the conflict entirely (remove from activeConflicts).
+// Deliberately does NOT include the generic-sounding "peace deal" flags set
+// by historic_peace_deal / middle_east_normalization — those are standalone
+// diplomacy flavor events about third-party or regional deals, not about
+// ending the player's own tracked war, and were renamed to
+// regional_peace_deal_signed after they were found to be wrongly clearing
+// every active conflict whenever they fired mid-war.
 const RESOLUTION_FLAGS = new Set([
   'war_ended',
   'war_victory',
   'war_defunded',
-  'peace_deal_signed',
 ])
 
 export interface ConflictUpdateResult {

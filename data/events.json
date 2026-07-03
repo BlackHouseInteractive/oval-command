@@ -3753,7 +3753,7 @@
           "debt": 0.5
         },
         "sets_flags": [
-          "peace_deal_signed"
+          "regional_peace_deal_signed"
         ],
         "outcome": "The signing was the most-watched diplomatic event in 25 years. Your legacy was transformed in a single afternoon. The deal held for 18 months before being tested. It survived."
       },
@@ -5076,7 +5076,7 @@
           "congressSupport": 4
         },
         "sets_flags": [
-          "peace_deal_signed",
+          "regional_peace_deal_signed",
           "middle_east_deal"
         ],
         "outcome": "The signing ceremony at the White House was the most-watched diplomatic event in a decade. The deal held. Your foreign policy legacy was secured in a single afternoon."
@@ -5090,7 +5090,7 @@
           "security": 4
         },
         "sets_flags": [
-          "peace_deal_signed"
+          "regional_peace_deal_signed"
         ],
         "outcome": "The low-profile approach made the deal more durable. Both parties claimed ownership. US facilitation was documented in every history book. Quiet success is still success."
       },
