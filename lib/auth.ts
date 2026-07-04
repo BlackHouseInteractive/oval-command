@@ -47,6 +47,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   providers,
   callbacks: {
+    // Runs on every auth() call across the whole app. A JWT session stays
+    // cryptographically "valid" even after its underlying User row is gone
+    // (guest expiration, or any other account deletion) — without this
+    // check, every one of the ~15 call sites that gate on `session?.user?.id`
+    // would treat a phantom account as signed in, only to fail confusingly
+    // the moment they touch the database. Returning null here is Auth.js's
+    // documented way to invalidate a session: it clears the cookie and every
+    // caller of auth() simply sees "not signed in", which the app already
+    // knows how to handle (redirect to /login, or 401 Unauthorized).
+    async jwt({ token }) {
+      if (!token.sub) return token
+      const user = await prisma.user.findUnique({ where: { id: token.sub }, select: { id: true } })
+      if (!user) return null
+      return token
+    },
     session({ session, token }) {
       if (session.user && token.sub) {
         session.user.id = token.sub
