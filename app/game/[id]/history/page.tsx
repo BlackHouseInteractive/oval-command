@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { EVENTS, LAWS } from '@/lib/game-engine'
 import { cn, formatDelta, isDeltaGood, getStatLabel, monthToDate } from '@/lib/utils'
 import { PendingEventBanner } from '@/components/game/PendingEventBanner'
-import { RoomAtmosphere } from '@/components/game/RoomAtmosphere'
+import { RoomBackground } from '@/components/game/RoomBackground'
 
 const MATCHING_CATEGORIES = ['scandal', 'social']
 
@@ -49,7 +49,7 @@ export default async function HistoryPage({ params }: PageProps) {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-10">
-      <RoomAtmosphere color="var(--color-cat-scandal)" />
+      <RoomBackground image="/press-room-bg.png" />
       <div>
         <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-cat-scandal)]">
           The Record

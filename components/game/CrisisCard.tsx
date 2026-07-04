@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { cn, formatDelta, isDeltaGood, getStatLabel } from '@/lib/utils'
 import { isBreakingEvent, getEventCallback } from '@/lib/game-engine'
 import { getEventBackground } from '@/lib/event-backgrounds'
+import { RoomBackground } from './RoomBackground'
 import { CategoryTag } from './CategoryTag'
 import { IntelligenceBriefing } from './IntelligenceBriefing'
 import type { CrisisEvent, StatDelta } from '@/types/game'
@@ -56,28 +57,7 @@ export function CrisisCard({ event, month, gameId, flags, onChoose, disabled }: 
 
   return (
     <>
-      {/* Background image — fills the screen behind the briefing */}
-      <div
-        className="pointer-events-none fixed inset-0 -z-10"
-        style={{
-          backgroundImage: `url(${backgroundImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      />
-
-      {/* Dark overlay to make text readable. Unlike the dashboard entry screen
-          (a single centered message, where a viewport-centered radial vignette
-          works), this backdrop sits behind an entire scrollable page — the nav
-          bar, header, and stat cards can end up anywhere in the viewport as the
-          player scrolls, so a spotlight-style radial leaves the edges (where a
-          radial's own math keeps opacity low) too bright. A flat, uniform scrim
-          guarantees the same contrast everywhere regardless of scroll position. */}
-      <div
-        className="pointer-events-none fixed inset-0 -z-10"
-        style={{ background: 'rgba(6,8,14,0.78)' }}
-      />
+      <RoomBackground image={backgroundImage} />
 
       <div
         className={cn(

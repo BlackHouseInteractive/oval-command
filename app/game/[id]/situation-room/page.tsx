@@ -7,7 +7,7 @@ import { StatCard } from '@/components/game/StatCard'
 import { ConflictBanner } from '@/components/game/ConflictBanner'
 import { CabinetCard } from '@/components/game/CabinetCard'
 import { PendingEventBanner } from '@/components/game/PendingEventBanner'
-import { RoomAtmosphere } from '@/components/game/RoomAtmosphere'
+import { RoomBackground } from '@/components/game/RoomBackground'
 
 const MATCHING_CATEGORIES = ['security', 'military', 'disaster']
 
@@ -31,7 +31,7 @@ export default async function SituationRoomPage({ params }: PageProps) {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-10">
-      <RoomAtmosphere color="var(--color-cat-military)" />
+      <RoomBackground image="/situation-room-bg.png" />
       <div>
         <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-cat-military)]">
           National Security

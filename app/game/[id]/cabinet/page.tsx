@@ -6,7 +6,7 @@ import { NPCS, EVENTS } from '@/lib/game-engine'
 import { CabinetCard } from '@/components/game/CabinetCard'
 import { AdvisorConversationPanel } from '@/components/game/AdvisorConversationPanel'
 import { PendingEventBanner } from '@/components/game/PendingEventBanner'
-import { RoomAtmosphere } from '@/components/game/RoomAtmosphere'
+import { RoomBackground } from '@/components/game/RoomBackground'
 import { getAdvisorRecommendations } from '@/lib/advisor-engine'
 import type { MilestoneTier } from '@/lib/npc-milestones'
 
@@ -46,7 +46,7 @@ export default async function CabinetPage({ params }: PageProps) {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-10">
-      <RoomAtmosphere color="var(--color-brass)" />
+      <RoomBackground image="/cabinet-room-bg.png" />
       <div>
         <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-brass)]">
           Administration

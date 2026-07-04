@@ -6,7 +6,7 @@ import { NPCS, EVENTS } from '@/lib/game-engine'
 import { StatCard } from '@/components/game/StatCard'
 import { CabinetCard } from '@/components/game/CabinetCard'
 import { PendingEventBanner } from '@/components/game/PendingEventBanner'
-import { RoomAtmosphere } from '@/components/game/RoomAtmosphere'
+import { RoomBackground } from '@/components/game/RoomBackground'
 
 const MATCHING_CATEGORIES = ['diplomacy']
 
@@ -30,7 +30,7 @@ export default async function DiplomaticOfficePage({ params }: PageProps) {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-10">
-      <RoomAtmosphere color="var(--color-cat-diplomacy)" />
+      <RoomBackground image="/diplomatic-office-bg.png" />
       <div>
         <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-cat-diplomacy)]">
           Foreign Relations
