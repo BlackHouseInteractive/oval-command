@@ -4,6 +4,7 @@ import Google from 'next-auth/providers/google'
 import GitHub from 'next-auth/providers/github'
 import Credentials from 'next-auth/providers/credentials'
 import { prisma } from '@/lib/prisma'
+import { expireStaleGuests } from '@/lib/guest-cleanup'
 
 const providers = []
 
@@ -26,20 +27,11 @@ providers.push(Credentials({
   name: 'Guest',
   credentials: {},
   async authorize() {
-    // Opportunistic cleanup: a guest account that never started a game and
-    // is more than a day old is abandoned (the player either closed the tab
-    // or came back later and got a fresh one here anyway). Deleting them on
-    // every new guest sign-in keeps the User table from growing unbounded —
-    // one permanent row per "Play Now" click — without needing any
-    // scheduled/cron job. Never touches guest accounts with real game data.
-    await prisma.user.deleteMany({
-      where: {
-        name: 'Guest',
-        email: null,
-        createdAt: { lt: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-        games: { none: {} },
-      },
-    })
+    // Opportunistic cleanup on top of the daily cron sweep (see
+    // app/api/cron/expire-guests/route.ts) — catches expired accounts
+    // immediately whenever anyone signs in as a new guest, rather than
+    // waiting for the next scheduled run.
+    await expireStaleGuests()
     const user = await prisma.user.create({ data: { name: 'Guest' } })
     return { id: user.id, name: user.name }
   },
