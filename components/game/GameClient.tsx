@@ -102,11 +102,11 @@ export function GameClient({ initialGame, initialEvent }: GameClientProps) {
     const legacy = computeLegacyScore(game)
     const reason = view.phase === 'gameover' ? view.result.gameOver! : view.reason
     const archetype = view.phase === 'gameover' ? view.result.archetype : undefined
-    const gameoverTreatment = getRoomTreatment('/oval-office-bg.png')
+    const gameoverTreatment = getRoomTreatment('/oval-office-bg.webp')
     return (
       <main className="mx-auto max-w-2xl px-6 py-12" style={roomAccentStyle('var(--color-brass)')}>
         <RoomBackground
-          image="/oval-office-bg.png"
+          image="/oval-office-bg.webp"
           color="var(--color-brass)"
           backgroundPosition={gameoverTreatment.backgroundPosition}
           foreground={{ style: gameoverTreatment.foregroundStyle, color: gameoverTreatment.foregroundColor }}

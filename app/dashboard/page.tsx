@@ -130,7 +130,7 @@ function OvalOfficeEntry() {
       <div style={{
         position: 'absolute',
         inset: 0,
-        backgroundImage: 'url(/oval-office-bg.png)',
+        backgroundImage: 'url(/oval-office-bg.webp)',
         backgroundSize: 'cover',
         backgroundPosition: 'center center',
         backgroundRepeat: 'no-repeat',

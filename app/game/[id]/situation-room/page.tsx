@@ -30,12 +30,12 @@ export default async function SituationRoomPage({ params }: PageProps) {
   const pendingEvent = row.currentEventId ? EVENTS.find(e => e.id === row.currentEventId) : undefined
   const showBanner = game.status === 'ACTIVE' && pendingEvent && MATCHING_CATEGORIES.includes(pendingEvent.category)
 
-  const treatment = getRoomTreatment('/situation-room-bg.png')
+  const treatment = getRoomTreatment('/situation-room-bg.webp')
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-10" style={roomAccentStyle('var(--color-cat-military)')}>
       <RoomBackground
-        image="/situation-room-bg.png"
+        image="/situation-room-bg.webp"
         color="var(--color-cat-military)"
         backgroundPosition={treatment.backgroundPosition}
         foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}

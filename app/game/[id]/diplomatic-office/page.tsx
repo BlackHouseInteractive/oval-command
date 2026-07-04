@@ -29,12 +29,12 @@ export default async function DiplomaticOfficePage({ params }: PageProps) {
   const pendingEvent = row.currentEventId ? EVENTS.find(e => e.id === row.currentEventId) : undefined
   const showBanner = game.status === 'ACTIVE' && pendingEvent && MATCHING_CATEGORIES.includes(pendingEvent.category)
 
-  const treatment = getRoomTreatment('/diplomatic-office-bg.png')
+  const treatment = getRoomTreatment('/diplomatic-office-bg.webp')
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-10" style={roomAccentStyle('var(--color-cat-diplomacy)')}>
       <RoomBackground
-        image="/diplomatic-office-bg.png"
+        image="/diplomatic-office-bg.webp"
         color="var(--color-cat-diplomacy)"
         backgroundPosition={treatment.backgroundPosition}
         foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}

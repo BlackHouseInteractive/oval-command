@@ -31,7 +31,7 @@ export default async function LoginPage() {
 
       {/* Background oval office photo — same atmosphere as the dashboard's entry screen */}
       <Image
-        src="/oval-office-bg.png"
+        src="/oval-office-bg.webp"
         alt=""
         fill
         priority

@@ -58,7 +58,7 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
   const highlightRef = useRef<HTMLDivElement>(null)
 
   const filtered = filter === 'all' ? lawsWithOdds : lawsWithOdds.filter(l => l.law.category === filter)
-  const treatment = getRoomTreatment('/congress-bg.png')
+  const treatment = getRoomTreatment('/congress-bg.webp')
 
   // Scroll the highlighted law into view once the page settles
   useEffect(() => {
@@ -116,7 +116,7 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
     return (
       <main className="mx-auto max-w-2xl px-6 py-12" style={roomAccentStyle('var(--color-cat-congress)')}>
         <RoomBackground
-          image="/congress-bg.png"
+          image="/congress-bg.webp"
           color="var(--color-cat-congress)"
           backgroundPosition={treatment.backgroundPosition}
           foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
@@ -163,7 +163,7 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
   return (
     <main className="mx-auto max-w-2xl px-6 py-10" style={roomAccentStyle('var(--color-cat-congress)')}>
       <RoomBackground
-        image="/congress-bg.png"
+        image="/congress-bg.webp"
         color="var(--color-cat-congress)"
         backgroundPosition={treatment.backgroundPosition}
         foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}

@@ -48,12 +48,12 @@ export default async function HistoryPage({ params }: PageProps) {
   const pendingEvent = game.currentEventId ? EVENTS.find(e => e.id === game.currentEventId) : undefined
   const showBanner = game.status === 'ACTIVE' && pendingEvent && MATCHING_CATEGORIES.includes(pendingEvent.category)
 
-  const treatment = getRoomTreatment('/press-room-bg.png')
+  const treatment = getRoomTreatment('/press-room-bg.webp')
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-10" style={roomAccentStyle('var(--color-cat-scandal)')}>
       <RoomBackground
-        image="/press-room-bg.png"
+        image="/press-room-bg.webp"
         color="var(--color-cat-scandal)"
         backgroundPosition={treatment.backgroundPosition}
         foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
