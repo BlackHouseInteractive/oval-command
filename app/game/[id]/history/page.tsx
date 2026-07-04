@@ -5,6 +5,10 @@ import { EVENTS, LAWS } from '@/lib/game-engine'
 import { cn, formatDelta, isDeltaGood, getStatLabel, monthToDate } from '@/lib/utils'
 import { PendingEventBanner } from '@/components/game/PendingEventBanner'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
+import { SocialFeed } from '@/components/game/SocialFeed'
+import { PressConferencePanel } from '@/components/game/PressConferencePanel'
+import { generateSocialFeed } from '@/lib/social-feed'
+import type { GameStats } from '@/types/game'
 import { getRoomTreatment } from '@/lib/event-backgrounds'
 
 const MATCHING_CATEGORIES = ['scandal', 'social']
@@ -38,6 +42,8 @@ export default async function HistoryPage({ params }: PageProps) {
       presidentName: true,
       status: true,
       currentEventId: true,
+      currentMonth: true,
+      stats: true,
       logs: { orderBy: { month: 'asc' } },
     },
   })
@@ -47,6 +53,9 @@ export default async function HistoryPage({ params }: PageProps) {
 
   const pendingEvent = game.currentEventId ? EVENTS.find(e => e.id === game.currentEventId) : undefined
   const showBanner = game.status === 'ACTIVE' && pendingEvent && MATCHING_CATEGORIES.includes(pendingEvent.category)
+  const pendingBriefingTitle = game.status === 'ACTIVE' ? pendingEvent?.title ?? null : null
+
+  const posts = generateSocialFeed(game.id, game.currentMonth, game.stats as unknown as GameStats)
 
   const treatment = getRoomTreatment('/press-room-bg.webp')
 
@@ -60,7 +69,7 @@ export default async function HistoryPage({ params }: PageProps) {
       />
       <div>
         <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-cat-scandal)]">
-          The Record
+          Press Room
         </div>
         <h1 className="mt-1 font-[family-name:var(--font-display)] text-2xl font-semibold text-[var(--color-paper)]">
           Presidential History
@@ -73,15 +82,29 @@ export default async function HistoryPage({ params }: PageProps) {
         </div>
       )}
 
+      <div className="mt-6">
+        <SocialFeed posts={posts} />
+      </div>
+
+      {game.status === 'ACTIVE' && (
+        <div className="mt-4">
+          <PressConferencePanel gameId={game.id} pendingBriefingTitle={pendingBriefingTitle} />
+        </div>
+      )}
+
+      <div className="mt-8 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
+        The Record
+      </div>
+
       {game.logs.length === 0 && (
-        <div className="mt-8 rounded-sm border border-dashed border-[var(--color-border-strong)] px-6 py-12 text-center">
+        <div className="mt-3 rounded-sm border border-dashed border-[var(--color-border-strong)] px-6 py-12 text-center">
           <p className="text-sm text-[var(--color-paper-dim)]">
             No decisions recorded yet. History starts with your first choice.
           </p>
         </div>
       )}
 
-      <div className="mt-7 space-y-0 border-l border-[var(--color-border)] pl-5">
+      <div className="mt-4 space-y-0 border-l border-[var(--color-border)] pl-5">
         {game.logs.map((log: (typeof game.logs)[number]) => {
           const event = log.eventId ? EVENTS.find(e => e.id === log.eventId) : undefined
           const law = log.lawId ? LAWS.find(l => l.id === log.lawId) : undefined

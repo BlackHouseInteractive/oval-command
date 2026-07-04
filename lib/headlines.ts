@@ -270,3 +270,59 @@ export function maybeApprovalTrendHeadline(
   }
   return null
 }
+
+// ── Address the Nation headlines ────────────────────────────
+
+export type SpeechTheme = 'economy' | 'security' | 'unity' | 'record'
+
+const SPEECH_TEMPLATES: Record<SpeechTheme, { effective: string[]; hollow: string[] }> = {
+  economy: {
+    effective: [
+      'President’s economic address resonates with anxious voters',
+      'Prime-time economic speech seen as reassuring by markets and Main Street alike',
+    ],
+    hollow: [
+      'Economic address rings hollow against the numbers, critics say',
+      'President’s upbeat economic message meets a skeptical public',
+    ],
+  },
+  security: {
+    effective: [
+      'President’s security address projects strength at home and abroad',
+      'National address on security draws praise for resolve',
+    ],
+    hollow: [
+      'Security speech fails to reassure a jittery public',
+      'Address on national security undercut by the numbers behind it',
+    ],
+  },
+  unity: {
+    effective: [
+      'President’s call for unity strikes a chord with a divided country',
+      'National address on unity draws rare cross-party praise',
+    ],
+    hollow: [
+      'Unity speech falls flat amid deep national divisions',
+      'Calls for unity read as desperate given the President’s standing',
+    ],
+  },
+  record: {
+    effective: [
+      'President’s defense of the record lands with the base',
+      'Address touting administration achievements draws a favorable reception',
+    ],
+    hollow: [
+      'President’s defense of a thin record draws open mockery',
+      'Address on accomplishments met with "what accomplishments?" from critics',
+    ],
+  },
+}
+
+export function generateSpeechHeadline(theme: SpeechTheme, effective: boolean): Headline {
+  const templates = SPEECH_TEMPLATES[theme]
+  return {
+    text: pick(effective ? templates.effective : templates.hollow),
+    outlet: pickOutlet(),
+    tone: effective ? 'positive' : 'negative',
+  }
+}

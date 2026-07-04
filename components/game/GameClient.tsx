@@ -214,9 +214,18 @@ export function GameClient({ initialGame, initialEvent }: GameClientProps) {
                 Congress →
               </Link>
             </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-[var(--color-paper)]">Address the Nation</span>
+              <Link
+                href={`/game/${game.id}/history`}
+                className="text-[var(--color-brass)] hover:underline"
+              >
+                Press Room →
+              </Link>
+            </div>
           </div>
           <p className="mt-2 text-[11px] text-[var(--color-paper-faint)]">
-            Taking either action advances to next month.
+            Taking any of these actions advances to next month.
           </p>
         </div>
       )}
