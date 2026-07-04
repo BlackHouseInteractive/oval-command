@@ -78,6 +78,18 @@ body {
   height: 2px;
 }
 
+/* Slow "breathing" zoom on room background photos — makes a room feel alive
+   rather than a static wallpaper. Only ever scales up from 1.0 (never
+   below), so there's always full viewport coverage, no edge gaps. Covered
+   by the blanket prefers-reduced-motion rule below. */
+@keyframes room-breathe {
+  from { transform: scale(1); }
+  to   { transform: scale(1.06); }
+}
+.animate-room-breathe {
+  animation: room-breathe 50s ease-in-out infinite alternate;
+}
+
 /* Visible keyboard focus ring everywhere — accessibility floor */
 :focus-visible {
   outline: 2px solid var(--color-brass);
@@ -89,5 +101,15 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  /* View Transition API pseudo-elements live outside the regular DOM tree —
+     the blanket `*` rule above doesn't reach them, so they need their own
+     override to respect reduced motion. */
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
   }
 }

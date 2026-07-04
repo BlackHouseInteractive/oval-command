@@ -61,7 +61,7 @@ export function LawCard({
   const anyArmedForThisLaw = pendingProposal?.lawId === law.id
 
   return (
-    <div className="rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+    <div className="rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] p-5 backdrop-blur-sm">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-2.5">
           <Image
@@ -138,8 +138,8 @@ export function LawCard({
                 className={cn(
                   'rounded-sm border px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.05em] transition-colors disabled:opacity-40',
                   armed('senate_leader')
-                    ? 'border-[var(--color-warn)] text-[var(--color-warn)] hover:bg-[var(--color-surface-2)]'
-                    : 'border-[var(--color-brass-dim)] text-[var(--color-brass)] hover:bg-[var(--color-surface-2)]'
+                    ? 'border-[var(--color-warn)] text-[var(--color-warn)] hover:bg-[var(--color-surface-2)] hover:backdrop-blur-sm'
+                    : 'border-[var(--color-brass-dim)] text-[var(--color-brass)] hover:bg-[var(--color-surface-2)] hover:backdrop-blur-sm'
                 )}
                 title="Senate Leader guarantees passage (once per term)"
               >
@@ -153,8 +153,8 @@ export function LawCard({
                 className={cn(
                   'rounded-sm border px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.05em] transition-colors disabled:opacity-40',
                   armed('speaker')
-                    ? 'border-[var(--color-warn)] text-[var(--color-warn)] hover:bg-[var(--color-surface-2)]'
-                    : 'border-[var(--color-brass-dim)] text-[var(--color-brass)] hover:bg-[var(--color-surface-2)]'
+                    ? 'border-[var(--color-warn)] text-[var(--color-warn)] hover:bg-[var(--color-surface-2)] hover:backdrop-blur-sm'
+                    : 'border-[var(--color-brass-dim)] text-[var(--color-brass)] hover:bg-[var(--color-surface-2)] hover:backdrop-blur-sm'
                 )}
                 title="Speaker fast-tracks passage (once per term)"
               >
@@ -167,8 +167,8 @@ export function LawCard({
               className={cn(
                 'rounded-sm border px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-40',
                 armed(undefined)
-                  ? 'border-[var(--color-warn)] bg-[var(--color-surface-2)] text-[var(--color-warn)]'
-                  : 'border-[var(--color-border-strong)] bg-[var(--color-surface-2)] text-[var(--color-paper)] hover:border-[var(--color-brass-dim)]'
+                  ? 'border-[var(--color-warn)] bg-[var(--color-surface-2)] text-[var(--color-warn)] backdrop-blur-sm'
+                  : 'border-[var(--color-border-strong)] bg-[var(--color-surface-2)] text-[var(--color-paper)] backdrop-blur-sm hover:border-[var(--color-brass-dim)]'
               )}
             >
               {armed(undefined) ? 'Confirm — Skip Briefing' : 'Propose'}

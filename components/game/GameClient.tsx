@@ -15,7 +15,7 @@ import { ConflictBanner } from '@/components/game/ConflictBanner'
 import { SecondaryStats } from '@/components/game/SecondaryStats'
 import { LegislativeAlert } from '@/components/game/LegislativeAlert'
 import { RoomAtmosphere } from '@/components/game/RoomAtmosphere'
-import { roomAccentStyle } from '@/components/game/RoomBackground'
+import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
 import { getEventAccentColor } from '@/lib/event-backgrounds'
 import { computeLegacyScore, checkGameOver } from '@/lib/game-engine'
 import { getAdvisorRecommendations } from '@/lib/advisor-engine'
@@ -103,8 +103,8 @@ export function GameClient({ initialGame, initialEvent }: GameClientProps) {
     const reason = view.phase === 'gameover' ? view.result.gameOver! : view.reason
     const archetype = view.phase === 'gameover' ? view.result.archetype : undefined
     return (
-      <main className="mx-auto max-w-2xl px-6 py-12">
-        <RoomAtmosphere color="var(--color-brass)" />
+      <main className="mx-auto max-w-2xl px-6 py-12" style={roomAccentStyle('var(--color-brass)')}>
+        <RoomBackground image="/oval-office-bg.png" color="var(--color-brass)" />
         <LegacyScreen
           legacy={legacy}
           reason={reason}
@@ -174,7 +174,7 @@ export function GameClient({ initialGame, initialEvent }: GameClientProps) {
         <div className="mt-4">
           <Link
             href={`/game/${game.id}/cabinet`}
-            className="block rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-sm text-[var(--color-paper-dim)] transition-colors hover:border-[var(--color-brass-dim)] hover:text-[var(--color-paper)]"
+            className="block rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-sm text-[var(--color-paper-dim)] backdrop-blur-sm transition-colors hover:border-[var(--color-brass-dim)] hover:text-[var(--color-paper)]"
           >
             {advisorRecommendations.length} advisor{advisorRecommendations.length > 1 ? 's have' : ' has'} something to say — visit the Cabinet Room →
           </Link>
@@ -188,7 +188,7 @@ export function GameClient({ initialGame, initialEvent }: GameClientProps) {
       )}
 
       {view.phase === 'briefing' && (
-        <div className="mt-4 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3">
+        <div className="mt-4 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 backdrop-blur-sm">
           <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
             This Month
           </div>

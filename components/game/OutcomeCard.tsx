@@ -23,7 +23,7 @@ export function OutcomeCard({
   const entries = Object.entries(effects).filter(([, v]) => v !== 0) as [string, number][]
 
   return (
-    <div className="rounded-sm border border-[var(--color-border-strong)] bg-[var(--color-surface)]">
+    <div className="rounded-sm border border-[var(--color-border-strong)] bg-[var(--color-surface)] backdrop-blur-sm">
       <div className="brief-rule" />
       <div className="p-6">
         <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-brass)]">
@@ -70,7 +70,7 @@ export function OutcomeCard({
                       className="h-8 w-8 rounded-sm object-cover"
                     />
                   ) : (
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-surface-2)] font-mono text-[11px] font-medium text-[var(--color-brass)]">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-surface-2)] font-mono text-[11px] font-medium text-[var(--color-brass)] backdrop-blur-sm">
                       {r.shortName.split(' ').map(w => w[0]).join('').slice(0, 2)}
                     </div>
                   )}

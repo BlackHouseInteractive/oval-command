@@ -46,7 +46,7 @@ export function LegacyScreen({ legacy, reason, presidentName, archetype, onNewGa
 
   return (
     <div className="mx-auto max-w-xl">
-      <div className="rounded-sm border border-[var(--color-border-strong)] bg-[var(--color-surface)]">
+      <div className="rounded-sm border border-[var(--color-border-strong)] bg-[var(--color-surface)] backdrop-blur-sm">
         <div className="brief-rule" />
         <div className="p-8 text-center">
           <Seal size={56} className={cn('mx-auto', sealTone(legacy.total))} />
@@ -69,7 +69,7 @@ export function LegacyScreen({ legacy, reason, presidentName, archetype, onNewGa
           </p>
 
           {archetype && (
-            <div className="mx-auto mt-6 max-w-sm rounded-sm border border-[var(--color-border-strong)] bg-[var(--color-surface-2)] px-5 py-5 text-left">
+            <div className="mx-auto mt-6 max-w-sm rounded-sm border border-[var(--color-border-strong)] bg-[var(--color-surface-2)] px-5 py-5 text-left backdrop-blur-sm">
               <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--color-brass)]">
                 Presidential Legacy Report
               </div>
@@ -119,7 +119,7 @@ export function LegacyScreen({ legacy, reason, presidentName, archetype, onNewGa
               )}
 
               {/* Biggest Criticism */}
-              <div className="mt-4 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5">
+              <div className="mt-4 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 backdrop-blur-sm">
                 <div className="font-mono text-[9px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
                   The Critics Said
                 </div>
@@ -129,7 +129,7 @@ export function LegacyScreen({ legacy, reason, presidentName, archetype, onNewGa
               </div>
 
               {/* Relationships */}
-              <div className="mt-3 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5">
+              <div className="mt-3 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 backdrop-blur-sm">
                 <div className="font-mono text-[9px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
                   Those Who Were There
                 </div>
@@ -148,7 +148,7 @@ export function LegacyScreen({ legacy, reason, presidentName, archetype, onNewGa
           )}
 
           {reason === 'TERM_COMPLETE' && (
-            <div className="mt-5 inline-block rounded-full bg-[var(--color-surface-2)] px-4 py-1.5">
+            <div className="mt-5 inline-block rounded-full bg-[var(--color-surface-2)] px-4 py-1.5 backdrop-blur-sm">
               <span className="font-mono text-xs text-[var(--color-paper)]">
                 {legacy.reelected ? '✓ Won reelection' : '✗ Lost reelection'} · {legacy.votePercent}% of the vote
               </span>

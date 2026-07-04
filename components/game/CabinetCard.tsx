@@ -34,7 +34,7 @@ export function CabinetCard({ npc, relationship, milestoneTier }: CabinetCardPro
   const milestoneText = milestoneTier ? getMilestoneText(npc.id, milestoneTier) : null
 
   return (
-    <div className="rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+    <div className="rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] p-4 backdrop-blur-sm">
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0">
           {npc.image ? (

@@ -114,7 +114,7 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
     return (
       <main className="mx-auto max-w-2xl px-6 py-12" style={roomAccentStyle('var(--color-cat-congress)')}>
         <RoomBackground image="/congress-bg.png" color="var(--color-cat-congress)" />
-        <div className="rounded-sm border border-[var(--color-border-strong)] bg-[var(--color-surface)]">
+        <div className="rounded-sm border border-[var(--color-border-strong)] bg-[var(--color-surface)] backdrop-blur-sm">
           <div className="brief-rule" />
           <div className="p-6 text-center">
             <span
@@ -174,7 +174,7 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
               'rounded-full px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.05em] transition-colors',
               filter === f.value
                 ? 'bg-[var(--color-brass)] text-[var(--color-ink)]'
-                : 'bg-[var(--color-surface)] text-[var(--color-paper-faint)] hover:text-[var(--color-paper)]'
+                : 'bg-[var(--color-surface)] text-[var(--color-paper-faint)] backdrop-blur-sm hover:text-[var(--color-paper)]'
             )}
           >
             {f.label}

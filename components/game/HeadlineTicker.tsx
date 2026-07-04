@@ -11,7 +11,7 @@ export function HeadlineTicker({ headlines }: { headlines: Headline[] }) {
   if (headlines.length === 0) return null
 
   return (
-    <div className="space-y-2 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3">
+    <div className="space-y-2 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 backdrop-blur-sm">
       <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
         Press Coverage
       </span>

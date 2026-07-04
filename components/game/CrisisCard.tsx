@@ -63,7 +63,7 @@ export function CrisisCard({ event, month, gameId, flags, onChoose, disabled }: 
       <div
         style={roomAccentStyle(accentColor)}
         className={cn(
-          'rounded-sm border bg-[var(--color-surface)]',
+          'rounded-sm border bg-[var(--color-surface)] backdrop-blur-sm',
           breaking ? 'border-[var(--color-bad)]' : 'border-[var(--color-border-strong)]'
         )}
       >
@@ -119,7 +119,7 @@ export function CrisisCard({ event, month, gameId, flags, onChoose, disabled }: 
               disabled={disabled}
               className={cn(
                 'group w-full rounded-sm border px-4 py-3.5 text-left transition-colors',
-                'border-[var(--color-border)] bg-[var(--color-surface-2)]',
+                'border-[var(--color-border)] bg-[var(--color-surface-2)] backdrop-blur-sm',
                 !disabled && 'hover:border-[var(--color-brass-dim)] hover:bg-[#202B3D]',
                 disabled && selected === i && 'border-[var(--color-brass)]',
                 disabled && selected !== i && 'opacity-40',

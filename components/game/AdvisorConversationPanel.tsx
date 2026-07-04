@@ -74,7 +74,7 @@ function AdvisorConversationCard({
   const content = buildAdvisorConversation(rec, law)
 
   return (
-    <div className={cn('flex gap-3 rounded-sm border border-[var(--color-border)] border-l-2 bg-[var(--color-surface)] px-4 py-3.5', style.border)}>
+    <div className={cn('flex gap-3 rounded-sm border border-[var(--color-border)] border-l-2 bg-[var(--color-surface)] px-4 py-3.5 backdrop-blur-sm', style.border)}>
       <div className="flex-shrink-0">
         {npc?.image ? (
           <Image
@@ -136,7 +136,7 @@ function AdvisorConversationCard({
           {rec.suggestedAction ? (
             <button
               onClick={() => router.push(`/game/${gameId}/congress?highlight=${rec.suggestedAction!.lawId}`)}
-              className="rounded-sm border border-[var(--color-brass-dim)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-brass)] transition-colors hover:bg-[var(--color-surface-2)]"
+              className="rounded-sm border border-[var(--color-brass-dim)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-brass)] transition-colors hover:bg-[var(--color-surface-2)] hover:backdrop-blur-sm"
             >
               Prepare a recommendation →
             </button>

@@ -12,7 +12,7 @@ export function ApprovalChart({ approvalHistory }: ApprovalChartProps) {
   const data = approvalHistory.map((value, i) => ({ month: i, approval: value }))
 
   return (
-    <div className="rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3">
+    <div className="rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 backdrop-blur-sm">
       <div className="flex items-baseline justify-between">
         <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
           Approval Over Time

@@ -1,4 +1,5 @@
 import { redirect, notFound } from 'next/navigation'
+import { ViewTransition } from 'react'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { EVENTS, isBreakingEvent } from '@/lib/game-engine'
@@ -28,8 +29,15 @@ export default async function GameLayout({ children, params }: LayoutProps) {
 
   return (
     <>
+      {/* RoomNav sits outside the transitioning subtree on purpose — it
+          should never re-animate or flicker while room content crossfades
+          beneath it (same "anchor the header" pattern the View Transitions
+          guide describes, just achieved by not wrapping it, since it isn't
+          part of what's changing between rooms). */}
       <RoomNav gameId={id} breakingEvent={breakingEvent} />
-      {children}
+      <ViewTransition default="auto">
+        {children}
+      </ViewTransition>
     </>
   )
 }

@@ -13,7 +13,7 @@ export function RoomBackground({ image, color }: { image: string; color?: string
   return (
     <>
       <div
-        className="pointer-events-none fixed inset-0 -z-10"
+        className="pointer-events-none fixed inset-0 -z-10 animate-room-breathe"
         style={{
           backgroundImage: `url(${image})`,
           backgroundSize: 'cover',
@@ -54,11 +54,21 @@ export function RoomBackground({ image, color }: { image: string; color?: string
  * even at a heavier color mix, so text-on-card contrast is unaffected), but
  * borders — thin lines with no text to protect — take a much stronger mix
  * so the room's identity actually reads at a glance instead of disappearing.
+ *
+ * Surfaces are also nested through a second color-mix into ~88%/85% opacity
+ * (not fully opaque) — paired with each card's own `backdrop-blur-sm` class,
+ * this is the "frosted glass" effect: the room's photo genuinely shows
+ * through the UI instead of sitting behind a flat opaque box. Blur is what
+ * makes this safe — it homogenizes whatever photo detail is behind a card
+ * before the semi-transparent tint is applied, so no sharp/bright photo
+ * detail can poke through unpredictably.
  */
 export function roomAccentStyle(color: string): CSSProperties {
+  const surface = `color-mix(in srgb, #131825 82%, ${color} 18%)`
+  const surface2 = `color-mix(in srgb, #1A2332 78%, ${color} 22%)`
   return {
-    '--color-surface': `color-mix(in srgb, #131825 82%, ${color} 18%)`,
-    '--color-surface-2': `color-mix(in srgb, #1A2332 78%, ${color} 22%)`,
+    '--color-surface': `color-mix(in srgb, ${surface} 88%, transparent)`,
+    '--color-surface-2': `color-mix(in srgb, ${surface2} 85%, transparent)`,
     '--color-border': `color-mix(in srgb, #2A3344 55%, ${color} 45%)`,
     '--color-border-strong': `color-mix(in srgb, #3D4A5C 50%, ${color} 50%)`,
   } as CSSProperties
