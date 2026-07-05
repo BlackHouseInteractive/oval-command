@@ -3,9 +3,8 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { dbToGame, gameToDbUpdate, toJson } from '@/lib/db-helpers'
 import { getLawById, resolveLawPassage, applyLawPassage, canUseNpcAbility } from '@/lib/law-engine'
-import { computePassiveDrift, applyDelta, pickEvent, checkGameOver, computeLegacyScore } from '@/lib/game-engine'
+import { applyDelta, pickEvent, advanceMonth } from '@/lib/game-engine'
 import { generateLawHeadline } from '@/lib/headlines'
-import { checkAndEnqueueChains, resolveDueConsequences } from '@/lib/cascade-engine'
 import { unlockAchievements } from '@/lib/achievements'
 import type { Headline } from '@/lib/headlines'
 import type { GameOverReason } from '@/types/game'
@@ -80,41 +79,10 @@ export async function POST(req: NextRequest, { params }: Params) {
       }
     }
 
-    const drift = computePassiveDrift(updatedGame)
-    const nextMonthNumber = updatedGame.currentMonth + 1
-    const { effects: cascadeEffects, headlines, remaining, newCooldowns } =
-      resolveDueConsequences(updatedGame.pendingConsequences, nextMonthNumber)
-    cascadeHeadlines = headlines
-
-    const combinedDrift = { ...drift }
-    for (const [k, v] of Object.entries(cascadeEffects) as [keyof typeof drift, number][]) {
-      combinedDrift[k] = ((combinedDrift[k] ?? 0) as number) + v
-    }
-
-    const driftedStats = applyDelta(updatedGame.stats, combinedDrift)
-    const updatedCooldowns = { ...updatedGame.chainCooldowns, ...newCooldowns }
-
-    const newPendingConsequences = checkAndEnqueueChains(
-      { ...updatedGame, stats: driftedStats, currentMonth: nextMonthNumber },
-      remaining,
-      updatedCooldowns,
-    )
-
-    updatedGame = {
-      ...updatedGame,
-      stats:               driftedStats,
-      pendingConsequences: newPendingConsequences,
-      chainCooldowns:      updatedCooldowns,
-      currentMonth:        nextMonthNumber,
-      approvalHistory:     [...updatedGame.approvalHistory, Math.round(driftedStats.approval)],
-      updatedAt:           new Date().toISOString(),
-    }
-
-    gameOver = checkGameOver(updatedGame)
-    if (gameOver) {
-      updatedGame.status = gameOver === 'TERM_COMPLETE' ? 'COMPLETE' : 'GAMEOVER'
-      updatedGame.legacyScore = computeLegacyScore(updatedGame).total
-    }
+    const advance = advanceMonth(updatedGame)
+    updatedGame = advance.game
+    cascadeHeadlines = advance.cascadeHeadlines
+    gameOver = advance.gameOver
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Law could not be processed'
     return NextResponse.json({ error: message }, { status: 400 })

@@ -1,7 +1,7 @@
 import { redirect, notFound } from 'next/navigation'
 import { ViewTransition } from 'react'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { getGameRow } from '@/lib/db-helpers'
 import { EVENTS, isBreakingEvent } from '@/lib/game-engine'
 import { RoomNav } from '@/components/game/RoomNav'
 
@@ -15,10 +15,7 @@ export default async function GameLayout({ children, params }: LayoutProps) {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
-  const row = await prisma.game.findUnique({
-    where: { id },
-    select: { id: true, userId: true, status: true, currentEventId: true },
-  })
+  const row = await getGameRow(id)
   if (!row) notFound()
   if (row.userId !== session.user.id) redirect('/dashboard')
 

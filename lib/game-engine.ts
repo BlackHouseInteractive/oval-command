@@ -16,6 +16,7 @@ import {
   type GameOverReason,
   type Party,
   type PendingConsequence,
+  type Headline,
 } from '@/types/game'
 
 import eventsRaw from '@/data/events.json'
@@ -617,6 +618,71 @@ export function rollLawPassage(probability: number): boolean {
 }
 
 // ============================================================
+// MONTH ADVANCE — shared by all three ways a turn can end (crisis
+// choice, law proposal, address-to-the-nation)
+// ============================================================
+
+export interface MonthAdvanceResult {
+  game:             Game
+  drift:            StatDelta
+  cascadeHeadlines: Headline[]
+  gameOver:         GameOverReason | null
+}
+
+/**
+ * Close out the month: apply passive stat drift, resolve any cascade
+ * consequences due this turn (merging their effects into drift), enqueue
+ * newly-triggered chains for future turns (plus any turn-specific ones the
+ * caller already knows about, e.g. a crisis choice's delayed effects),
+ * advance currentMonth/approvalHistory, and check for game-over.
+ *
+ * `game.stats` must already reflect this turn's own immediate effects
+ * (the crisis choice's/law's/speech's direct StatDelta) — this only
+ * applies what happens passively after that.
+ */
+export function advanceMonth(
+  game: Game,
+  extraPendingConsequences: PendingConsequence[] = [],
+): MonthAdvanceResult {
+  const drift = computePassiveDrift(game)
+  const nextMonthNumber = game.currentMonth + 1
+  const { effects: cascadeEffects, headlines: cascadeHeadlines, remaining, newCooldowns } =
+    resolveDueConsequences(game.pendingConsequences, nextMonthNumber)
+
+  const combinedDrift: StatDelta = { ...drift }
+  for (const [k, v] of Object.entries(cascadeEffects) as [keyof StatDelta, number][]) {
+    combinedDrift[k] = ((combinedDrift[k] ?? 0) as number) + v
+  }
+
+  const driftedStats = applyDelta(game.stats, combinedDrift)
+  const updatedCooldowns = { ...game.chainCooldowns, ...newCooldowns }
+
+  const newPendingConsequences = checkAndEnqueueChains(
+    { ...game, stats: driftedStats, currentMonth: nextMonthNumber },
+    [...remaining, ...extraPendingConsequences],
+    updatedCooldowns,
+  )
+
+  const updatedGame: Game = {
+    ...game,
+    stats:               driftedStats,
+    pendingConsequences: newPendingConsequences,
+    chainCooldowns:      updatedCooldowns,
+    currentMonth:        nextMonthNumber,
+    approvalHistory:     [...game.approvalHistory, Math.round(driftedStats.approval)],
+    updatedAt:           new Date().toISOString(),
+  }
+
+  const gameOver = checkGameOver(updatedGame)
+  if (gameOver) {
+    updatedGame.status = gameOver === 'TERM_COMPLETE' ? 'COMPLETE' : 'GAMEOVER'
+    updatedGame.legacyScore = computeLegacyScore(updatedGame).total
+  }
+
+  return { game: updatedGame, drift, cascadeHeadlines, gameOver: gameOver ?? null }
+}
+
+// ============================================================
 // FULL TURN PROCESSOR
 // ============================================================
 
@@ -671,31 +737,7 @@ export function processEventTurn(
     turnFlags,
   )
 
-  const drift = computePassiveDrift({
-    ...game,
-    stats:            newStats,
-    flags:            newFlags,
-    npcRelationships: newRelationships,
-    activeConflicts:  nextConflicts,
-    activeScandals:   newActiveScandals,
-  })
-
-  // Resolve any cascade consequences that are due THIS turn (seeded by a
-  // prior turn's threshold crossing), then check current stats to seed
-  // any NEW chains for future turns. Cooldowns prevent the same chain
-  // from re-enqueuing immediately if its triggering condition persists.
   const nextMonthNumber = game.currentMonth + 1
-  const { effects: cascadeEffects, headlines: cascadeHeadlines, remaining, newCooldowns } =
-    resolveDueConsequences(game.pendingConsequences, nextMonthNumber)
-
-  const combinedDrift: StatDelta = { ...drift }
-  for (const [k, v] of Object.entries(cascadeEffects) as [keyof StatDelta, number][]) {
-    combinedDrift[k] = ((combinedDrift[k] ?? 0) as number) + v
-  }
-
-  const driftedStats = applyDelta(newStats, combinedDrift)
-
-  const updatedCooldowns = { ...game.chainCooldowns, ...newCooldowns }
 
   // Merge choice-level delayed effects (e.g. "cut regulations now, pay later")
   // with the threshold-triggered cascade chains already in the queue.
@@ -708,33 +750,22 @@ export function processEventTurn(
       headlineText: d.headline,
     }))
 
-  const newPendingConsequences = checkAndEnqueueChains(
-    { ...game, stats: driftedStats, currentMonth: nextMonthNumber },
-    [...remaining, ...choiceDelayedConsequences],
-    updatedCooldowns,
-  )
-
-  const updatedGame: Game = {
+  // computePassiveDrift/checkAndEnqueueChains/checkGameOver (all called
+  // inside advanceMonth) only read stats/currentMonth/activeConflicts/
+  // activeScandals — never flags — so merging milestoneFlags in now
+  // rather than after is behavior-identical, just simpler.
+  const preDriftGame: Game = {
     ...game,
-    stats:               driftedStats,
-    flags:               { ...newFlags, ...milestoneFlags },
-    npcRelationships:    newRelationships,
-    activeConflicts:     nextConflicts,
-    activeScandals:      newActiveScandals,
-    pendingConsequences: newPendingConsequences,
-    chainCooldowns:      updatedCooldowns,
-    usedEvents:          [...game.usedEvents, eventId],
-    currentMonth:        nextMonthNumber,
-    approvalHistory:     [...game.approvalHistory, Math.round(driftedStats.approval)],
-    updatedAt:           new Date().toISOString(),
+    stats:            newStats,
+    flags:            { ...newFlags, ...milestoneFlags },
+    npcRelationships: newRelationships,
+    activeConflicts:  nextConflicts,
+    activeScandals:   newActiveScandals,
+    usedEvents:       [...game.usedEvents, eventId],
   }
 
-  const gameOver = checkGameOver(updatedGame)
-
-  if (gameOver) {
-    updatedGame.status = gameOver === 'TERM_COMPLETE' ? 'COMPLETE' : 'GAMEOVER'
-    updatedGame.legacyScore = computeLegacyScore(updatedGame).total
-  }
+  const { game: updatedGame, drift, cascadeHeadlines, gameOver } =
+    advanceMonth(preDriftGame, choiceDelayedConsequences)
 
   // Headlines: one from the crisis category/effects, plus an optional
   // approval-trend headline if approval moved sharply this turn.
@@ -742,11 +773,11 @@ export function processEventTurn(
     generateCrisisHeadline(event.category, choice.effects),
     ...cascadeHeadlines,
   ]
-  const trendHeadline = maybeApprovalTrendHeadline(game.stats.approval, driftedStats.approval)
+  const trendHeadline = maybeApprovalTrendHeadline(game.stats.approval, updatedGame.stats.approval)
   if (trendHeadline) headlines.push(trendHeadline)
 
   return {
-    updatedGame,
+    game: updatedGame,
     log: {
       gameId:      game.id,
       month:       game.currentMonth,

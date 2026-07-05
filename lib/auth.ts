@@ -27,13 +27,20 @@ providers.push(Credentials({
   name: 'Guest',
   credentials: {},
   async authorize() {
-    // Opportunistic cleanup on top of the daily cron sweep (see
-    // app/api/cron/expire-guests/route.ts) — catches expired accounts
-    // immediately whenever anyone signs in as a new guest, rather than
-    // waiting for the next scheduled run.
-    await expireStaleGuests()
-    const user = await prisma.user.create({ data: { name: 'Guest' } })
-    return { id: user.id, name: user.name }
+    try {
+      // Opportunistic cleanup on top of the daily cron sweep (see
+      // app/api/cron/expire-guests/route.ts) — catches expired accounts
+      // immediately whenever anyone signs in as a new guest, rather than
+      // waiting for the next scheduled run.
+      await expireStaleGuests()
+      const user = await prisma.user.create({ data: { name: 'Guest' } })
+      return { id: user.id, name: user.name }
+    } catch {
+      // Returning null is Auth.js's documented "sign-in failed" signal —
+      // a DB blip here should surface as a normal failed sign-in attempt,
+      // not an unhandled crash.
+      return null
+    }
   },
 }))
 
@@ -58,8 +65,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // knows how to handle (redirect to /login, or 401 Unauthorized).
     async jwt({ token }) {
       if (!token.sub) return token
-      const user = await prisma.user.findUnique({ where: { id: token.sub }, select: { id: true } })
-      if (!user) return null
+      try {
+        const user = await prisma.user.findUnique({ where: { id: token.sub }, select: { id: true } })
+        if (!user) return null
+      } catch {
+        // This callback runs on every auth() call across the whole app —
+        // failing closed on a transient DB error would sign out every
+        // active session at once. Let the session through instead; if the
+        // account really is gone, the next successful check (or any
+        // DB-touching page) still catches it.
+      }
       return token
     },
     session({ session, token }) {

@@ -1,7 +1,6 @@
 import { redirect, notFound } from 'next/navigation'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
-import { dbToGame } from '@/lib/db-helpers'
+import { dbToGame, getGameRow } from '@/lib/db-helpers'
 import { NPCS, EVENTS } from '@/lib/game-engine'
 import { StatCard } from '@/components/game/StatCard'
 import { CabinetCard } from '@/components/game/CabinetCard'
@@ -20,7 +19,7 @@ export default async function DiplomaticOfficePage({ params }: PageProps) {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
-  const row = await prisma.game.findUnique({ where: { id } })
+  const row = await getGameRow(id)
   if (!row) notFound()
   if (row.userId !== session.user.id) redirect('/dashboard')
 

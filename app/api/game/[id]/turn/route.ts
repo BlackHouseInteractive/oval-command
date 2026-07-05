@@ -65,14 +65,14 @@ export async function POST(req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: message }, { status: 400 })
   }
 
-  const nextEvent = result.updatedGame.status === 'ACTIVE'
-    ? pickEvent(result.updatedGame)
+  const nextEvent = result.game.status === 'ACTIVE'
+    ? pickEvent(result.game)
     : null
 
   const [updateResult] = await prisma.$transaction([
     prisma.game.updateMany({
       where: { id: id, updatedAt: row.updatedAt },
-      data:  { ...gameToDbUpdate(result.updatedGame), currentEventId: nextEvent?.id ?? null },
+      data:  { ...gameToDbUpdate(result.game), currentEventId: nextEvent?.id ?? null },
     }),
     prisma.gameLog.create({
       data: {
@@ -114,9 +114,9 @@ export async function POST(req: NextRequest, { params }: Params) {
       narrative:   l.narrative  ?? undefined,
       createdAt:   l.createdAt.toISOString(),
     }))
-    archetype = computePresidentialArchetype(result.updatedGame, gameLogs)
-    newAchievements = await unlockAchievements(session.user.id, result.updatedGame, result.gameOver)
+    archetype = computePresidentialArchetype(result.game, gameLogs)
+    newAchievements = await unlockAchievements(session.user.id, result.game, result.gameOver)
   }
 
-  return NextResponse.json({ result: { ...result, archetype, newAchievements }, nextEvent })
+  return NextResponse.json({ ...result, archetype, newAchievements, nextEvent })
 }

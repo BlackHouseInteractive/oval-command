@@ -99,16 +99,17 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
       }
 
       const data: ProcessTurnResponse = await res.json()
-      setGame(data.result.updatedGame)
+      const { nextEvent, ...result } = data
+      setGame(result.game)
       setRecentLogs(prev => [
-        { ...data.result.log, id: `pending-${data.result.log.month}`, createdAt: new Date().toISOString() },
+        { ...result.log, id: `pending-${result.log.month}`, createdAt: new Date().toISOString() },
         ...prev,
       ].slice(0, 8))
 
-      if (data.result.gameOver) {
-        setView({ phase: 'gameover', result: data.result })
+      if (result.gameOver) {
+        setView({ phase: 'gameover', result })
       } else {
-        setView({ phase: 'outcome', result: data.result, nextEvent: data.nextEvent ?? null })
+        setView({ phase: 'outcome', result, nextEvent: nextEvent ?? null })
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong.')
@@ -373,7 +374,7 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
             effects={view.result.log.statDeltas}
             npcReactions={view.result.npcReactions}
             onContinue={handleContinue}
-            nextMonth={view.result.updatedGame.currentMonth}
+            nextMonth={view.result.game.currentMonth}
             isGameOver={false}
           />
         )}

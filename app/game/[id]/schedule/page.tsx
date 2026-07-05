@@ -1,8 +1,7 @@
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
-import { dbToGame } from '@/lib/db-helpers'
+import { dbToGame, getGameRow } from '@/lib/db-helpers'
 import { EVENTS } from '@/lib/game-engine'
 import { getLegislativeOpportunity } from '@/lib/law-engine'
 import { hashSeed } from '@/lib/utils'
@@ -23,7 +22,7 @@ export default async function SchedulePage({ params }: PageProps) {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
-  const row = await prisma.game.findUnique({ where: { id } })
+  const row = await getGameRow(id)
   if (!row) notFound()
   if (row.userId !== session.user.id) redirect('/dashboard')
 

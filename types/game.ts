@@ -366,7 +366,7 @@ export interface Headline {
 }
 
 export interface TurnResult {
-  updatedGame:  Game
+  game:         Game
   log:          Omit<GameLog, 'id' | 'createdAt'>
   npcReactions: NpcReactionResult[]
   driftApplied: StatDelta
@@ -439,7 +439,6 @@ export interface ProcessTurnRequest {
   choiceIndex: number
 }
 
-export interface ProcessTurnResponse {
-  result:       TurnResult
-  nextEvent?:   CrisisEvent | null
+export interface ProcessTurnResponse extends TurnResult {
+  nextEvent?: CrisisEvent | null
 }

@@ -3,9 +3,8 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { dbToGame, gameToDbUpdate, toJson } from '@/lib/db-helpers'
 import { resolveSpeech } from '@/lib/address-nation'
-import { computePassiveDrift, applyDelta, pickEvent, checkGameOver, computeLegacyScore } from '@/lib/game-engine'
+import { applyDelta, pickEvent, advanceMonth } from '@/lib/game-engine'
 import { generateSpeechHeadline, type SpeechTheme } from '@/lib/headlines'
-import { checkAndEnqueueChains, resolveDueConsequences } from '@/lib/cascade-engine'
 import { unlockAchievements } from '@/lib/achievements'
 import type { Headline } from '@/lib/headlines'
 import type { StatDelta, GameOverReason } from '@/types/game'
@@ -55,41 +54,10 @@ export async function POST(req: NextRequest, { params }: Params) {
     speechEffects = speechResult.effects
     const statsAfterSpeech = applyDelta(game.stats, speechEffects)
 
-    const drift = computePassiveDrift({ ...game, stats: statsAfterSpeech })
-    const nextMonthNumber = game.currentMonth + 1
-    const { effects: cascadeEffects, headlines, remaining, newCooldowns } =
-      resolveDueConsequences(game.pendingConsequences, nextMonthNumber)
-    cascadeHeadlines = headlines
-
-    const combinedDrift = { ...drift }
-    for (const [k, v] of Object.entries(cascadeEffects) as [keyof typeof drift, number][]) {
-      combinedDrift[k] = ((combinedDrift[k] ?? 0) as number) + v
-    }
-
-    const driftedStats = applyDelta(statsAfterSpeech, combinedDrift)
-    const updatedCooldowns = { ...game.chainCooldowns, ...newCooldowns }
-
-    const newPendingConsequences = checkAndEnqueueChains(
-      { ...game, stats: driftedStats, currentMonth: nextMonthNumber },
-      remaining,
-      updatedCooldowns,
-    )
-
-    updatedGame = {
-      ...game,
-      stats:               driftedStats,
-      pendingConsequences: newPendingConsequences,
-      chainCooldowns:      updatedCooldowns,
-      currentMonth:        nextMonthNumber,
-      approvalHistory:     [...game.approvalHistory, Math.round(driftedStats.approval)],
-      updatedAt:           new Date().toISOString(),
-    }
-
-    gameOver = checkGameOver(updatedGame)
-    if (gameOver) {
-      updatedGame.status = gameOver === 'TERM_COMPLETE' ? 'COMPLETE' : 'GAMEOVER'
-      updatedGame.legacyScore = computeLegacyScore(updatedGame).total
-    }
+    const advance = advanceMonth({ ...game, stats: statsAfterSpeech })
+    updatedGame = advance.game
+    cascadeHeadlines = advance.cascadeHeadlines
+    gameOver = advance.gameOver
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Speech could not be processed'
     return NextResponse.json({ error: message }, { status: 400 })

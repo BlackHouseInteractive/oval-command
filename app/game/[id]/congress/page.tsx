@@ -1,8 +1,7 @@
 import { redirect, notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
-import { dbToGame } from '@/lib/db-helpers'
+import { dbToGame, getGameRow } from '@/lib/db-helpers'
 import { LAWS, EVENTS, computePassProbability } from '@/lib/game-engine'
 import { canUseNpcAbility } from '@/lib/law-engine'
 import { CongressClient } from '@/components/game/CongressClient'
@@ -16,7 +15,7 @@ export default async function CongressPage({ params }: PageProps) {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
-  const row = await prisma.game.findUnique({ where: { id } })
+  const row = await getGameRow(id)
   if (!row) notFound()
   if (row.userId !== session.user.id) redirect('/dashboard')
 

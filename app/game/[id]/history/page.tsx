@@ -1,6 +1,7 @@
 import { redirect, notFound } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { dbToGame, dbToGameLog, getGameRow } from '@/lib/db-helpers'
 import { EVENTS, LAWS } from '@/lib/game-engine'
 import { cn, formatDelta, isDeltaGood, getStatLabel, monthToDate } from '@/lib/utils'
 import { PendingEventBanner } from '@/components/game/PendingEventBanner'
@@ -8,8 +9,8 @@ import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackgroun
 import { SocialFeed } from '@/components/game/SocialFeed'
 import { PressConferencePanel } from '@/components/game/PressConferencePanel'
 import { generateSocialFeed } from '@/lib/social-feed'
-import type { GameStats } from '@/types/game'
 import { getRoomTreatment } from '@/lib/event-backgrounds'
+import type { GameStats } from '@/types/game'
 
 const MATCHING_CATEGORIES = ['scandal', 'social']
 
@@ -34,28 +35,20 @@ export default async function HistoryPage({ params }: PageProps) {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
-  const game = await prisma.game.findUnique({
-    where: { id },
-    select: {
-      id: true,
-      userId: true,
-      presidentName: true,
-      status: true,
-      currentEventId: true,
-      currentMonth: true,
-      stats: true,
-      logs: { orderBy: { month: 'asc' } },
-    },
-  })
+  const row = await getGameRow(id)
+  if (!row) notFound()
+  if (row.userId !== session.user.id) redirect('/dashboard')
 
-  if (!game) notFound()
-  if (game.userId !== session.user.id) redirect('/dashboard')
+  const game = dbToGame(row)
 
-  const pendingEvent = game.currentEventId ? EVENTS.find(e => e.id === game.currentEventId) : undefined
+  const logRows = await prisma.gameLog.findMany({ where: { gameId: id }, orderBy: { month: 'asc' } })
+  const logs = logRows.map(dbToGameLog)
+
+  const pendingEvent = row.currentEventId ? EVENTS.find(e => e.id === row.currentEventId) : undefined
   const showBanner = game.status === 'ACTIVE' && pendingEvent && MATCHING_CATEGORIES.includes(pendingEvent.category)
   const pendingBriefingTitle = game.status === 'ACTIVE' ? pendingEvent?.title ?? null : null
 
-  const posts = generateSocialFeed(game.id, game.currentMonth, game.stats as unknown as GameStats)
+  const posts = generateSocialFeed(game.id, game.currentMonth, game.stats)
 
   const treatment = getRoomTreatment('/press-room-bg.webp')
 
@@ -96,7 +89,7 @@ export default async function HistoryPage({ params }: PageProps) {
         The Record
       </div>
 
-      {game.logs.length === 0 && (
+      {logs.length === 0 && (
         <div className="mt-3 rounded-sm border border-dashed border-[var(--color-border-strong)] px-6 py-12 text-center">
           <p className="text-sm text-[var(--color-paper-dim)]">
             No decisions recorded yet. History starts with your first choice.
@@ -105,11 +98,11 @@ export default async function HistoryPage({ params }: PageProps) {
       )}
 
       <div className="mt-4 space-y-0 border-l border-[var(--color-border)] pl-5">
-        {game.logs.map((log: (typeof game.logs)[number]) => {
+        {logs.map((log) => {
           const event = log.eventId ? EVENTS.find(e => e.id === log.eventId) : undefined
           const law = log.lawId ? LAWS.find(l => l.id === log.lawId) : undefined
           const title = event?.title ?? law?.title ?? ACTION_LABEL[log.actionType] ?? log.actionType
-          const deltas = Object.entries(log.statDeltas as Partial<Record<keyof GameStats, number>>).filter(([, v]) => v !== 0) as [keyof GameStats, number][]
+          const deltas = Object.entries(log.statDeltas).filter(([, v]) => v !== 0) as [keyof GameStats, number][]
 
           return (
             <div key={log.id} className="relative pb-6 last:pb-0">

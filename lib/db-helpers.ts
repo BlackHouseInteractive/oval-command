@@ -3,7 +3,23 @@
  * Centralised here so API routes stay thin and the conversion logic
  * lives in one place to update.
  */
+import { cache } from 'react'
+import { prisma } from '@/lib/prisma'
 import type { Game, GameLog, ActionType, UnlockedAchievement } from '@/types/game'
+
+/**
+ * The full Game row, memoized per request via React's cache() — the game
+ * layout and whichever room page renders inside it both need this same
+ * row (the layout for its nav/breaking-event banner, the page for the
+ * full game state), and without this they'd each run their own
+ * independent query for the same request. cache() dedupes calls with the
+ * same argument within a single render pass, so this collapses that back
+ * down to one query. Only for Server Component reads — API route
+ * handlers each get their own request context, so mutation routes fetch
+ * directly instead (and shouldn't use a memoized read anyway, since they
+ * rely on getting the freshest row for optimistic-concurrency checks).
+ */
+export const getGameRow = cache((id: string) => prisma.game.findUnique({ where: { id } }))
 
 // Prisma row shapes (mirrors schema.prisma — keep in sync)
 interface DbGame {

@@ -1,7 +1,7 @@
 import { redirect, notFound } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { dbToGame, dbToGameLog } from '@/lib/db-helpers'
+import { dbToGame, dbToGameLog, getGameRow } from '@/lib/db-helpers'
 import { pickEvent, EVENTS } from '@/lib/game-engine'
 import { getInactivityWarning } from '@/lib/guest-cleanup'
 import { getEnabledOAuthProviders } from '@/lib/oauth-providers'
@@ -16,7 +16,7 @@ export default async function GamePage({ params }: PageProps) {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
-  const row = await prisma.game.findUnique({ where: { id } })
+  const row = await getGameRow(id)
   if (!row) notFound()
   if (row.userId !== session.user.id) redirect('/dashboard')
 

@@ -2,7 +2,7 @@ import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { dbToGame, dbToGameLog } from '@/lib/db-helpers'
+import { dbToGame, dbToGameLog, getGameRow } from '@/lib/db-helpers'
 import { computeStatTrend } from '@/lib/stat-trends'
 import { GovernmentOverviewView } from '@/components/game/GovernmentOverviewView'
 import type { GameStats } from '@/types/game'
@@ -22,7 +22,7 @@ export default async function GovernmentOverviewPage({ params }: PageProps) {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
-  const row = await prisma.game.findUnique({ where: { id } })
+  const row = await getGameRow(id)
   if (!row) notFound()
   if (row.userId !== session.user.id) redirect('/dashboard')
 
