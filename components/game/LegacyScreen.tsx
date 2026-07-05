@@ -11,7 +11,7 @@ interface LegacyScreenProps {
   onNewGame: () => void
 }
 
-const REASON_LABEL: Record<GameOverReason, string> = {
+export const REASON_LABEL: Record<GameOverReason, string> = {
   IMPEACHMENT: 'Removed from Office',
   DEBT_COLLAPSE: 'Economic Collapse',
   SECURITY_FAILURE: 'National Security Failure',
