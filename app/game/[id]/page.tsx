@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { dbToGame, dbToGameLog, getGameRow } from '@/lib/db-helpers'
 import { pickEvent, EVENTS } from '@/lib/game-engine'
+import { computePresidentialArchetype } from '@/lib/archetype-engine'
 import { getInactivityWarning } from '@/lib/guest-cleanup'
 import { getEnabledOAuthProviders } from '@/lib/oauth-providers'
 import { GameClient } from '@/components/game/GameClient'
@@ -51,6 +52,19 @@ export default async function GamePage({ params }: PageProps) {
   })
   const recentLogs = recentLogRows.map(dbToGameLog)
 
+  // A game that ends via a law proposal or an Address the Nation speech
+  // redirects here rather than showing its archetype inline the way a
+  // crisis-choice ending does (see GameClient's fresh 'gameover' phase) —
+  // computed here instead so every revisit of a finished game shows it,
+  // regardless of which action actually ended the term. Same recompute
+  // pattern as app/presidencies/page.tsx: archetype is a pure function of
+  // the final game state + its full log history, both already persisted.
+  let finishedGameArchetype = undefined
+  if (game.status !== 'ACTIVE') {
+    const allLogRows = await prisma.gameLog.findMany({ where: { gameId: id }, orderBy: { month: 'asc' } })
+    finishedGameArchetype = computePresidentialArchetype(game, allLogRows.map(dbToGameLog))
+  }
+
   // Guest sessions are the only ones subject to expiration — session.user.name
   // is 'Guest' for exactly the accounts lib/guest-cleanup.ts targets, so this
   // reuses a signal already present on the session rather than a new query.
@@ -66,6 +80,7 @@ export default async function GamePage({ params }: PageProps) {
       inactivityWarning={inactivityWarning}
       githubEnabled={githubEnabled}
       googleEnabled={googleEnabled}
+      finishedGameArchetype={finishedGameArchetype}
     />
   )
 }

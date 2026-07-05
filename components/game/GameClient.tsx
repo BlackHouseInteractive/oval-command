@@ -28,6 +28,7 @@ import { getAdvisorRecommendations } from '@/lib/advisor-engine'
 import { computeStatTrend, getTopMovers } from '@/lib/stat-trends'
 import { cn, monthToDate, AVATAR_COLORS } from '@/lib/utils'
 import type { InactivityWarning } from '@/lib/guest-cleanup'
+import type { PresidentialArchetype } from '@/lib/archetype-engine'
 import type { Game, GameLog, CrisisEvent, TurnResult, ProcessTurnResponse } from '@/types/game'
 
 interface GameClientProps {
@@ -37,6 +38,7 @@ interface GameClientProps {
   inactivityWarning: InactivityWarning | null
   githubEnabled: boolean
   googleEnabled: boolean
+  finishedGameArchetype?: PresidentialArchetype
 }
 
 type ViewState =
@@ -51,7 +53,7 @@ const SEVERITY_DOT: Record<string, string> = {
   opportunity: 'bg-[var(--color-good)]',
 }
 
-export function GameClient({ initialGame, initialEvent, recentLogs: initialRecentLogs, inactivityWarning, githubEnabled, googleEnabled }: GameClientProps) {
+export function GameClient({ initialGame, initialEvent, recentLogs: initialRecentLogs, inactivityWarning, githubEnabled, googleEnabled, finishedGameArchetype }: GameClientProps) {
   const router = useRouter()
   const [game, setGame] = useState(initialGame)
   const [event, setEvent] = useState(initialEvent)
@@ -127,7 +129,7 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
   if (view.phase === 'gameover' || view.phase === 'loaded-gameover') {
     const legacy = computeLegacyScore(game)
     const reason = view.phase === 'gameover' ? view.result.gameOver! : view.reason
-    const archetype = view.phase === 'gameover' ? view.result.archetype : undefined
+    const archetype = view.phase === 'gameover' ? view.result.archetype : finishedGameArchetype
     const gameoverTreatment = getRoomTreatment('/oval-office-bg.webp')
     return (
       <main className="mx-auto max-w-3xl px-6 py-12" style={roomAccentStyle('var(--color-brass)')}>
