@@ -1,7 +1,7 @@
 import { redirect, notFound } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { dbToGame } from '@/lib/db-helpers'
+import { dbToGame, dbToGameLog } from '@/lib/db-helpers'
 import { pickEvent, EVENTS } from '@/lib/game-engine'
 import { GameClient } from '@/components/game/GameClient'
 
@@ -39,5 +39,15 @@ export default async function GamePage({ params }: PageProps) {
     }
   }
 
-  return <GameClient initialGame={game} initialEvent={currentEvent} />
+  // Bounded, indexed query — used to derive per-stat trends/sparklines on
+  // read (see lib/stat-trends.ts) rather than persisting a second history
+  // array per stat.
+  const recentLogRows = await prisma.gameLog.findMany({
+    where: { gameId: id },
+    orderBy: { month: 'desc' },
+    take: 8,
+  })
+  const recentLogs = recentLogRows.map(dbToGameLog)
+
+  return <GameClient initialGame={game} initialEvent={currentEvent} recentLogs={recentLogs} />
 }

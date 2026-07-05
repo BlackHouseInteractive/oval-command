@@ -128,3 +128,45 @@ export function applyLawPassage(
 export function getLawById(lawId: string): Law | undefined {
   return LAWS.find(l => l.id === lawId)
 }
+
+export interface LegislativeOpportunity {
+  suggested?: Law
+  congressHighlyFavorable: boolean
+  message: string
+}
+
+/**
+ * Shared "is this a good moment to push legislation" check — extracted
+ * from components/game/LegislativeAlert.tsx so PresidentialInbox and the
+ * Propose Legislation action card can reuse the exact same condition
+ * instead of re-deriving it.
+ */
+export function getLegislativeOpportunity(game: Game): LegislativeOpportunity | null {
+  const congressFavorable = game.stats.congressSupport > 55
+  const availableLaws = LAWS.filter(l => !game.passedLaws.includes(l.id))
+  const noLawsThisTerm = game.passedLaws.length === 0
+  const congressHighlyFavorable = game.stats.congressSupport > 65
+
+  const shouldShow = availableLaws.length > 0 && (
+    (congressFavorable && noLawsThisTerm && game.currentMonth > 5) ||
+    (congressHighlyFavorable && game.currentMonth > 8)
+  )
+
+  if (!shouldShow) return null
+
+  const suggested = availableLaws
+    .filter(l => {
+      const base = 50 + (game.stats.congressSupport - 50) * 0.8
+      return base > 45 && l.cost !== 'high'
+    })
+    .sort((a, b) => {
+      const costOrder: Record<string, number> = { none: 0, low: 1, medium: 2, high: 3 }
+      return costOrder[a.cost] - costOrder[b.cost]
+    })[0]
+
+  const message = congressHighlyFavorable && !noLawsThisTerm
+    ? `Congress support is at ${Math.round(game.stats.congressSupport)}% — an unusually strong window.`
+    : `Congress is favorable at ${Math.round(game.stats.congressSupport)}% and you haven't passed any legislation yet.`
+
+  return { suggested, congressHighlyFavorable, message }
+}

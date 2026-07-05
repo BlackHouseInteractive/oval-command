@@ -36,7 +36,12 @@ export default async function GameLayout({ children, params }: LayoutProps) {
           part of what's changing between rooms). */}
       <RoomNav gameId={id} breakingEvent={breakingEvent} />
       <ViewTransition default="auto">
-        {children}
+        {/* Bottom padding clears the fixed bottom nav bar (and its breaking-
+            event banner, when present) so page content is never hidden
+            beneath it. */}
+        <div className="pb-24">
+          {children}
+        </div>
       </ViewTransition>
     </>
   )
