@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import { auth, signIn } from '@/lib/auth'
 import { getEnabledOAuthProviders } from '@/lib/oauth-providers'
 import { Seal } from '@/components/Seal'
@@ -110,6 +111,14 @@ export default async function LoginPage() {
 
         <p className="mt-8 text-center font-mono text-[10px] text-[var(--color-paper-faint)]">
           Sign in to save your legacy score and compare terms
+        </p>
+        <p className="mt-2 text-center">
+          <Link
+            href="/leaderboard"
+            className="font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-paper-faint)] underline-offset-2 hover:text-[var(--color-brass)] hover:underline"
+          >
+            View the Leaderboard
+          </Link>
         </p>
       </div>
     </main>

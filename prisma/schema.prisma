@@ -86,6 +86,7 @@ model Game {
   logs            GameLog[]
 
   @@index([userId, updatedAt])
+  @@index([status, legacyScore])
 }
 
 model GameLog {
