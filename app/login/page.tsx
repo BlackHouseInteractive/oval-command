@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import Image from 'next/image'
 import { auth, signIn } from '@/lib/auth'
+import { getEnabledOAuthProviders } from '@/lib/oauth-providers'
 import { Seal } from '@/components/Seal'
 
 export default async function LoginPage() {
@@ -9,11 +10,7 @@ export default async function LoginPage() {
     redirect('/dashboard')
   }
 
-  // Mirror the exact same env-var check lib/auth.ts uses to decide whether
-  // to register each OAuth provider — a button for an unregistered provider
-  // would error on click instead of signing in.
-  const githubEnabled = Boolean(process.env.GITHUB_ID && process.env.GITHUB_SECRET)
-  const googleEnabled = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET)
+  const { githubEnabled, googleEnabled } = getEnabledOAuthProviders()
   const anyOAuthEnabled = githubEnabled || googleEnabled
 
   return (

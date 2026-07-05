@@ -35,6 +35,8 @@ interface GameClientProps {
   initialEvent: CrisisEvent | null
   recentLogs: GameLog[]
   inactivityWarning: InactivityWarning | null
+  githubEnabled: boolean
+  googleEnabled: boolean
 }
 
 type ViewState =
@@ -49,7 +51,7 @@ const SEVERITY_DOT: Record<string, string> = {
   opportunity: 'bg-[var(--color-good)]',
 }
 
-export function GameClient({ initialGame, initialEvent, recentLogs: initialRecentLogs, inactivityWarning }: GameClientProps) {
+export function GameClient({ initialGame, initialEvent, recentLogs: initialRecentLogs, inactivityWarning, githubEnabled, googleEnabled }: GameClientProps) {
   const router = useRouter()
   const [game, setGame] = useState(initialGame)
   const [event, setEvent] = useState(initialEvent)
@@ -213,7 +215,7 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
 
       {view.phase === 'briefing' && inactivityWarning && (
         <div className="mt-4">
-          <GuestExpiryWarning warning={inactivityWarning} />
+          <GuestExpiryWarning warning={inactivityWarning} githubEnabled={githubEnabled} googleEnabled={googleEnabled} />
         </div>
       )}
 

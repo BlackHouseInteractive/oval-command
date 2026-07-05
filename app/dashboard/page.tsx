@@ -3,13 +3,23 @@ import { redirect } from 'next/navigation'
 import { auth, signOut } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { monthToDate } from '@/lib/utils'
+import { getEnabledOAuthProviders } from '@/lib/oauth-providers'
 import { SiteNav } from '@/components/SiteNav'
+import { SaveProgressPrompt } from '@/components/SaveProgressPrompt'
 import { PartyIcon } from '@/components/game/PartyIcon'
 import type { Party } from '@/types/game'
 
-export default async function DashboardPage() {
+interface DashboardPageProps {
+  searchParams: Promise<{ linked?: string }>
+}
+
+export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
+
+  const { linked } = await searchParams
+  const isGuest = session.user.name === 'Guest'
+  const { githubEnabled, googleEnabled } = getEnabledOAuthProviders()
 
   const games = await prisma.game.findMany({
     where: { userId: session.user.id },
@@ -45,6 +55,18 @@ export default async function DashboardPage() {
             Your Administrations
           </h1>
         </div>
+
+        {linked === '1' && (
+          <div className="mb-6 rounded-sm border border-[var(--color-good)]/40 bg-[var(--color-good-dim)]/40 px-4 py-3">
+            <p className="text-sm text-[var(--color-good)]">
+              Your progress has been saved to this account — it&rsquo;s no longer subject to guest expiration.
+            </p>
+          </div>
+        )}
+
+        {isGuest && (
+          <SaveProgressPrompt githubEnabled={githubEnabled} googleEnabled={googleEnabled} />
+        )}
 
         <div className="space-y-3">
           {(games as GameSummary[]).map((game) => (

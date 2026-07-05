@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { dbToGame, dbToGameLog } from '@/lib/db-helpers'
 import { pickEvent, EVENTS } from '@/lib/game-engine'
 import { getInactivityWarning } from '@/lib/guest-cleanup'
+import { getEnabledOAuthProviders } from '@/lib/oauth-providers'
 import { GameClient } from '@/components/game/GameClient'
 
 interface PageProps {
@@ -55,6 +56,7 @@ export default async function GamePage({ params }: PageProps) {
   // reuses a signal already present on the session rather than a new query.
   const isGuest = session.user.name === 'Guest'
   const inactivityWarning = isGuest ? getInactivityWarning(row.updatedAt) : null
+  const { githubEnabled, googleEnabled } = getEnabledOAuthProviders()
 
   return (
     <GameClient
@@ -62,6 +64,8 @@ export default async function GamePage({ params }: PageProps) {
       initialEvent={currentEvent}
       recentLogs={recentLogs}
       inactivityWarning={inactivityWarning}
+      githubEnabled={githubEnabled}
+      googleEnabled={googleEnabled}
     />
   )
 }
