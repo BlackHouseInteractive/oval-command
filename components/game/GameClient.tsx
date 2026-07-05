@@ -19,6 +19,7 @@ import { ApprovalGauge } from '@/components/game/ApprovalGauge'
 import { ActionCard, type ActionCardTag } from '@/components/game/ActionCard'
 import { PresidentialInbox } from '@/components/game/PresidentialInbox'
 import { DailyBrief } from '@/components/game/DailyBrief'
+import { OnboardingWelcome } from '@/components/game/OnboardingWelcome'
 import { getEventAccentColor, getRoomTreatment } from '@/lib/event-backgrounds'
 import { computeLegacyScore, checkGameOver, isBreakingEvent, computePassProbability, NPCS } from '@/lib/game-engine'
 import { getLegislativeOpportunity } from '@/lib/law-engine'
@@ -200,6 +201,12 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
         </div>
         <p className="mt-1 text-sm text-[var(--color-paper-faint)]">{monthLabel}</p>
       </div>
+
+      {view.phase === 'briefing' && (
+        <div className="mt-4">
+          <OnboardingWelcome />
+        </div>
+      )}
 
       <div className="mt-4">
         <TermProgress currentMonth={game.currentMonth} />
