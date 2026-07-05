@@ -4,10 +4,11 @@ import { auth, signOut } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { monthToDate } from '@/lib/utils'
 import { getEnabledOAuthProviders } from '@/lib/oauth-providers'
+import { computeLegacyScore } from '@/lib/game-engine'
 import { SiteNav } from '@/components/SiteNav'
 import { SaveProgressPrompt } from '@/components/SaveProgressPrompt'
 import { PartyIcon } from '@/components/game/PartyIcon'
-import type { Party } from '@/types/game'
+import type { Party, Game, GameStats, ActiveConflict } from '@/types/game'
 
 interface DashboardPageProps {
   searchParams: Promise<{ linked?: string }>
@@ -42,6 +43,26 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   if (!hasGames) {
     return <OvalOfficeEntry />
   }
+
+  // Recomputed the same way as app/presidencies/page.tsx (rather than read
+  // from the stored Game.legacyScore column) so the two never disagree if
+  // the scoring formula ever changes. Narrow select + cast since
+  // computeLegacyScore only reads these four fields off Game.
+  const finishedGames = await prisma.game.findMany({
+    where: { userId: session.user.id, status: { in: ['COMPLETE', 'GAMEOVER'] } },
+    select: { presidentName: true, stats: true, passedLaws: true, activeScandals: true, activeConflicts: true },
+  })
+  const personalBest = finishedGames.reduce<{ presidentName: string; score: number } | null>((best, g) => {
+    const legacy = computeLegacyScore({
+      stats:           g.stats as unknown as GameStats,
+      passedLaws:      (g.passedLaws as unknown as string[]) ?? [],
+      activeScandals:  g.activeScandals,
+      activeConflicts: (g.activeConflicts as unknown as ActiveConflict[]) ?? [],
+    } as Game)
+    return !best || legacy.total > best.score
+      ? { presidentName: g.presidentName, score: legacy.total }
+      : best
+  }, null)
 
   return (
     <>
@@ -96,6 +117,19 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               </p>
             </Link>
           ))}
+
+          {personalBest && (
+            <div className="rounded-sm border border-[var(--color-brass)]/30 bg-[var(--color-brass)]/5 px-4 py-3 text-center">
+              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-brass)]">
+                Personal Best
+              </div>
+              <p className="mt-1 text-sm text-[var(--color-paper-dim)]">
+                President {personalBest.presidentName} scored{' '}
+                <span className="font-mono font-semibold text-[var(--color-paper)]">{personalBest.score}</span>.
+                Can you beat it?
+              </p>
+            </div>
+          )}
 
           <Link
             href="/new-game"

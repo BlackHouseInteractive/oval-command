@@ -516,10 +516,13 @@ export function computeLegacyScore(game: Game): LegacyScore {
   const scandalDeduct = Math.min(25, activeScandals * 5)
   const warDeduct      = activeConflicts.filter(c => c.level >= 4).length * 8
 
-  const total = Math.max(0, Math.min(100,
+  // lawPts (passedLaws.length * 1.5) is the only term here not already an
+  // integer — round the total rather than let a fractional score (e.g.
+  // 81.5) leak into what every display treats as a whole number.
+  const total = Math.max(0, Math.min(100, Math.round(
     approvalPts + economyPts + securityPts + reputationPts +
     lawPts - scandalDeduct - warDeduct
-  ))
+  )))
 
   const rawVote    = 45 + (stats.approval - 50) * 0.4 + (stats.economy - 50) * 0.2
   const votePercent = Math.max(30, Math.min(70, Math.round(rawVote)))
