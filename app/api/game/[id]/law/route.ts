@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { dbToGame, gameToDbUpdate, toJson, safeErrorMessage } from '@/lib/db-helpers'
-import { getLawById, resolveLawPassage, applyLawPassage, canUseNpcAbility } from '@/lib/law-engine'
+import { getLawById, resolveLawPassage, applyLawPassage, canUseNpcAbility, resolveLawNpcReactions } from '@/lib/law-engine'
 import { applyDelta, pickEvent, advanceMonth } from '@/lib/game-engine'
 import { generateLawHeadline } from '@/lib/headlines'
 import { unlockAchievements } from '@/lib/achievements'
 import type { Headline } from '@/lib/headlines'
-import type { GameOverReason } from '@/types/game'
+import type { GameOverReason, NpcReactionResult } from '@/types/game'
 
 interface Params { params: Promise<{ id: string }> }
 
@@ -68,6 +68,7 @@ export async function POST(req: NextRequest, { params }: Params) {
   let updatedGame: ReturnType<typeof applyLawPassage>
   let cascadeHeadlines: Headline[]
   let gameOver: GameOverReason | null = null
+  let npcReactions: NpcReactionResult[] = []
   try {
     passageResult = resolveLawPassage(law, game, { useNpcAbility })
     updatedGame = applyLawPassage(game, law, passageResult)
@@ -77,6 +78,9 @@ export async function POST(req: NextRequest, { params }: Params) {
         ...updatedGame,
         stats: applyDelta(updatedGame.stats, law.effects.onPass),
       }
+      const { reactions, newRelationships } = resolveLawNpcReactions(updatedGame, law)
+      npcReactions = reactions
+      updatedGame = { ...updatedGame, npcRelationships: newRelationships }
     }
 
     const advance = advanceMonth(updatedGame)
@@ -118,7 +122,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     )
   }
 
-  const headline = generateLawHeadline(law.title, law.category, passageResult.passed, passageResult.usedAbility)
+  const headline = generateLawHeadline(law.title, law.category, law.sector, passageResult.passed, passageResult.usedAbility)
   const newAchievements = gameOver ? await unlockAchievements(session.user.id, updatedGame, gameOver) : []
 
   return NextResponse.json({
@@ -128,5 +132,6 @@ export async function POST(req: NextRequest, { params }: Params) {
     cascadeHeadlines,
     nextEvent,
     newAchievements,
+    npcReactions,
   })
 }

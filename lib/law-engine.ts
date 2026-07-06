@@ -17,7 +17,7 @@
  */
 
 import { LAWS, NPCS, computePassProbability, rollLawPassage } from '@/lib/game-engine'
-import type { Game, Law } from '@/types/game'
+import type { Game, Law, NpcReactionResult } from '@/types/game'
 
 export interface LawPassageOptions {
   /** If set, attempt to use this NPC's special ability to guarantee passage */
@@ -127,6 +127,42 @@ export function applyLawPassage(
 /** Convenience: look up a law by id from the canonical LAWS list */
 export function getLawById(lawId: string): Law | undefined {
   return LAWS.find(l => l.id === lawId)
+}
+
+/**
+ * Reacts NPCs to a just-passed law using that law's own `npc_reactions`
+ * quotes — deliberately separate from the generic processNpcReactions
+ * engine in game-engine.ts, which draws a RANDOM line from an NPC's
+ * current relationship-tier dialogue rather than a quote specific to what
+ * just happened. Every law already carries 2-3 hand-written NPC quotes in
+ * its data; this is what actually surfaces them.
+ */
+export function resolveLawNpcReactions(
+  game: Game,
+  law: Law
+): { reactions: NpcReactionResult[]; newRelationships: Record<string, number> } {
+  const relationships = { ...game.npcRelationships }
+  const reactions: NpcReactionResult[] = []
+
+  for (const [npcId, reaction] of Object.entries(law.npc_reactions ?? {})) {
+    const npc = NPCS.find(n => n.id === npcId)
+    if (!npc) continue
+
+    const current = relationships[npcId] ?? npc.relationship.start
+    const next = Math.max(npc.relationship.min, Math.min(npc.relationship.max, current + reaction.relationship))
+    relationships[npcId] = next
+
+    reactions.push({
+      npcId,
+      npcName:           npc.name,
+      shortName:         npc.shortName,
+      quote:             reaction.quote,
+      relationshipDelta: reaction.relationship,
+      newRelationship:   next,
+    })
+  }
+
+  return { reactions, newRelationships: relationships }
 }
 
 export interface LegislativeOpportunity {
