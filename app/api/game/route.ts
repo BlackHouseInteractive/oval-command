@@ -4,8 +4,9 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { createInitialGame, pickEvent } from '@/lib/game-engine'
 import { ALL_PERKS } from '@/lib/achievements'
+import { resolveCampaignChoices } from '@/lib/campaign'
 import { dbToGame, toJson, toUnlockedAchievements } from '@/lib/db-helpers'
-import type { CreateGameRequest } from '@/types/game'
+import type { CreateGameRequest, StatDelta } from '@/types/game'
 
 // Well above what any real player would accumulate — this exists purely to
 // bound storage/query cost against a scripted signed-in user spamming
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  const { presidentName, party, difficulty = 'normal', perkId } = body
+  const { presidentName, party, difficulty = 'normal', perkId, campaignChoiceIds } = body
 
   if (!presidentName?.trim() || presidentName.trim().length > 60) {
     return NextResponse.json({ error: 'President name must be 1–60 characters' }, { status: 400 })
@@ -45,7 +46,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid difficulty' }, { status: 400 })
   }
 
-  let perkBonus = undefined
+  let perkBonus: StatDelta | undefined = undefined
   if (perkId) {
     const perk = ALL_PERKS.find(p => p.id === perkId)
     if (!perk) {
@@ -59,7 +60,15 @@ export async function POST(req: NextRequest) {
     perkBonus = perk.statBonus
   }
 
-  const initial = createInitialGame(session.user.id, presidentName.trim(), party, difficulty, perkBonus)
+  // Re-derived from the real scenario/option list, never trusted as a raw
+  // delta from the client — see lib/campaign.ts.
+  const campaignBonus = Array.isArray(campaignChoiceIds) ? resolveCampaignChoices(campaignChoiceIds) : {}
+  const combinedBonus: StatDelta = { ...perkBonus }
+  for (const [key, value] of Object.entries(campaignBonus) as [keyof StatDelta, number][]) {
+    combinedBonus[key] = ((combinedBonus[key] ?? 0) as number) + value
+  }
+
+  const initial = createInitialGame(session.user.id, presidentName.trim(), party, difficulty, combinedBonus)
 
   let dbGame
   try {

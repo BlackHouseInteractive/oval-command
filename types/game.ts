@@ -423,10 +423,11 @@ export interface UnlockedAchievement {
 // ============================================================
 
 export interface CreateGameRequest {
-  presidentName: string
-  party:         Party
-  difficulty?:   Difficulty
-  perkId?:       string
+  presidentName:     string
+  party:             Party
+  difficulty?:       Difficulty
+  perkId?:           string
+  campaignChoiceIds?: string[]
 }
 
 export interface CreateGameResponse {

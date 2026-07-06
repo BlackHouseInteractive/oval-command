@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { Seal } from '@/components/Seal'
 import { PartyIcon } from '@/components/game/PartyIcon'
+import { CAMPAIGN_SCENARIOS, resolveCampaignChoices, computeElectionResult } from '@/lib/campaign'
 import type { Party, Difficulty, Perk, CreateGameResponse } from '@/types/game'
 
 const PARTIES: { value: Party; label: string; description: string }[] = [
@@ -18,16 +19,26 @@ interface NewGameFormProps {
   unlockedPerks: Perk[]
 }
 
+// The campaign choices and election-night reveal are a lead-in before the
+// actual game exists — nothing is persisted until "Take the Oath of
+// Office" fires the real POST /api/game, so this whole flow lives as
+// client-only phase state rather than separate routes.
+type Phase =
+  | { step: 'setup' }
+  | { step: 'campaign'; scenarioIndex: number; choiceIds: string[] }
+  | { step: 'election-night'; choiceIds: string[] }
+
 export function NewGameForm({ unlockedPerks }: NewGameFormProps) {
   const router = useRouter()
   const [presidentName, setPresidentName] = useState('')
   const [party, setParty] = useState<Party>('DEMOCRAT')
   const [difficulty, setDifficulty] = useState<Difficulty>('normal')
   const [perkId, setPerkId] = useState<string | null>(null)
+  const [phase, setPhase] = useState<Phase>({ step: 'setup' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSetupSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
 
@@ -41,12 +52,47 @@ export function NewGameForm({ unlockedPerks }: NewGameFormProps) {
       return
     }
 
+    setPhase({ step: 'campaign', scenarioIndex: 0, choiceIds: [] })
+  }
+
+  function handleCampaignChoice(optionId: string) {
+    if (phase.step !== 'campaign') return
+    const choiceIds = [...phase.choiceIds, optionId]
+    if (phase.scenarioIndex + 1 < CAMPAIGN_SCENARIOS.length) {
+      setPhase({ step: 'campaign', scenarioIndex: phase.scenarioIndex + 1, choiceIds })
+    } else {
+      setPhase({ step: 'election-night', choiceIds })
+    }
+  }
+
+  function handleBack() {
+    if (phase.step === 'campaign') {
+      if (phase.scenarioIndex === 0) {
+        setPhase({ step: 'setup' })
+      } else {
+        setPhase({ step: 'campaign', scenarioIndex: phase.scenarioIndex - 1, choiceIds: phase.choiceIds.slice(0, -1) })
+      }
+    } else if (phase.step === 'election-night') {
+      setPhase({ step: 'campaign', scenarioIndex: CAMPAIGN_SCENARIOS.length - 1, choiceIds: phase.choiceIds.slice(0, -1) })
+    }
+  }
+
+  async function handleTakeOath() {
+    if (phase.step !== 'election-night') return
     setLoading(true)
+    setError(null)
+
     try {
       const res = await fetch('/api/game', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ presidentName: trimmed, party, difficulty, perkId: perkId ?? undefined }),
+        body: JSON.stringify({
+          presidentName: presidentName.trim(),
+          party,
+          difficulty,
+          perkId: perkId ?? undefined,
+          campaignChoiceIds: phase.choiceIds,
+        }),
       })
 
       if (!res.ok) {
@@ -60,6 +106,107 @@ export function NewGameForm({ unlockedPerks }: NewGameFormProps) {
       setError(err instanceof Error ? err.message : 'Something went wrong.')
       setLoading(false)
     }
+  }
+
+  if (phase.step === 'campaign') {
+    const scenario = CAMPAIGN_SCENARIOS[phase.scenarioIndex]
+    return (
+      <main className="flex min-h-screen items-center justify-center px-6 py-12">
+        <div className="w-full max-w-md">
+          <button
+            type="button"
+            onClick={handleBack}
+            className="font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--color-paper-faint)] hover:text-[var(--color-paper)]"
+          >
+            ← Back
+          </button>
+
+          <div className="mt-4 text-center">
+            <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-brass)]">
+              The Campaign · {phase.scenarioIndex + 1} of {CAMPAIGN_SCENARIOS.length}
+            </div>
+            <h1 className="mt-2 font-[family-name:var(--font-display)] text-2xl font-semibold text-[var(--color-paper)]">
+              {scenario.prompt}
+            </h1>
+            <p className="mt-3 text-sm leading-relaxed text-[var(--color-paper-dim)]">
+              {scenario.flavor}
+            </p>
+          </div>
+
+          <div className="mt-8 space-y-2.5">
+            {scenario.options.map(option => (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => handleCampaignChoice(option.id)}
+                className="w-full rounded-sm border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-4 py-3.5 text-left text-sm text-[var(--color-paper)] transition-colors hover:border-[var(--color-brass-dim)] hover:bg-[var(--color-surface-2)]"
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </main>
+    )
+  }
+
+  if (phase.step === 'election-night') {
+    // Purely a client-side reveal computed from the same pure functions
+    // the server will use to validate/apply the real bonus on submit —
+    // there's nothing to trust here yet since no game exists.
+    const result = computeElectionResult(
+      `${presidentName.trim()}:${party}:${difficulty}`,
+      difficulty,
+      resolveCampaignChoices(phase.choiceIds)
+    )
+
+    return (
+      <main className="flex min-h-screen items-center justify-center px-6 py-12">
+        <div className="w-full max-w-md text-center">
+          <button
+            type="button"
+            onClick={handleBack}
+            className="font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--color-paper-faint)] hover:text-[var(--color-paper)]"
+          >
+            ← Back
+          </button>
+
+          <div className="mt-5 font-mono text-[10px] uppercase tracking-[0.35em] text-[var(--color-brass)]">
+            Election Night
+          </div>
+          <div className="mt-5 flex justify-center">
+            <PartyIcon party={party} size={40} />
+          </div>
+          <div className="mt-5 font-mono text-6xl font-semibold tabular-nums text-[var(--color-paper)]">
+            {result.votePercent}%
+          </div>
+          <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-brass)]">
+            {result.marginLabel}
+          </div>
+          <p className="mx-auto mt-5 max-w-sm text-[15px] leading-relaxed text-[var(--color-paper-dim)]">
+            {result.narrative}
+          </p>
+          <h2 className="mt-8 font-[family-name:var(--font-display)] text-xl font-semibold text-[var(--color-paper)]">
+            President {presidentName.trim()}
+          </h2>
+
+          {error && (
+            <p className="mt-5 rounded-sm bg-[var(--color-bad-dim)] px-3.5 py-2.5 text-sm text-[var(--color-bad)]">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="button"
+            onClick={handleTakeOath}
+            disabled={loading}
+            className="mt-8 w-full rounded-sm border border-[var(--color-brass-dim)] bg-[var(--color-brass)] py-3 text-sm font-medium text-[var(--color-ink)] transition-opacity hover:opacity-90 disabled:opacity-50"
+          >
+            {loading ? 'Preparing the briefing…' : 'Take the Oath of Office'}
+          </button>
+        </div>
+      </main>
+    )
   }
 
   return (
@@ -77,11 +224,11 @@ export function NewGameForm({ unlockedPerks }: NewGameFormProps) {
             New Term
           </div>
           <h1 className="mt-2 font-[family-name:var(--font-display)] text-2xl font-semibold text-[var(--color-paper)]">
-            Take the Oath of Office
+            Announce Your Candidacy
           </h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        <form onSubmit={handleSetupSubmit} className="mt-8 space-y-6">
           <div>
             <label htmlFor="presidentName" className="font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--color-paper-faint)]">
               President&rsquo;s Name
@@ -201,10 +348,9 @@ export function NewGameForm({ unlockedPerks }: NewGameFormProps) {
 
           <button
             type="submit"
-            disabled={loading}
-            className="w-full rounded-sm border border-[var(--color-brass-dim)] bg-[var(--color-brass)] py-3 text-sm font-medium text-[var(--color-ink)] transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="w-full rounded-sm border border-[var(--color-brass-dim)] bg-[var(--color-brass)] py-3 text-sm font-medium text-[var(--color-ink)] transition-opacity hover:opacity-90"
           >
-            {loading ? 'Preparing the briefing…' : 'Begin Your Term'}
+            Continue to the Campaign
           </button>
         </form>
       </div>
