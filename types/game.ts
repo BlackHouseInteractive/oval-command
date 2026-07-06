@@ -394,6 +394,7 @@ export interface TurnResult {
   gameOver?:    GameOverReason
   archetype?:   import('@/lib/archetype-engine').PresidentialArchetype
   newAchievements?: Achievement[]
+  specialCovers?: import('@/lib/magazine-covers').CoverContent[]
 }
 
 export interface LegacyScore {

@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { processEventTurn, pickEvent, isEventEligible, EVENTS } from '@/lib/game-engine'
+import { processEventTurn, pickEvent, isEventEligible, EVENTS, computeLegacyScore } from '@/lib/game-engine'
 import { computePresidentialArchetype } from '@/lib/archetype-engine'
 import { unlockAchievements } from '@/lib/achievements'
+import { computeSpecialEditionCovers, type CoverContent } from '@/lib/magazine-covers'
 import { dbToGame, gameToDbUpdate, toJson, safeErrorMessage } from '@/lib/db-helpers'
 import type { ProcessTurnRequest, GameLog, Achievement } from '@/types/game'
 
@@ -97,6 +98,7 @@ export async function POST(req: NextRequest, { params }: Params) {
 
   let archetype = undefined
   let newAchievements: Achievement[] = []
+  let specialCovers: CoverContent[] = []
   if (result.gameOver) {
     const allLogs = await prisma.gameLog.findMany({
       where: { gameId: id },
@@ -116,7 +118,8 @@ export async function POST(req: NextRequest, { params }: Params) {
     }))
     archetype = computePresidentialArchetype(result.game, gameLogs)
     newAchievements = await unlockAchievements(session.user.id, result.game, result.gameOver)
+    specialCovers = computeSpecialEditionCovers(result.game, result.gameOver, computeLegacyScore(result.game))
   }
 
-  return NextResponse.json({ ...result, archetype, newAchievements, nextEvent })
+  return NextResponse.json({ ...result, archetype, newAchievements, specialCovers, nextEvent })
 }

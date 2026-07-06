@@ -7,6 +7,7 @@ import { SPEECH_THEMES } from '@/lib/address-nation'
 import { AchievementUnlockToast } from '@/components/game/AchievementUnlockToast'
 import type { SpeechTheme } from '@/lib/headlines'
 import type { Achievement } from '@/types/game'
+import type { CoverContent } from '@/lib/magazine-covers'
 
 interface PressConferencePanelProps {
   gameId: string
@@ -18,6 +19,8 @@ interface SpeechResult {
   narrative: string
   headlineText: string
   newAchievements: Achievement[]
+  specialCovers: CoverContent[]
+  month: number
 }
 
 export function PressConferencePanel({ gameId, pendingBriefingTitle }: PressConferencePanelProps) {
@@ -59,6 +62,8 @@ export function PressConferencePanel({ gameId, pendingBriefingTitle }: PressConf
         narrative: data.narrative,
         headlineText: data.headline.text,
         newAchievements: data.newAchievements ?? [],
+        specialCovers: data.specialCovers ?? [],
+        month: data.game.currentMonth,
       })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong.')
@@ -81,9 +86,13 @@ export function PressConferencePanel({ gameId, pendingBriefingTitle }: PressConf
         </span>
         <p className="mt-1.5 text-sm text-[var(--color-paper-dim)]">{result.narrative}</p>
         <p className="mt-2 text-[12px] italic text-[var(--color-paper-faint)]">“{result.headlineText}”</p>
-        {result.newAchievements.length > 0 && (
+        {(result.newAchievements.length > 0 || result.specialCovers.length > 0) && (
           <div className="mt-3">
-            <AchievementUnlockToast achievements={result.newAchievements} />
+            <AchievementUnlockToast
+              achievements={result.newAchievements}
+              specialCovers={result.specialCovers}
+              month={result.month}
+            />
           </div>
         )}
         <button

@@ -12,6 +12,7 @@ import { getRoomTreatment } from '@/lib/event-backgrounds'
 import { LAW_SECTOR_META, LAW_SECTORS } from '@/lib/law-sectors'
 import { cn } from '@/lib/utils'
 import type { Game, Law, Headline, Achievement, LawSector, NpcReactionResult } from '@/types/game'
+import type { CoverContent } from '@/lib/magazine-covers'
 
 interface LawWithOdds {
   law: Law
@@ -42,6 +43,8 @@ interface ProposeResult {
   lawTitle: string
   newAchievements: Achievement[]
   npcReactions: NpcReactionResult[]
+  specialCovers: CoverContent[]
+  month: number
 }
 
 export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUseSpeakerAbility, pendingBriefingTitle }: CongressClientProps) {
@@ -116,6 +119,8 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
         lawTitle,
         newAchievements: data.newAchievements ?? [],
         npcReactions: data.npcReactions ?? [],
+        specialCovers: data.specialCovers ?? [],
+        month: data.game.currentMonth,
       })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong.')
@@ -163,9 +168,13 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
 
             <NpcReactionList reactions={result.npcReactions} />
 
-            {result.newAchievements.length > 0 && (
+            {(result.newAchievements.length > 0 || result.specialCovers.length > 0) && (
               <div className="mt-5 text-left">
-                <AchievementUnlockToast achievements={result.newAchievements} />
+                <AchievementUnlockToast
+                  achievements={result.newAchievements}
+                  specialCovers={result.specialCovers}
+                  month={result.month}
+                />
               </div>
             )}
 

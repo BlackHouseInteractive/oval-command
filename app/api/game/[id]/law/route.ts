@@ -3,9 +3,10 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { dbToGame, gameToDbUpdate, toJson, safeErrorMessage } from '@/lib/db-helpers'
 import { getLawById, resolveLawPassage, applyLawPassage, canUseNpcAbility, resolveLawNpcReactions } from '@/lib/law-engine'
-import { applyDelta, pickEvent, advanceMonth } from '@/lib/game-engine'
+import { applyDelta, pickEvent, advanceMonth, computeLegacyScore } from '@/lib/game-engine'
 import { generateLawHeadline } from '@/lib/headlines'
 import { unlockAchievements } from '@/lib/achievements'
+import { computeSpecialEditionCovers, type CoverContent } from '@/lib/magazine-covers'
 import type { Headline } from '@/lib/headlines'
 import type { GameOverReason, NpcReactionResult } from '@/types/game'
 
@@ -124,6 +125,9 @@ export async function POST(req: NextRequest, { params }: Params) {
 
   const headline = generateLawHeadline(law.title, law.category, law.sector, passageResult.passed, passageResult.usedAbility)
   const newAchievements = gameOver ? await unlockAchievements(session.user.id, updatedGame, gameOver) : []
+  const specialCovers: CoverContent[] = gameOver
+    ? computeSpecialEditionCovers(updatedGame, gameOver, computeLegacyScore(updatedGame))
+    : []
 
   return NextResponse.json({
     game: updatedGame,
@@ -132,6 +136,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     cascadeHeadlines,
     nextEvent,
     newAchievements,
+    specialCovers,
     npcReactions,
   })
 }

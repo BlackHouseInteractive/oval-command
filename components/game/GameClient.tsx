@@ -147,9 +147,13 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
           passedLaws={game.passedLaws}
           onNewGame={() => router.push('/new-game')}
         />
-        {view.phase === 'gameover' && (view.result.newAchievements?.length ?? 0) > 0 && (
+        {view.phase === 'gameover' && (
           <div className="mt-4">
-            <AchievementUnlockToast achievements={view.result.newAchievements ?? []} />
+            <AchievementUnlockToast
+              achievements={view.result.newAchievements ?? []}
+              specialCovers={view.result.specialCovers ?? []}
+              month={game.currentMonth}
+            />
           </div>
         )}
         {game.approvalHistory.length >= 2 && (

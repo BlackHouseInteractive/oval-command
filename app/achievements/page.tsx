@@ -2,9 +2,10 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { SiteNav } from '@/components/SiteNav'
+import { MagazineCover } from '@/components/MagazineCover'
 import { ACHIEVEMENTS, computeAchievementProgress } from '@/lib/achievements'
-import { cn } from '@/lib/utils'
 import { dbToGame, toUnlockedAchievements } from '@/lib/db-helpers'
+import type { UnlockedAchievement } from '@/types/game'
 
 export default async function AchievementsPage() {
   const session = await auth()
@@ -17,6 +18,14 @@ export default async function AchievementsPage() {
 
   const unlocked = toUnlockedAchievements(user?.unlockedAchievements)
   const unlockedById = new Map(unlocked.map(u => [u.id, u]))
+
+  const unlockedList: { a: (typeof ACHIEVEMENTS)[number]; earned: UnlockedAchievement }[] = []
+  const lockedList: (typeof ACHIEVEMENTS)[number][] = []
+  for (const a of ACHIEVEMENTS) {
+    const earned = unlockedById.get(a.id)
+    if (earned) unlockedList.push({ a, earned })
+    else lockedList.push(a)
+  }
 
   // Progress bars reflect whichever ACTIVE game the player touched most
   // recently — if they have several in progress, that's the one they're
@@ -43,68 +52,80 @@ export default async function AchievementsPage() {
           </p>
         </div>
 
-        <div className="space-y-3">
-          {ACHIEVEMENTS.map(a => {
-            const earned = unlockedById.get(a.id)
-            const isUnlocked = Boolean(earned)
-            const prog = !isUnlocked ? progress?.[a.id] : undefined
-            return (
-              <div
-                key={a.id}
-                className={cn(
-                  'rounded-sm border px-5 py-4 backdrop-blur-sm',
-                  isUnlocked
-                    ? 'border-[var(--color-brass)] bg-[var(--color-surface-2)]'
-                    : 'border-[var(--color-border)] bg-[var(--color-surface)] opacity-50'
-                )}
-              >
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">{a.icon}</span>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <span className={cn('text-sm font-medium', isUnlocked ? 'text-[var(--color-paper)]' : 'text-[var(--color-paper-dim)]')}>
-                        {a.title}
-                      </span>
-                      {isUnlocked ? (
-                        <span className="font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-brass)]">
-                          Unlocked
-                        </span>
-                      ) : (
+        {unlockedList.length > 0 && (
+          <div className="mb-8">
+            <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--color-brass)]">
+              Magazine Covers
+            </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {unlockedList.map(({ a, earned }) => (
+                <div key={a.id}>
+                  <MagazineCover
+                    icon={a.icon}
+                    headline={a.title}
+                    subhead={a.description}
+                    issueDate={new Date(earned.earnedAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                  />
+                  {a.perk && (
+                    <p className="mt-1.5 text-[11px] text-[var(--color-brass)]">
+                      Perk: {a.perk.label} — {a.perk.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {lockedList.length > 0 && (
+          <div className="space-y-3">
+            {unlockedList.length > 0 && (
+              <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--color-paper-faint)]">
+                Locked
+              </div>
+            )}
+            {lockedList.map(a => {
+              const prog = progress?.[a.id]
+              return (
+                <div
+                  key={a.id}
+                  className="rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-4 opacity-50 backdrop-blur-sm"
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">{a.icon}</span>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-[var(--color-paper-dim)]">{a.title}</span>
                         <span className="font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-paper-faint)]">
                           Locked
                         </span>
+                      </div>
+                      <p className="mt-1 text-xs text-[var(--color-paper-faint)]">{a.description}</p>
+                      {prog && (
+                        <div className="mt-2">
+                          <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--color-surface-2)]">
+                            <div
+                              className="h-full rounded-full bg-[var(--color-brass)]"
+                              style={{ width: `${Math.min(100, (prog.current / prog.target) * 100)}%` }}
+                            />
+                          </div>
+                          <p className="mt-1 font-mono text-[10px] text-[var(--color-paper-faint)]">
+                            {prog.current} / {prog.target}
+                          </p>
+                        </div>
+                      )}
+                      {a.perk && (
+                        <p className="mt-2 text-[11px] text-[var(--color-brass)]">
+                          Perk: {a.perk.label} — {a.perk.description}
+                        </p>
                       )}
                     </div>
-                    <p className="mt-1 text-xs text-[var(--color-paper-faint)]">{a.description}</p>
-                    {prog && (
-                      <div className="mt-2">
-                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--color-surface-2)]">
-                          <div
-                            className="h-full rounded-full bg-[var(--color-brass)]"
-                            style={{ width: `${Math.min(100, (prog.current / prog.target) * 100)}%` }}
-                          />
-                        </div>
-                        <p className="mt-1 font-mono text-[10px] text-[var(--color-paper-faint)]">
-                          {prog.current} / {prog.target}
-                        </p>
-                      </div>
-                    )}
-                    {isUnlocked && earned && (
-                      <p className="mt-1 font-mono text-[10px] text-[var(--color-paper-faint)]">
-                        Earned {new Date(earned.earnedAt).toLocaleDateString()}
-                      </p>
-                    )}
-                    {a.perk && (
-                      <p className="mt-2 text-[11px] text-[var(--color-brass)]">
-                        Perk: {a.perk.label} — {a.perk.description}
-                      </p>
-                    )}
                   </div>
                 </div>
-              </div>
-            )
-          })}
-        </div>
+              )
+            })}
+          </div>
+        )}
       </main>
     </>
   )

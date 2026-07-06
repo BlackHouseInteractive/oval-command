@@ -3,9 +3,10 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { dbToGame, gameToDbUpdate, toJson, safeErrorMessage } from '@/lib/db-helpers'
 import { resolveSpeech, SPEECH_THEMES } from '@/lib/address-nation'
-import { applyDelta, pickEvent, advanceMonth } from '@/lib/game-engine'
+import { applyDelta, pickEvent, advanceMonth, computeLegacyScore } from '@/lib/game-engine'
 import { generateSpeechHeadline, type SpeechTheme } from '@/lib/headlines'
 import { unlockAchievements } from '@/lib/achievements'
+import { computeSpecialEditionCovers, type CoverContent } from '@/lib/magazine-covers'
 import type { Headline } from '@/lib/headlines'
 import type { StatDelta, GameOverReason } from '@/types/game'
 
@@ -97,6 +98,9 @@ export async function POST(req: NextRequest, { params }: Params) {
 
   const headline = generateSpeechHeadline(theme, effective)
   const newAchievements = gameOver ? await unlockAchievements(session.user.id, updatedGame, gameOver) : []
+  const specialCovers: CoverContent[] = gameOver
+    ? computeSpecialEditionCovers(updatedGame, gameOver, computeLegacyScore(updatedGame))
+    : []
 
   return NextResponse.json({
     game: updatedGame,
@@ -106,5 +110,6 @@ export async function POST(req: NextRequest, { params }: Params) {
     cascadeHeadlines,
     nextEvent,
     newAchievements,
+    specialCovers,
   })
 }

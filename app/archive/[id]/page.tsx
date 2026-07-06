@@ -4,13 +4,15 @@ import Link from 'next/link'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { dbToGame, dbToGameLog, getGameRow } from '@/lib/db-helpers'
-import { computeLegacyScore } from '@/lib/game-engine'
+import { checkGameOver, computeLegacyScore } from '@/lib/game-engine'
 import { computePresidentialArchetype } from '@/lib/archetype-engine'
 import { computeSectorBreakdown } from '@/lib/law-sectors'
 import { SECRET_FILES } from '@/lib/secret-files'
+import { computeSpecialEditionCovers } from '@/lib/magazine-covers'
 import { Seal } from '@/components/Seal'
 import { SiteNav } from '@/components/SiteNav'
 import { SecretFileCard } from '@/components/SecretFileCard'
+import { MagazineCover } from '@/components/MagazineCover'
 import { monthToDate } from '@/lib/utils'
 import type { GameLog } from '@/types/game'
 
@@ -35,6 +37,13 @@ export default async function ArchivePage({ params }: PageProps) {
   const archetype = computePresidentialArchetype(game, logs)
   const sectorBreakdown = computeSectorBreakdown(game.passedLaws)
   const secretFilesUnlocked = SECRET_FILES.filter(f => Boolean(game.flags[f.requiresFlag])).length
+
+  // checkGameOver is a pure function of final persisted stats, so re-running
+  // it here reliably reconstructs the original ending reason without
+  // needing to have persisted it separately.
+  const magazineCovers = game.status === 'ACTIVE'
+    ? []
+    : computeSpecialEditionCovers(game, checkGameOver(game) ?? 'TERM_COMPLETE', legacy)
 
   const startYear = Number(monthToDate(1).split(' ')[1])
   const endYear = Number(monthToDate(game.currentMonth).split(' ')[1])
@@ -69,7 +78,11 @@ export default async function ArchivePage({ params }: PageProps) {
 
         <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
           <ArchiveShelf title="Artifacts">
-            <ShelfPlaceholder label="Magazine Covers" />
+            {magazineCovers.length > 0 ? (
+              <ShelfCount label="Magazine Covers" current={magazineCovers.length} />
+            ) : (
+              <ShelfPlaceholder label="Magazine Covers" />
+            )}
             <ShelfCount label="Secret Files" current={secretFilesUnlocked} total={SECRET_FILES.length} />
           </ArchiveShelf>
 
@@ -84,6 +97,29 @@ export default async function ArchivePage({ params }: PageProps) {
             <ShelfLink href={`/game/${game.id}/diplomatic-office`} label="Foreign Affairs" />
             <ShelfLink href="/achievements" label="Achievements" />
           </ArchiveShelf>
+        </div>
+
+        <div className="mt-8">
+          <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--color-paper-faint)]">
+            Magazine Covers
+          </div>
+          {magazineCovers.length > 0 ? (
+            <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {magazineCovers.map(c => (
+                <MagazineCover
+                  key={c.id}
+                  icon={c.icon}
+                  headline={c.headline}
+                  subhead={c.subhead}
+                  issueDate={monthToDate(game.currentMonth)}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="mt-2 text-sm text-[var(--color-paper-faint)]">
+              No covers yet — check back once this administration concludes.
+            </p>
+          )}
         </div>
 
         <div className="mt-8">
@@ -133,10 +169,10 @@ function ShelfLink({ href, label }: { href: string; label: string }) {
   )
 }
 
-function ShelfCount({ label, current, total }: { label: string; current: number; total: number }) {
+function ShelfCount({ label, current, total }: { label: string; current: number; total?: number }) {
   return (
     <div className="rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 text-sm text-[var(--color-paper-dim)] backdrop-blur-sm">
-      {label} <span className="font-mono text-[var(--color-brass)]">{current}/{total}</span>
+      {label} <span className="font-mono text-[var(--color-brass)]">{total ? `${current}/${total}` : current}</span>
     </div>
   )
 }
