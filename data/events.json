@@ -8585,5 +8585,1355 @@
         "outcome": "The utilities pushed back hard in the press, but the public mostly agreed with the White House on this one."
       }
     ]
+  },
+  {
+    "id": "treasury_resignation_threat",
+    "title": "Treasury Secretary Threatens Resignation Over Fiscal Policy",
+    "category": "scandal",
+    "description": "Treasury Secretary Eleanor Voss has told senior staff she's prepared to resign unless the administration changes course on spending. The story has already reached three reporters.",
+    "triggers": {
+      "always_available": true
+    },
+    "sets_flags": [],
+    "requires_flags": [
+      "milestone_treasury_secretary_estranged"
+    ],
+    "isHistorical": true,
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Meet with her privately and adjust course",
+        "effects": {
+          "partyUnity": 2,
+          "economy": -2,
+          "congressSupport": 1
+        },
+        "sets_flags": [],
+        "outcome": "The private meeting produced a real compromise. Voss stayed — publicly relieved, privately still wary."
+      },
+      {
+        "index": 1,
+        "text": "Publicly back her and reaffirm confidence",
+        "effects": {
+          "approval": 2,
+          "economy": 1
+        },
+        "sets_flags": [],
+        "outcome": "The public vote of confidence bought goodwill, though the underlying disagreement never really got resolved."
+      },
+      {
+        "index": 2,
+        "text": "Let her resign and find a replacement",
+        "effects": {
+          "economy": -4,
+          "approval": -2,
+          "congressSupport": -2
+        },
+        "sets_flags": [],
+        "outcome": "Markets wobbled on the transition. The new Treasury pick took months to confirm."
+      },
+      {
+        "index": 3,
+        "text": "Ignore the story and hope it blows over",
+        "effects": {
+          "approval": -3,
+          "economy": -1
+        },
+        "sets_flags": [],
+        "outcome": "It did not blow over. Voss stayed, visibly unhappy, and the story became a running subplot for weeks."
+      }
+    ]
+  },
+  {
+    "id": "vp_public_disagreement",
+    "title": "Vice President Breaks Publicly With Your Policy Agenda",
+    "category": "scandal",
+    "description": "VP Dana Mercer gave an interview criticizing a core piece of your agenda — the first real daylight between the two of you in public.",
+    "triggers": {
+      "always_available": true
+    },
+    "sets_flags": [],
+    "requires_flags": [
+      "milestone_vice_president_estranged"
+    ],
+    "isHistorical": true,
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Address it directly in a joint statement",
+        "effects": {
+          "approval": 2,
+          "partyUnity": 3
+        },
+        "sets_flags": [],
+        "outcome": "The joint statement papered over the disagreement well enough that the story faded within days."
+      },
+      {
+        "index": 1,
+        "text": "Let it go — she's entitled to her view",
+        "effects": {
+          "partyUnity": -2,
+          "approval": 1
+        },
+        "sets_flags": [],
+        "outcome": "The hands-off approach read as confidence to some, and as a crack in the administration to others."
+      },
+      {
+        "index": 2,
+        "text": "Have staff quietly push back through the press",
+        "effects": {
+          "partyUnity": -3,
+          "mediaScore": -1
+        },
+        "sets_flags": [],
+        "outcome": "The anonymous pushback leaked within a day, turning a disagreement into a visible rift."
+      },
+      {
+        "index": 3,
+        "text": "Quietly start considering options for the next term",
+        "effects": {
+          "baseSupport": 2,
+          "partyUnity": -5
+        },
+        "sets_flags": [],
+        "outcome": "Nothing was said publicly, but the West Wing's body language told its own story."
+      }
+    ]
+  },
+  {
+    "id": "speaker_retirement_announcement",
+    "title": "Speaker Dunmore Announces She Won't Seek Reelection",
+    "category": "congress",
+    "description": "After a rocky stretch working with your administration, Speaker Patricia Dunmore has announced her retirement from Congress at the end of her term — a legacy-defining moment for the chamber’s leadership.",
+    "triggers": {
+      "always_available": true
+    },
+    "sets_flags": [],
+    "requires_flags": [
+      "milestone_speaker_estranged"
+    ],
+    "isHistorical": true,
+    "weight": 4,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Publicly thank her for her service",
+        "effects": {
+          "congressSupport": 2,
+          "approval": 1
+        },
+        "sets_flags": [],
+        "outcome": "The gracious statement was noted, if not entirely believed, on both sides of the aisle."
+      },
+      {
+        "index": 1,
+        "text": "Stay quiet and let the caucus handle succession",
+        "effects": {
+          "congressSupport": -1
+        },
+        "sets_flags": [],
+        "outcome": "The silence was noticed. Several members took it as confirmation of how strained the relationship had become."
+      },
+      {
+        "index": 2,
+        "text": "Push behind the scenes for an ally to succeed her",
+        "effects": {
+          "congressSupport": 3,
+          "partyUnity": -2
+        },
+        "sets_flags": [],
+        "outcome": "The maneuvering worked, but it cost goodwill with members who resented the White House picking sides."
+      },
+      {
+        "index": 3,
+        "text": "Use the leadership vacuum to push stalled legislation through fast",
+        "effects": {
+          "congressSupport": 1,
+          "partyUnity": -3,
+          "approval": 1
+        },
+        "sets_flags": [],
+        "outcome": "The rushed push got one bill moving, but it looked opportunistic to members still mourning the transition."
+      }
+    ]
+  },
+  {
+    "id": "foreign_ally_emergency_summit",
+    "title": "Chancellor Brandt Requests an Emergency Summit",
+    "category": "diplomacy",
+    "description": "Chancellor Helena Brandt, now one of your closest international partners, is requesting an emergency summit to coordinate on a shared strategic priority — a rare ask from an ally this close.",
+    "triggers": {
+      "always_available": true
+    },
+    "sets_flags": [],
+    "requires_flags": [
+      "milestone_foreign_ally_ally"
+    ],
+    "isHistorical": true,
+    "weight": 4,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Accept immediately and host it stateside",
+        "effects": {
+          "globalReputation": 5,
+          "approval": 2
+        },
+        "sets_flags": [],
+        "outcome": "The summit produced a real joint framework and cemented the partnership as the defining alliance of the term."
+      },
+      {
+        "index": 1,
+        "text": "Accept, but send the Secretary of State instead",
+        "effects": {
+          "globalReputation": 2
+        },
+        "sets_flags": [],
+        "outcome": "Brandt understood the scheduling conflict, but a flicker of disappointment came through in the readout."
+      },
+      {
+        "index": 2,
+        "text": "Delay — domestic priorities come first",
+        "effects": {
+          "globalReputation": -4
+        },
+        "sets_flags": [],
+        "outcome": "The delay stung more than expected. Brandt’s office was notably cooler in the following months."
+      },
+      {
+        "index": 3,
+        "text": "Use the summit to extract a major concession",
+        "effects": {
+          "globalReputation": 3,
+          "economy": 2
+        },
+        "sets_flags": [],
+        "outcome": "The hard-nosed approach worked — barely — and Brandt made clear she noticed the calculation."
+      }
+    ]
+  },
+  {
+    "id": "sec_defense_public_backing",
+    "title": "Secretary of Defense Publicly Vouches for Your Leadership",
+    "category": "military",
+    "description": "SecDef Admiral James Hargrove, unprompted, gave a rare on-record interview praising the administration’s handling of national security — a real vote of confidence from a famously reserved man.",
+    "triggers": {
+      "always_available": true
+    },
+    "sets_flags": [],
+    "requires_flags": [
+      "milestone_sec_defense_ally"
+    ],
+    "isHistorical": true,
+    "weight": 4,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Amplify the moment in your own remarks",
+        "effects": {
+          "approval": 3,
+          "security": 1
+        },
+        "sets_flags": [],
+        "outcome": "The joint messaging landed well — a rare united front on national security that the press noticed."
+      },
+      {
+        "index": 1,
+        "text": "Let it stand on its own, no comment",
+        "effects": {
+          "security": 1
+        },
+        "sets_flags": [],
+        "outcome": "The understated response matched Hargrove’s own style, and the moment aged well precisely because no one oversold it."
+      },
+      {
+        "index": 2,
+        "text": "Use the momentum to push a defense priority through",
+        "effects": {
+          "security": 3,
+          "economy": -1
+        },
+        "sets_flags": [],
+        "outcome": "The Pentagon got what it wanted while the goodwill was fresh."
+      },
+      {
+        "index": 3,
+        "text": "Downplay it to avoid politicizing the military",
+        "effects": {
+          "approval": 1,
+          "globalReputation": 1
+        },
+        "sets_flags": [],
+        "outcome": "The restraint was quietly appreciated by career officers who worry about exactly this kind of politicization."
+      }
+    ]
+  },
+  {
+    "id": "grid_failure_strong_economy",
+    "title": "Winter Storm Cripples the Power Grid",
+    "category": "disaster",
+    "description": "A historic winter storm has knocked out power to millions across multiple states. The good news: a strong economy means the resources are there to respond fast.",
+    "triggers": {
+      "always_available": true,
+      "economy": {
+        "min": 65
+      },
+      "passed_renewable_grid": false
+    },
+    "sets_flags": [],
+    "requires_flags": [],
+    "isHistorical": true,
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Deploy federal emergency crews and mutual aid immediately",
+        "effects": {
+          "approval": 4,
+          "economy": -1,
+          "unrest": -3
+        },
+        "sets_flags": [],
+        "outcome": "Power was restored within days. The fast, well-funded response became a template for future storms."
+      },
+      {
+        "index": 1,
+        "text": "Direct utilities to prioritize hospitals and vulnerable populations first",
+        "effects": {
+          "approval": 3,
+          "unrest": -2
+        },
+        "sets_flags": [],
+        "outcome": "The triage plan worked — no hospital lost power, even as other outages dragged on."
+      },
+      {
+        "index": 2,
+        "text": "Let state governments lead the response",
+        "effects": {
+          "approval": -2,
+          "unrest": 2
+        },
+        "sets_flags": [],
+        "outcome": "Response times varied wildly by state. The wealthier ones recovered fast; others were left waiting."
+      },
+      {
+        "index": 3,
+        "text": "Announce a rebate program for affected households",
+        "effects": {
+          "approval": 5,
+          "economy": -2,
+          "debt": 0.3
+        },
+        "sets_flags": [],
+        "outcome": "The rebates were popular, if a little expensive — a strong economy made the bill easy to swallow."
+      }
+    ]
+  },
+  {
+    "id": "grid_failure_strained_economy",
+    "title": "Winter Storm Cripples the Power Grid",
+    "category": "disaster",
+    "description": "A historic winter storm has knocked out power to millions. With the economy already under strain, there's little room to maneuver — every dollar spent on relief is a dollar not spent somewhere else.",
+    "triggers": {
+      "always_available": true,
+      "economy": {
+        "max": 45
+      },
+      "passed_renewable_grid": false
+    },
+    "sets_flags": [],
+    "requires_flags": [],
+    "isHistorical": true,
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Deploy emergency crews anyway, debt be damned",
+        "effects": {
+          "approval": 3,
+          "economy": -4,
+          "debt": 0.4
+        },
+        "sets_flags": [],
+        "outcome": "The response worked, but the bill landed at the worst possible time for an already-strained budget."
+      },
+      {
+        "index": 1,
+        "text": "Ration federal aid to only the hardest-hit areas",
+        "effects": {
+          "approval": -3,
+          "unrest": 3
+        },
+        "sets_flags": [],
+        "outcome": "Rationed aid left entire towns feeling abandoned. The anger lingered long after the power came back."
+      },
+      {
+        "index": 2,
+        "text": "Ask utilities to absorb the cost of the response",
+        "effects": {
+          "approval": 1,
+          "economy": -1
+        },
+        "sets_flags": [],
+        "outcome": "Utilities grumbled but complied. Customers saw the cost show up in next year’s rates instead."
+      },
+      {
+        "index": 3,
+        "text": "Do the minimum required by law",
+        "effects": {
+          "approval": -6,
+          "unrest": 5
+        },
+        "sets_flags": [],
+        "outcome": "The bare-minimum response, during an already difficult economy, read as abandonment to millions of Americans."
+      }
+    ]
+  },
+  {
+    "id": "grid_failure_renewable_passed",
+    "title": "Winter Storm Cripples the Power Grid",
+    "category": "disaster",
+    "description": "A historic winter storm has hit the grid — but the modernized infrastructure from the Renewable Grid Modernization Act is holding up far better than the old system ever would have.",
+    "triggers": {
+      "always_available": true
+    },
+    "sets_flags": [],
+    "requires_flags": [
+      "passed_renewable_grid"
+    ],
+    "isHistorical": true,
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Highlight the grid investment's payoff in a national address",
+        "effects": {
+          "approval": 6,
+          "globalReputation": 2
+        },
+        "sets_flags": [],
+        "outcome": "The address landed as vindication — even skeptics of the original bill admitted the timing was fortunate."
+      },
+      {
+        "index": 1,
+        "text": "Keep the response low-key and let the results speak for themselves",
+        "effects": {
+          "approval": 3
+        },
+        "sets_flags": [],
+        "outcome": "The quiet confidence played well. Local news did the bragging so the White House didn’t have to."
+      },
+      {
+        "index": 2,
+        "text": "Redirect the emergency funds that weren’t needed elsewhere",
+        "effects": {
+          "economy": 2,
+          "approval": 1
+        },
+        "sets_flags": [],
+        "outcome": "The unspent emergency funds got quietly reallocated — a small, tidy win nobody outside Washington noticed."
+      },
+      {
+        "index": 3,
+        "text": "Use the moment to propose expanding the modernization further",
+        "effects": {
+          "approval": 4,
+          "congressSupport": 2,
+          "debt": 0.2
+        },
+        "sets_flags": [],
+        "outcome": "Momentum from the storm made the expansion an easy sell, even to lawmakers who’d opposed the original bill."
+      }
+    ]
+  },
+  {
+    "id": "recession_warning_false_alarm",
+    "title": "Economists Warn of a Possible Recession",
+    "category": "economy",
+    "description": "A handful of economists are warning of a coming recession. Given the current strength of the economy, most analysts view this as an overcautious minority opinion.",
+    "triggers": {
+      "always_available": true,
+      "economy": {
+        "min": 60
+      }
+    },
+    "sets_flags": [],
+    "requires_flags": [],
+    "isHistorical": true,
+    "weight": 4,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Dismiss the warnings publicly",
+        "effects": {
+          "approval": 1,
+          "economy": 1
+        },
+        "sets_flags": [],
+        "outcome": "The dismissal aged well — the numbers kept climbing and the warnings quietly faded from the news cycle."
+      },
+      {
+        "index": 1,
+        "text": "Convene an economic council just in case",
+        "effects": {
+          "congressSupport": 1
+        },
+        "sets_flags": [],
+        "outcome": "The council found nothing alarming, but the caution was quietly appreciated by markets."
+      },
+      {
+        "index": 2,
+        "text": "Use it as a talking point for reelection messaging",
+        "effects": {
+          "baseSupport": 2,
+          "approval": 1
+        },
+        "sets_flags": [],
+        "outcome": "\"They said recession, we delivered growth\" became a reliable applause line on the trail."
+      },
+      {
+        "index": 3,
+        "text": "Take no action — the data doesn’t support it",
+        "effects": {
+          "economy": 1
+        },
+        "sets_flags": [],
+        "outcome": "Nothing changed, because nothing needed to. The warnings were, in the end, exactly the minority view they seemed."
+      }
+    ]
+  },
+  {
+    "id": "recession_warning_real",
+    "title": "Economists Warn of a Possible Recession",
+    "category": "economy",
+    "description": "The warning signs are real and mounting — GDP growth has stalled and consumer confidence is slipping. This is a moment that could go either way.",
+    "triggers": {
+      "always_available": true,
+      "economy": {
+        "min": 40,
+        "max": 59
+      }
+    },
+    "sets_flags": [],
+    "requires_flags": [],
+    "isHistorical": true,
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Propose an emergency stimulus package",
+        "effects": {
+          "economy": 3,
+          "debt": 0.5,
+          "approval": 2
+        },
+        "sets_flags": [],
+        "outcome": "The stimulus arrived early enough to matter — growth stabilized within a quarter."
+      },
+      {
+        "index": 1,
+        "text": "Push public messaging aimed at boosting consumer confidence",
+        "effects": {
+          "economy": 1,
+          "globalReputation": -1
+        },
+        "sets_flags": [],
+        "outcome": "The messaging campaign helped at the margins, though a few economists rolled their eyes at the optimism."
+      },
+      {
+        "index": 2,
+        "text": "Wait and see — avoid overreacting",
+        "effects": {
+          "economy": -2,
+          "approval": -2
+        },
+        "sets_flags": [],
+        "outcome": "The wait-and-see approach let the slowdown deepen before anyone acted."
+      },
+      {
+        "index": 3,
+        "text": "Blame external factors publicly",
+        "effects": {
+          "approval": 1,
+          "globalReputation": -2
+        },
+        "sets_flags": [],
+        "outcome": "The finger-pointing satisfied the base and irritated exactly the trading partners named."
+      }
+    ]
+  },
+  {
+    "id": "recession_warning_confirmed",
+    "title": "Economists Warn of a Possible Recession",
+    "category": "economy",
+    "description": "The recession warnings have been validated — economic indicators are now unambiguously negative, and layoffs are already ticking upward.",
+    "triggers": {
+      "always_available": true,
+      "economy": {
+        "max": 39
+      }
+    },
+    "sets_flags": [],
+    "requires_flags": [],
+    "isHistorical": true,
+    "weight": 6,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Launch a major emergency stimulus program",
+        "effects": {
+          "economy": 5,
+          "debt": 1,
+          "approval": 3
+        },
+        "sets_flags": [],
+        "outcome": "The large stimulus was expensive, but it kept the recession from becoming a genuine collapse."
+      },
+      {
+        "index": 1,
+        "text": "Focus relief narrowly on unemployment benefits",
+        "effects": {
+          "economy": 2,
+          "unrest": -2,
+          "debt": 0.4
+        },
+        "sets_flags": [],
+        "outcome": "The targeted relief eased the sharpest edges without fully arresting the downturn."
+      },
+      {
+        "index": 2,
+        "text": "Hold the line on spending discipline",
+        "effects": {
+          "economy": -3,
+          "approval": -4
+        },
+        "sets_flags": [],
+        "outcome": "The discipline held the debt in check while the recession deepened around it."
+      },
+      {
+        "index": 3,
+        "text": "Convene a bipartisan economic summit",
+        "effects": {
+          "congressSupport": 3,
+          "economy": 1
+        },
+        "sets_flags": [],
+        "outcome": "The summit produced modest, genuinely bipartisan relief measures — rare, and worth something politically."
+      }
+    ]
+  },
+  {
+    "id": "veterans_homelessness_report",
+    "title": "New Report Tracks Veteran Homelessness Nationwide",
+    "category": "social",
+    "description": "A new federal report tracks veteran homelessness rates across the country — a persistent challenge that outlives any single administration.",
+    "triggers": {
+      "always_available": true
+    },
+    "sets_flags": [],
+    "requires_flags": [],
+    "isHistorical": true,
+    "weight": 5,
+    "callbacks": [
+      {
+        "flag": "va_expanded",
+        "text": "Veteran homelessness has declined measurably since the Veterans Care Act expanded services — advocates call it the most tangible result of the bill so far."
+      }
+    ],
+    "choices": [
+      {
+        "index": 0,
+        "text": "Announce new funding for veteran housing programs",
+        "effects": {
+          "approval": 3,
+          "unrest": -1,
+          "debt": 0.2
+        },
+        "sets_flags": [],
+        "outcome": "The new funding was well received, though advocates noted it addresses symptoms more than root causes."
+      },
+      {
+        "index": 1,
+        "text": "Direct the VA to streamline housing assistance applications",
+        "effects": {
+          "approval": 2
+        },
+        "sets_flags": [],
+        "outcome": "The streamlined process cut wait times noticeably within a few months."
+      },
+      {
+        "index": 2,
+        "text": "Highlight the report as a call to action for Congress",
+        "effects": {
+          "congressSupport": 1,
+          "approval": 1
+        },
+        "sets_flags": [],
+        "outcome": "The call to action got a respectful hearing, if not immediate legislative movement."
+      },
+      {
+        "index": 3,
+        "text": "Take no new action — existing programs are sufficient",
+        "effects": {
+          "approval": -2
+        },
+        "sets_flags": [],
+        "outcome": "Veterans groups noted, pointedly, that the numbers said otherwise."
+      }
+    ]
+  },
+  {
+    "id": "digital_id_rollout_review",
+    "title": "Congressional Review of the Federal Digital ID Rollout",
+    "category": "scandal",
+    "description": "A congressional committee is reviewing early rollout data for federal digital services — a routine oversight check, unless something is found.",
+    "triggers": {
+      "always_available": true
+    },
+    "sets_flags": [],
+    "requires_flags": [],
+    "isHistorical": true,
+    "weight": 4,
+    "callbacks": [
+      {
+        "flag": "passed_digital_identity",
+        "text": "Adoption of the new federal digital ID system has exceeded projections, with agencies reporting fewer service delays than at any point in a decade."
+      }
+    ],
+    "choices": [
+      {
+        "index": 0,
+        "text": "Testify personally before the committee",
+        "effects": {
+          "approval": 2,
+          "congressSupport": 2
+        },
+        "sets_flags": [],
+        "outcome": "The personal testimony went smoothly and headed off what could have been a longer fight."
+      },
+      {
+        "index": 1,
+        "text": "Send a senior official to testify instead",
+        "effects": {
+          "congressSupport": 1
+        },
+        "sets_flags": [],
+        "outcome": "The official’s testimony satisfied the committee without much drama."
+      },
+      {
+        "index": 2,
+        "text": "Push back on the review as unnecessary",
+        "effects": {
+          "congressSupport": -2,
+          "approval": -1
+        },
+        "sets_flags": [],
+        "outcome": "The pushback read as evasive to members who’d planned a routine, low-stakes hearing."
+      },
+      {
+        "index": 3,
+        "text": "Use the review to propose further modernization",
+        "effects": {
+          "congressSupport": 2,
+          "economy": 1
+        },
+        "sets_flags": [],
+        "outcome": "Turning an oversight hearing into a pitch for more funding was a bold move — and it worked."
+      }
+    ]
+  },
+  {
+    "id": "rail_ridership_milestone",
+    "title": "First-Year Ridership Numbers Are In for the National Rail Network",
+    "category": "economy",
+    "description": "The Department of Transportation has released its first full year of ridership data across the national rail and transit network.",
+    "triggers": {
+      "always_available": true
+    },
+    "sets_flags": [],
+    "requires_flags": [],
+    "isHistorical": true,
+    "weight": 4,
+    "callbacks": [
+      {
+        "flag": "infrastructure_passed",
+        "text": "Ridership on infrastructure-funded transit corridors has beaten every projection, with several routes already recouping a third of their construction cost in economic activity."
+      }
+    ],
+    "choices": [
+      {
+        "index": 0,
+        "text": "Tout the numbers in a national address",
+        "effects": {
+          "approval": 3,
+          "congressSupport": 1
+        },
+        "sets_flags": [],
+        "outcome": "The numbers made for an easy, feel-good address — one of the rare wins that needed no spin."
+      },
+      {
+        "index": 1,
+        "text": "Quietly note the numbers in a press release",
+        "effects": {
+          "approval": 1
+        },
+        "sets_flags": [],
+        "outcome": "The understated release got picked up anyway — good numbers travel on their own."
+      },
+      {
+        "index": 2,
+        "text": "Use the data to push for further transit investment",
+        "effects": {
+          "congressSupport": 2,
+          "debt": 0.2
+        },
+        "sets_flags": [],
+        "outcome": "The pitch for more funding landed easily on the back of genuinely good data."
+      },
+      {
+        "index": 3,
+        "text": "Downplay it — the numbers still fall short of promises",
+        "effects": {
+          "approval": -2
+        },
+        "sets_flags": [],
+        "outcome": "The self-critical framing was honest, but it cost some of the credit the administration had actually earned."
+      }
+    ]
+  },
+  {
+    "id": "border_town_economic_report",
+    "title": "Border Town Economies Show Mixed Results a Year After Reform",
+    "category": "economy",
+    "description": "A year after major changes at the border, economic data from border communities is coming in — and it's more complicated than either side predicted.",
+    "triggers": {
+      "always_available": true
+    },
+    "sets_flags": [],
+    "requires_flags": [],
+    "isHistorical": true,
+    "weight": 4,
+    "callbacks": [
+      {
+        "flag": "passed_immigration_reform",
+        "text": "Border town economies have seen a genuine boost from the Immigration Reform Act’s new work-visa channels — local chambers of commerce are among its most vocal defenders now."
+      }
+    ],
+    "choices": [
+      {
+        "index": 0,
+        "text": "Highlight the positive data points publicly",
+        "effects": {
+          "approval": 2,
+          "baseSupport": 1
+        },
+        "sets_flags": [],
+        "outcome": "The positive framing landed well in the communities that actually saw the benefit."
+      },
+      {
+        "index": 1,
+        "text": "Commission a follow-up study before commenting",
+        "effects": {
+          "congressSupport": 1
+        },
+        "sets_flags": [],
+        "outcome": "The caution read as diligence to some and as dodging the question to others."
+      },
+      {
+        "index": 2,
+        "text": "Acknowledge the mixed results honestly",
+        "effects": {
+          "approval": 1,
+          "globalReputation": 1
+        },
+        "sets_flags": [],
+        "outcome": "The honest framing was unusual enough to earn its own round of coverage."
+      },
+      {
+        "index": 3,
+        "text": "Avoid the topic — it's politically complicated either way",
+        "effects": {
+          "approval": -1
+        },
+        "sets_flags": [],
+        "outcome": "The silence was noticed by border-state reporters who’d specifically asked for comment."
+      }
+    ]
+  },
+  {
+    "id": "cartel_violence_escalation",
+    "title": "Cartel Violence Spikes Along Trade Corridors",
+    "category": "security",
+    "description": "Cartel-related violence has spiked sharply along key trade corridors, threatening commerce and raising questions about enforcement capacity — a distinct problem from the border-crossing surge, and a growing one.",
+    "triggers": {
+      "always_available": true,
+      "cartel_crisis_started": false
+    },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 4,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Surge federal law enforcement to the corridors",
+        "effects": {
+          "security": 4,
+          "economy": 1
+        },
+        "sets_flags": [
+          "cartel_crisis_started",
+          "cartel_enforcement_surge"
+        ],
+        "outcome": "The surge disrupted several trafficking routes almost immediately."
+      },
+      {
+        "index": 1,
+        "text": "Coordinate a joint task force with Mexican authorities",
+        "effects": {
+          "globalReputation": 3,
+          "security": 2
+        },
+        "sets_flags": [
+          "cartel_crisis_started",
+          "cartel_joint_task_force"
+        ],
+        "outcome": "The joint task force was slower to stand up, but the cooperation itself was diplomatically significant."
+      },
+      {
+        "index": 2,
+        "text": "Impose new trade corridor security fees to fund enforcement",
+        "effects": {
+          "economy": -2,
+          "security": 3
+        },
+        "sets_flags": [
+          "cartel_crisis_started"
+        ],
+        "outcome": "Shippers grumbled about the new fees, but the funding stood up real enforcement capacity fast."
+      },
+      {
+        "index": 3,
+        "text": "Downplay the violence as a local law enforcement matter",
+        "effects": {
+          "security": -3,
+          "approval": -2
+        },
+        "sets_flags": [
+          "cartel_crisis_started"
+        ],
+        "outcome": "The violence kept climbing while Washington treated it as someone else’s problem."
+      }
+    ]
+  },
+  {
+    "id": "cartel_violence_resolution",
+    "title": "The Cartel Crackdown Reaches a Turning Point",
+    "category": "security",
+    "description": "Months into the enforcement push, a moment of real consequence has arrived — the numbers are about to move decisively, one way or the other.",
+    "triggers": {
+      "always_available": true,
+      "cartel_crisis_resolved": false
+    },
+    "sets_flags": [],
+    "requires_flags": [
+      "cartel_crisis_started"
+    ],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Announce a major cartel leadership takedown",
+        "effects": {
+          "security": 6,
+          "approval": 4
+        },
+        "sets_flags": [
+          "cartel_crisis_resolved"
+        ],
+        "outcome": "The takedown was the clearest possible win — violence along the corridors dropped within weeks."
+      },
+      {
+        "index": 1,
+        "text": "Settle for reduced violence, not full resolution",
+        "effects": {
+          "security": 2,
+          "unrest": -1
+        },
+        "sets_flags": [
+          "cartel_crisis_resolved"
+        ],
+        "outcome": "The numbers improved, if not dramatically. Nobody declared victory, but nobody panicked either."
+      },
+      {
+        "index": 2,
+        "text": "Escalate further with military-adjacent resources",
+        "effects": {
+          "security": 3,
+          "globalReputation": -4,
+          "unrest": 2
+        },
+        "sets_flags": [
+          "cartel_crisis_resolved"
+        ],
+        "outcome": "The escalation worked tactically and drew sharp criticism internationally about militarizing law enforcement."
+      },
+      {
+        "index": 3,
+        "text": "Wind down the operation, citing cost",
+        "effects": {
+          "security": -4,
+          "approval": -3
+        },
+        "sets_flags": [
+          "cartel_crisis_resolved"
+        ],
+        "outcome": "The wind-down saved money and let the violence creep back up almost immediately."
+      }
+    ]
+  },
+  {
+    "id": "media_scandal_leak",
+    "title": "A Leaked Recording Puts a Senior Aide's Comments in the Spotlight",
+    "category": "scandal",
+    "description": "A leaked recording captures a senior White House aide making comments that are already dominating cable news.",
+    "triggers": {
+      "always_available": true,
+      "media_scandal_started": false
+    },
+    "sets_flags": [
+      "active_scandal"
+    ],
+    "requires_flags": [],
+    "weight": 4,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Fire the aide immediately",
+        "effects": {
+          "approval": 2,
+          "mediaScore": 1
+        },
+        "sets_flags": [
+          "media_scandal_started",
+          "aide_fired"
+        ],
+        "outcome": "The swift firing signaled accountability, though allies of the aide were privately furious."
+      },
+      {
+        "index": 1,
+        "text": "Stand by the aide publicly",
+        "effects": {
+          "partyUnity": 2,
+          "mediaScore": -2
+        },
+        "sets_flags": [
+          "media_scandal_started",
+          "aide_defended"
+        ],
+        "outcome": "Standing by the aide held the inner circle together and gave the press cycle another week of oxygen."
+      },
+      {
+        "index": 2,
+        "text": "Order an internal investigation first",
+        "effects": {
+          "congressSupport": 1
+        },
+        "sets_flags": [
+          "media_scandal_started",
+          "scandal_investigated"
+        ],
+        "outcome": "The investigation bought time, though critics called it a stalling tactic."
+      },
+      {
+        "index": 3,
+        "text": "Say nothing and let the story run its course",
+        "effects": {
+          "mediaScore": -3,
+          "approval": -2
+        },
+        "sets_flags": [
+          "media_scandal_started"
+        ],
+        "outcome": "The silence let the story fill in its own details — rarely a favorable outcome."
+      }
+    ]
+  },
+  {
+    "id": "media_scandal_hearing",
+    "title": "Congress Announces Hearings Into the Leak",
+    "category": "scandal",
+    "description": "A congressional committee has announced hearings into the leaked recording and the administration’s response to it.",
+    "triggers": {
+      "always_available": true,
+      "media_scandal_hearing_done": false
+    },
+    "sets_flags": [],
+    "requires_flags": [
+      "media_scandal_started"
+    ],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Cooperate fully and turn over requested documents",
+        "effects": {
+          "congressSupport": 2,
+          "mediaScore": 1
+        },
+        "sets_flags": [
+          "media_scandal_hearing_done",
+          "scandal_cooperated"
+        ],
+        "outcome": "Full cooperation took the wind out of the committee’s sails faster than expected."
+      },
+      {
+        "index": 1,
+        "text": "Assert executive privilege on key materials",
+        "effects": {
+          "partyUnity": 2,
+          "congressSupport": -3,
+          "mediaScore": -1
+        },
+        "sets_flags": [
+          "media_scandal_hearing_done",
+          "scandal_stonewalled"
+        ],
+        "outcome": "Asserting privilege held the line for the administration and extended the story by weeks."
+      },
+      {
+        "index": 2,
+        "text": "Send senior counsel to testify instead of aides",
+        "effects": {
+          "congressSupport": 1
+        },
+        "sets_flags": [
+          "media_scandal_hearing_done"
+        ],
+        "outcome": "Counsel’s careful, lawyerly testimony satisfied the letter of the request without giving much away."
+      },
+      {
+        "index": 3,
+        "text": "Preemptively release everything before being asked",
+        "effects": {
+          "mediaScore": 3,
+          "approval": 2
+        },
+        "sets_flags": [
+          "media_scandal_hearing_done",
+          "scandal_transparent"
+        ],
+        "outcome": "The preemptive release was disarming — there was nothing left for the committee to dig for."
+      }
+    ]
+  },
+  {
+    "id": "media_scandal_resolution",
+    "title": "The Scandal Reaches Its Final Chapter",
+    "category": "scandal",
+    "description": "After weeks of hearings and headlines, the story is finally reaching its natural end — one way or another.",
+    "triggers": {
+      "always_available": true,
+      "media_scandal_resolved": false
+    },
+    "sets_flags": [],
+    "requires_flags": [
+      "media_scandal_hearing_done"
+    ],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Deliver a national address closing the chapter",
+        "effects": {
+          "approval": 3,
+          "mediaScore": 2
+        },
+        "sets_flags": [
+          "media_scandal_resolved"
+        ],
+        "removes_flags": [
+          "active_scandal"
+        ],
+        "outcome": "The address gave the story a clean ending — exactly what a national address is for."
+      },
+      {
+        "index": 1,
+        "text": "Let the news cycle move on without further comment",
+        "effects": {
+          "mediaScore": 1
+        },
+        "sets_flags": [
+          "media_scandal_resolved"
+        ],
+        "removes_flags": [
+          "active_scandal"
+        ],
+        "outcome": "The story faded on its own, the way most eventually do."
+      },
+      {
+        "index": 2,
+        "text": "Accept a formal congressional censure to end it",
+        "effects": {
+          "congressSupport": 2,
+          "approval": -3
+        },
+        "sets_flags": [
+          "media_scandal_resolved"
+        ],
+        "removes_flags": [
+          "active_scandal"
+        ],
+        "outcome": "The censure was a bitter pill, but it closed the book decisively."
+      },
+      {
+        "index": 3,
+        "text": "Continue denying wrongdoing despite the findings",
+        "effects": {
+          "mediaScore": -3,
+          "approval": -4
+        },
+        "sets_flags": [
+          "media_scandal_resolved"
+        ],
+        "outcome": "The continued denial kept the scandal technically open, simmering in the background for the rest of the term."
+      }
+    ]
+  },
+  {
+    "id": "national_labor_strike_begins",
+    "title": "Dockworkers Strike Threatens to Paralyze National Freight",
+    "category": "economy",
+    "description": "Dockworkers at every major port have walked off the job over automation and pay disputes. Within days, freight backups could ripple through the entire economy.",
+    "triggers": {
+      "always_available": true,
+      "labor_strike_started": false
+    },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 4,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Invoke federal authority to force workers back to the job",
+        "effects": {
+          "economy": 2,
+          "unrest": 5,
+          "partyUnity": -3
+        },
+        "sets_flags": [
+          "labor_strike_started",
+          "strike_forced_back"
+        ],
+        "outcome": "The forced return kept freight moving but left organized labor furious for the rest of the term."
+      },
+      {
+        "index": 1,
+        "text": "Push both sides toward binding arbitration",
+        "effects": {
+          "economy": -1,
+          "congressSupport": 2
+        },
+        "sets_flags": [
+          "labor_strike_started",
+          "strike_arbitration"
+        ],
+        "outcome": "Arbitration slowed the immediate crisis but bought real credibility as an honest broker."
+      },
+      {
+        "index": 2,
+        "text": "Publicly back the workers' demands",
+        "effects": {
+          "baseSupport": 4,
+          "economy": -3
+        },
+        "sets_flags": [
+          "labor_strike_started",
+          "strike_backed_workers"
+        ],
+        "outcome": "Labor unions praised the support. Shippers and retailers were considerably less pleased."
+      },
+      {
+        "index": 3,
+        "text": "Stay neutral and let negotiations play out",
+        "effects": {
+          "economy": -4,
+          "unrest": 2
+        },
+        "sets_flags": [
+          "labor_strike_started"
+        ],
+        "outcome": "The neutral stance satisfied no one while freight kept backing up at every port."
+      }
+    ]
+  },
+  {
+    "id": "national_labor_strike_resolution",
+    "title": "The Dockworkers Strike Reaches a Breaking Point",
+    "category": "economy",
+    "description": "Weeks into the standoff, freight backlogs are now visibly affecting store shelves and factory schedules — a resolution can’t wait much longer.",
+    "triggers": {
+      "always_available": true,
+      "labor_strike_resolved": false
+    },
+    "sets_flags": [],
+    "requires_flags": [
+      "labor_strike_started"
+    ],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Broker a final deal with concessions from both sides",
+        "effects": {
+          "economy": 3,
+          "approval": 3,
+          "congressSupport": 1
+        },
+        "sets_flags": [
+          "labor_strike_resolved"
+        ],
+        "outcome": "The negotiated deal ended the strike cleanly — a genuine, if exhausting, diplomatic win."
+      },
+      {
+        "index": 1,
+        "text": "Let the deal collapse and the strike continue",
+        "effects": {
+          "economy": -6,
+          "unrest": 4
+        },
+        "sets_flags": [
+          "labor_strike_resolved"
+        ],
+        "outcome": "The collapse dragged the strike out for months, with real economic damage to show for it."
+      },
+      {
+        "index": 2,
+        "text": "Deploy military logistics support to bypass the ports",
+        "effects": {
+          "economy": 2,
+          "globalReputation": -2,
+          "partyUnity": -2
+        },
+        "sets_flags": [
+          "labor_strike_resolved"
+        ],
+        "outcome": "The military bypass kept goods moving, though using troops to route around a labor dispute drew sharp criticism."
+      },
+      {
+        "index": 3,
+        "text": "Support a worker buyout and automation compromise package",
+        "effects": {
+          "economy": 1,
+          "debt": 0.3,
+          "baseSupport": 2
+        },
+        "sets_flags": [
+          "labor_strike_resolved"
+        ],
+        "outcome": "The compromise package split the difference — not a total win for either side, which is usually the sign of a real deal."
+      }
+    ]
   }
 ]
