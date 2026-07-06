@@ -5,7 +5,7 @@
  * election-night result is revealed before the oath of office.
  *
  * The player wins the overwhelming majority of the time — computeElectionResult
- * mostly varies HOW big the win was — but there's a ~2% easter-egg chance
+ * mostly varies HOW big the win was — but there's a ~0.5% easter-egg chance
  * of a genuine loss, surfaced via its own concession-night screen with a
  * reroll rather than a real game-over (see NewGameForm's "Try Again").
  */
@@ -94,8 +94,8 @@ const DIFFICULTY_MARGIN_PENALTY: Record<Difficulty, number> = {
 
 // Easter egg, not a real difficulty lever — deliberately independent of
 // difficulty/campaign choices so it can't be farmed or avoided, just an
-// occasional surprise. 1-in-50 (2%).
-const LOSS_CHANCE_DENOMINATOR = 50
+// occasional surprise. 1-in-200 (0.5%).
+const LOSS_CHANCE_DENOMINATOR = 200
 
 /**
  * A deterministic-but-flavorful vote share for election night — same
