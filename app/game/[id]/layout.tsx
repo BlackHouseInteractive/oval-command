@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth'
 import { getGameRow } from '@/lib/db-helpers'
 import { EVENTS, isBreakingEvent } from '@/lib/game-engine'
 import { RoomNav } from '@/components/game/RoomNav'
+import { GameMenuButton } from '@/components/game/GameMenuButton'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -32,6 +33,7 @@ export default async function GameLayout({ children, params }: LayoutProps) {
           guide describes, just achieved by not wrapping it, since it isn't
           part of what's changing between rooms). */}
       <RoomNav gameId={id} breakingEvent={breakingEvent} />
+      <GameMenuButton gameId={id} />
       <ViewTransition default="auto">
         {/* Bottom padding clears the fixed bottom nav bar (and its breaking-
             event banner, when present) so page content is never hidden
