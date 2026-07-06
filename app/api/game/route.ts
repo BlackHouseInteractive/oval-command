@@ -7,10 +7,23 @@ import { ALL_PERKS } from '@/lib/achievements'
 import { dbToGame, toJson, toUnlockedAchievements } from '@/lib/db-helpers'
 import type { CreateGameRequest } from '@/types/game'
 
+// Well above what any real player would accumulate — this exists purely to
+// bound storage/query cost against a scripted signed-in user spamming
+// game creation, not to constrain normal use.
+const MAX_GAMES_PER_USER = 50
+
 export async function POST(req: NextRequest) {
   const session = await auth()
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const existingGameCount = await prisma.game.count({ where: { userId: session.user.id } })
+  if (existingGameCount >= MAX_GAMES_PER_USER) {
+    return NextResponse.json(
+      { error: `You've reached the maximum of ${MAX_GAMES_PER_USER} administrations. Finish or abandon an existing term first.` },
+      { status: 429 }
+    )
   }
 
   let body: CreateGameRequest

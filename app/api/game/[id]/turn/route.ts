@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { processEventTurn, pickEvent, isEventEligible, EVENTS } from '@/lib/game-engine'
 import { computePresidentialArchetype } from '@/lib/archetype-engine'
 import { unlockAchievements } from '@/lib/achievements'
-import { dbToGame, gameToDbUpdate, toJson } from '@/lib/db-helpers'
+import { dbToGame, gameToDbUpdate, toJson, safeErrorMessage } from '@/lib/db-helpers'
 import type { ProcessTurnRequest, GameLog, Achievement } from '@/types/game'
 
 interface Params { params: Promise<{ id: string }> }
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest, { params }: Params) {
   try {
     result = processEventTurn(game, eventId, choiceIndex)
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Decision could not be processed'
+    const message = safeErrorMessage(err, 'Decision could not be processed')
     return NextResponse.json({ error: message }, { status: 400 })
   }
 

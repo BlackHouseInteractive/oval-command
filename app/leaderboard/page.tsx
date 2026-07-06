@@ -30,7 +30,22 @@ export default async function LeaderboardPage() {
     take: LEADERBOARD_SIZE,
   })
 
-  let entries: { game: ReturnType<typeof dbToGame>; legacyTotal: number; archetype: ReturnType<typeof computePresidentialArchetype> }[] = []
+  // Deliberately a narrow, hand-picked shape — never the full Game object
+  // (which carries userId) — since this is other users' data reaching an
+  // anonymous visitor's browser. Keeping LeaderboardRow's prop type this
+  // narrow means it physically can't render (or, if it ever became a
+  // Client Component, leak across the RSC boundary) anything beyond what's
+  // listed here, regardless of what a future edit elsewhere does.
+  interface LeaderboardEntry {
+    id:            string
+    presidentName: string
+    party:         ReturnType<typeof dbToGame>['party']
+    difficulty:    ReturnType<typeof dbToGame>['difficulty']
+    legacyTotal:   number
+    archetype:     ReturnType<typeof computePresidentialArchetype>
+  }
+
+  let entries: LeaderboardEntry[] = []
 
   if (bestPerUser.length > 0) {
     const rows = await prisma.game.findMany({
@@ -48,12 +63,19 @@ export default async function LeaderboardPage() {
     })
 
     entries = uniqueRows
-      .map(row => {
+      .map((row): LeaderboardEntry => {
         const game = dbToGame(row)
         const logs: GameLog[] = row.logs.map(dbToGameLog)
         const legacy = computeLegacyScore(game)
         const archetype = computePresidentialArchetype(game, logs)
-        return { game, legacyTotal: legacy.total, archetype }
+        return {
+          id:            game.id,
+          presidentName: game.presidentName,
+          party:         game.party,
+          difficulty:    game.difficulty,
+          legacyTotal:   legacy.total,
+          archetype,
+        }
       })
       .sort((a, b) => b.legacyTotal - a.legacyTotal)
   }
@@ -101,7 +123,15 @@ export default async function LeaderboardPage() {
         ) : (
           <div className="space-y-2">
             {entries.map((e, i) => (
-              <LeaderboardRow key={e.game.id} rank={i + 1} game={e.game} legacyTotal={e.legacyTotal} archetype={e.archetype} />
+              <LeaderboardRow
+                key={e.id}
+                rank={i + 1}
+                presidentName={e.presidentName}
+                party={e.party}
+                difficulty={e.difficulty}
+                legacyTotal={e.legacyTotal}
+                archetype={e.archetype}
+              />
             ))}
           </div>
         )}

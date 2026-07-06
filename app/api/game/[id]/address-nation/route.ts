@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { dbToGame, gameToDbUpdate, toJson } from '@/lib/db-helpers'
+import { dbToGame, gameToDbUpdate, toJson, safeErrorMessage } from '@/lib/db-helpers'
 import { resolveSpeech } from '@/lib/address-nation'
 import { applyDelta, pickEvent, advanceMonth } from '@/lib/game-engine'
 import { generateSpeechHeadline, type SpeechTheme } from '@/lib/headlines'
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     cascadeHeadlines = advance.cascadeHeadlines
     gameOver = advance.gameOver
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Speech could not be processed'
+    const message = safeErrorMessage(err, 'Speech could not be processed')
     return NextResponse.json({ error: message }, { status: 400 })
   }
 

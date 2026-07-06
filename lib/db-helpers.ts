@@ -4,6 +4,7 @@
  * lives in one place to update.
  */
 import { cache } from 'react'
+import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import type { Game, GameLog, ActionType, UnlockedAchievement } from '@/types/game'
 
@@ -106,6 +107,27 @@ export function dbToGameLog(row: DbGameLog): GameLog {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function toJson(value: unknown): any {
   return value
+}
+
+const PRISMA_ERROR_TYPES = [
+  Prisma.PrismaClientKnownRequestError,
+  Prisma.PrismaClientUnknownRequestError,
+  Prisma.PrismaClientValidationError,
+  Prisma.PrismaClientInitializationError,
+]
+
+/**
+ * Extract a message safe to forward in a client-facing error response.
+ * Every route that catches engine-thrown errors uses hand-written, safe
+ * strings today, but this guards against a future Prisma error (which can
+ * carry DB internals — table/column names, connection details) ever
+ * slipping through the same catch block and being echoed back verbatim.
+ */
+export function safeErrorMessage(err: unknown, fallback: string): string {
+  if (err instanceof Error && !PRISMA_ERROR_TYPES.some(cls => err instanceof cls)) {
+    return err.message
+  }
+  return fallback
 }
 
 /** Read the User.unlockedAchievements Json column back into its real shape */

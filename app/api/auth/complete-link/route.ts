@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import { Prisma } from '@prisma/client'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { toJson, toUnlockedAchievements } from '@/lib/db-helpers'
@@ -52,11 +53,21 @@ export async function GET(req: NextRequest) {
   const existingIds = new Set(newAchievements.map(a => a.id))
   const mergedAchievements = [...newAchievements, ...oldAchievements.filter(a => !existingIds.has(a.id))]
 
-  await prisma.$transaction([
-    prisma.game.updateMany({ where: { userId: oldGuestId }, data: { userId: session.user.id } }),
-    prisma.user.update({ where: { id: session.user.id }, data: { unlockedAchievements: toJson(mergedAchievements) } }),
-    prisma.user.delete({ where: { id: oldGuestId } }),
-  ])
+  try {
+    await prisma.$transaction([
+      prisma.game.updateMany({ where: { userId: oldGuestId }, data: { userId: session.user.id } }),
+      prisma.user.update({ where: { id: session.user.id }, data: { unlockedAchievements: toJson(mergedAchievements) } }),
+      prisma.user.delete({ where: { id: oldGuestId } }),
+    ])
+  } catch (err) {
+    // A concurrent replay of this same redirect (double-click, browser
+    // prefetch) can race two requests through the checks above before
+    // either's transaction commits — the second one's delete then targets
+    // a row the first already removed. That's the merge having already
+    // succeeded, not a failure, so treat it as one rather than a 500.
+    const alreadyMerged = err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025'
+    if (!alreadyMerged) throw err
+  }
 
   dashboardUrl.searchParams.set('linked', '1')
   return NextResponse.redirect(dashboardUrl)
