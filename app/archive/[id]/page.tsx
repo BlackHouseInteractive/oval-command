@@ -7,8 +7,10 @@ import { dbToGame, dbToGameLog, getGameRow } from '@/lib/db-helpers'
 import { computeLegacyScore } from '@/lib/game-engine'
 import { computePresidentialArchetype } from '@/lib/archetype-engine'
 import { computeSectorBreakdown } from '@/lib/law-sectors'
+import { SECRET_FILES } from '@/lib/secret-files'
 import { Seal } from '@/components/Seal'
 import { SiteNav } from '@/components/SiteNav'
+import { SecretFileCard } from '@/components/SecretFileCard'
 import { monthToDate } from '@/lib/utils'
 import type { GameLog } from '@/types/game'
 
@@ -32,6 +34,7 @@ export default async function ArchivePage({ params }: PageProps) {
   const legacy = computeLegacyScore(game)
   const archetype = computePresidentialArchetype(game, logs)
   const sectorBreakdown = computeSectorBreakdown(game.passedLaws)
+  const secretFilesUnlocked = SECRET_FILES.filter(f => Boolean(game.flags[f.requiresFlag])).length
 
   const startYear = Number(monthToDate(1).split(' ')[1])
   const endYear = Number(monthToDate(game.currentMonth).split(' ')[1])
@@ -67,7 +70,7 @@ export default async function ArchivePage({ params }: PageProps) {
         <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
           <ArchiveShelf title="Artifacts">
             <ShelfPlaceholder label="Magazine Covers" />
-            <ShelfPlaceholder label="Secret Files" />
+            <ShelfCount label="Secret Files" current={secretFilesUnlocked} total={SECRET_FILES.length} />
           </ArchiveShelf>
 
           <ArchiveShelf title="Government">
@@ -81,6 +84,17 @@ export default async function ArchivePage({ params }: PageProps) {
             <ShelfLink href={`/game/${game.id}/diplomatic-office`} label="Foreign Affairs" />
             <ShelfLink href="/achievements" label="Achievements" />
           </ArchiveShelf>
+        </div>
+
+        <div className="mt-8">
+          <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--color-paper-faint)]">
+            Declassified Files
+          </div>
+          <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {SECRET_FILES.map(file => (
+              <SecretFileCard key={file.id} file={file} unlocked={Boolean(game.flags[file.requiresFlag])} />
+            ))}
+          </div>
         </div>
 
         <div className="mt-8 space-y-4">
@@ -116,6 +130,14 @@ function ShelfLink({ href, label }: { href: string; label: string }) {
     >
       {label}
     </Link>
+  )
+}
+
+function ShelfCount({ label, current, total }: { label: string; current: number; total: number }) {
+  return (
+    <div className="rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 text-sm text-[var(--color-paper-dim)] backdrop-blur-sm">
+      {label} <span className="font-mono text-[var(--color-brass)]">{current}/{total}</span>
+    </div>
   )
 }
 

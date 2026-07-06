@@ -137,6 +137,18 @@ body {
   animation: breaking-title-reveal 350ms ease-out;
 }
 
+/* "Stamp slam" for a newly-unlocked Secret File's classification mark —
+   a single mount-time settle (oversized + faded to resting rotation/scale),
+   not a timed multi-stage sequence. Covered by the blanket
+   prefers-reduced-motion rule below like every other animation here. */
+@keyframes stamp-slam {
+  from { opacity: 0; transform: scale(1.4) rotate(-14deg); }
+  to   { opacity: 1; transform: scale(1) rotate(-8deg); }
+}
+.animate-stamp {
+  animation: stamp-slam 350ms ease-out;
+}
+
 /* Visible keyboard focus ring everywhere — accessibility floor */
 :focus-visible {
   outline: 2px solid var(--color-brass);
