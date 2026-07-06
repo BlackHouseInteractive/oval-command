@@ -6,8 +6,12 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { Seal } from '@/components/Seal'
 import { PartyIcon } from '@/components/game/PartyIcon'
+import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
+import { getRoomTreatment } from '@/lib/event-backgrounds'
 import { CAMPAIGN_SCENARIOS, resolveCampaignChoices, computeElectionResult } from '@/lib/campaign'
 import type { Party, Difficulty, Perk, CreateGameResponse } from '@/types/game'
+
+const DEBATE_BG = '/debate-podium-bg.webp'
 
 const PARTIES: { value: Party; label: string; description: string }[] = [
   { value: 'DEMOCRAT', label: 'Democratic', description: 'Stronger starting base support, lower starting congress lean' },
@@ -130,8 +134,15 @@ export function NewGameForm({ unlockedPerks }: NewGameFormProps) {
 
   if (phase.step === 'campaign') {
     const scenario = CAMPAIGN_SCENARIOS[phase.scenarioIndex]
+    const treatment = getRoomTreatment(DEBATE_BG)
     return (
-      <main className="flex min-h-screen items-center justify-center px-6 py-12">
+      <main className="flex min-h-screen items-center justify-center px-6 py-12" style={roomAccentStyle('var(--color-brass)')}>
+        <RoomBackground
+          image={DEBATE_BG}
+          color="var(--color-brass)"
+          backgroundPosition={treatment.backgroundPosition}
+          foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
+        />
         <div className="w-full max-w-md">
           <div className="flex items-center justify-between">
             <button
@@ -189,8 +200,15 @@ export function NewGameForm({ unlockedPerks }: NewGameFormProps) {
       resolveCampaignChoices(phase.choiceIds)
     )
 
+    const treatment = getRoomTreatment(DEBATE_BG)
     return (
-      <main className="flex min-h-screen items-center justify-center px-6 py-12">
+      <main className="flex min-h-screen items-center justify-center px-6 py-12" style={roomAccentStyle('var(--color-brass)')}>
+        <RoomBackground
+          image={DEBATE_BG}
+          color="var(--color-brass)"
+          backgroundPosition={treatment.backgroundPosition}
+          foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
+        />
         <div className="w-full max-w-md text-center">
           <button
             type="button"

@@ -56,6 +56,11 @@ const ROOM_TREATMENTS: Record<string, RoomTreatment> = {
   '/diplomatic-office-bg.webp':{ backgroundPosition: 'center 35%',    foregroundStyle: 'columns', foregroundColor: '#c9a876' },
   '/congress-bg.webp':         { backgroundPosition: 'center 35%',    foregroundStyle: 'columns', foregroundColor: '#b89a6e' },
   '/press-room-bg.webp':       { backgroundPosition: 'center center', foregroundStyle: 'chairs',  foregroundColor: '#1a1d24' },
+  // The podium's own curved top edge (with the presidential seal) already
+  // sits at the very bottom of frame, same composition as the desk-edge
+  // rooms — foregroundColor sampled from the podium's dark navy body so
+  // the added gradient blends into the photo rather than tinting it.
+  '/debate-podium-bg.webp':    { backgroundPosition: 'center center', foregroundStyle: 'desk',    foregroundColor: '#12141a' },
 }
 
 export function getRoomTreatment(image: string): RoomTreatment {
