@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Cinzel, Inter, JetBrains_Mono } from 'next/font/google'
+import { Cinzel, Inter, JetBrains_Mono, Sacramento } from 'next/font/google'
 import './globals.css'
 
 // Ceremonial/presidential display face — engraved-monument, official-seal
@@ -22,6 +22,14 @@ const jetbrainsMono = JetBrains_Mono({
   variable: '--font-jetbrains',
 })
 
+// Signature/script face — used only for the "Respectfully, President
+// {name}" closing line on the Archive and Legacy screens, nowhere else.
+const sacramento = Sacramento({
+  subsets: ['latin'],
+  variable: '--font-signature',
+  weight: '400',
+})
+
 export const metadata: Metadata = {
   title: 'Oval Command',
   description: 'You are the President. Every decision has consequences.',
@@ -39,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${cinzel.variable} ${inter.variable} ${jetbrainsMono.variable} h-full`}
+      className={`${cinzel.variable} ${inter.variable} ${jetbrainsMono.variable} ${sacramento.variable} h-full`}
     >
       <body className="min-h-full antialiased">{children}</body>
     </html>

@@ -9,12 +9,22 @@ import { computePresidentialArchetype } from '@/lib/archetype-engine'
 import { computeSectorBreakdown } from '@/lib/law-sectors'
 import { SECRET_FILES } from '@/lib/secret-files'
 import { computeSpecialEditionCovers } from '@/lib/magazine-covers'
+import { getPresidentialQuote } from '@/lib/presidential-quote'
+import { ACHIEVEMENTS } from '@/lib/achievements'
 import { Seal } from '@/components/Seal'
 import { SiteNav } from '@/components/SiteNav'
 import { SecretFileCard } from '@/components/SecretFileCard'
 import { MagazineCover } from '@/components/MagazineCover'
 import { monthToDate } from '@/lib/utils'
+import { toUnlockedAchievements } from '@/lib/db-helpers'
 import type { GameLog } from '@/types/game'
+
+// Fixed ceilings for the Collection Completion breakdown — the max a
+// single administration can realistically accumulate: every special-edition
+// cover trigger computeSpecialEditionCovers defines, every Secret File, and
+// one Annual Report per year of a full 48-month term.
+const MAX_MAGAZINE_COVERS = 4
+const MAX_ANNUAL_REPORTS  = 4
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -33,10 +43,14 @@ export default async function ArchivePage({ params }: PageProps) {
   const logRows = await prisma.gameLog.findMany({ where: { gameId: id }, orderBy: { month: 'asc' } })
   const logs: GameLog[] = logRows.map(dbToGameLog)
 
+  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { unlockedAchievements: true } })
+  const unlockedAchievements = toUnlockedAchievements(user?.unlockedAchievements)
+
   const legacy = computeLegacyScore(game)
   const archetype = computePresidentialArchetype(game, logs)
   const sectorBreakdown = computeSectorBreakdown(game.passedLaws)
   const secretFilesUnlocked = SECRET_FILES.filter(f => Boolean(game.flags[f.requiresFlag])).length
+  const quote = getPresidentialQuote(archetype)
 
   // checkGameOver is a pure function of final persisted stats, so re-running
   // it here reliably reconstructs the original ending reason without
@@ -44,6 +58,21 @@ export default async function ArchivePage({ params }: PageProps) {
   const magazineCovers = game.status === 'ACTIVE'
     ? []
     : computeSpecialEditionCovers(game, checkGameOver(game) ?? 'TERM_COMPLETE', legacy)
+
+  const annualReportsAvailable = Math.min(Math.floor(game.currentMonth / 12), MAX_ANNUAL_REPORTS)
+
+  const collectionEntries = [
+    { label: 'Magazine Covers', current: magazineCovers.length,       total: MAX_MAGAZINE_COVERS },
+    { label: 'Secret Files',    current: secretFilesUnlocked,          total: SECRET_FILES.length },
+    { label: 'Annual Reports',  current: annualReportsAvailable,       total: MAX_ANNUAL_REPORTS },
+  ]
+  const collectionTotal   = collectionEntries.reduce((sum, e) => sum + e.total, 0)
+  const collectionCurrent = collectionEntries.reduce((sum, e) => sum + e.current, 0)
+  const collectionPercent = collectionTotal > 0 ? Math.round((collectionCurrent / collectionTotal) * 100) : 0
+
+  const crisesResolved = logs.filter(l => l.actionType === 'CRISIS').length
+  const approvalPeak = Math.round(Math.max(...game.approvalHistory))
+  const approvalLow  = Math.round(Math.min(...game.approvalHistory))
 
   const startYear = Number(monthToDate(1).split(' ')[1])
   const endYear = Number(monthToDate(game.currentMonth).split(' ')[1])
@@ -88,7 +117,7 @@ export default async function ArchivePage({ params }: PageProps) {
 
           <ArchiveShelf title="Government">
             <ShelfLink href={`/game/${game.id}/history`} label="Presidential Journal" />
-            <ShelfPlaceholder label="Annual Reports" />
+            <ShelfCount label="Annual Reports" current={annualReportsAvailable} total={MAX_ANNUAL_REPORTS} />
             <ShelfSectorBreakdown breakdown={sectorBreakdown} />
           </ArchiveShelf>
 
@@ -133,13 +162,51 @@ export default async function ArchivePage({ params }: PageProps) {
           </div>
         </div>
 
-        <div className="mt-8 space-y-4">
-          <ShelfPlaceholder label="Collection Completion" fullWidth />
-          <ShelfPlaceholder label="Presidential Statistics" fullWidth />
-          <ShelfPlaceholder label="Presidential Quote" fullWidth />
+        <div className="mt-8">
+          <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--color-paper-faint)]">
+            <span>Collection Completion</span>
+            <span className="text-[var(--color-brass)]">{collectionPercent}%</span>
+          </div>
+          <div className="mt-2 h-[3px] w-full rounded-full bg-[var(--color-border)]">
+            <div
+              className="h-full rounded-full bg-[var(--color-brass)] transition-all duration-500"
+              style={{ width: `${collectionPercent}%` }}
+            />
+          </div>
+          <div className="mt-3 space-y-1.5">
+            {collectionEntries.map(entry => (
+              <div key={entry.label} className="flex items-center justify-between text-xs">
+                <span className="text-[var(--color-paper-dim)]">{entry.label}</span>
+                <span className="font-mono tabular-nums text-[var(--color-paper-faint)]">{entry.current}/{entry.total}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <p className="mt-2 text-right font-mono text-[10px] text-[var(--color-paper-faint)]">
+        <div className="mt-8 rounded-sm border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-5 py-5 backdrop-blur-sm">
+          <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--color-paper-faint)]">
+            Presidential Statistics
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <StatBox label="Approval Peak" value={`${approvalPeak}%`} />
+            <StatBox label="Approval Low" value={`${approvalLow}%`} />
+            <StatBox label="Laws Passed" value={String(game.passedLaws.length)} />
+            <StatBox label="Crises Resolved" value={String(crisesResolved)} />
+            <StatBox label="Active Conflicts" value={String(game.activeConflicts.length)} />
+            <StatBox label="Achievements" value={`${unlockedAchievements.length}/${ACHIEVEMENTS.length}`} />
+          </div>
+        </div>
+
+        <div className="mt-8 text-center">
+          <p className="mx-auto max-w-md text-[15px] italic leading-relaxed text-[var(--color-paper-dim)]">
+            “{quote}”
+          </p>
+          <p className="mt-3 font-[family-name:var(--font-signature)] text-2xl text-[var(--color-brass)]">
+            Respectfully, President {game.presidentName}
+          </p>
+        </div>
+
+        <p className="mt-6 text-right font-mono text-[10px] text-[var(--color-paper-faint)]">
           Legacy Score {legacy.total}
         </p>
       </main>
@@ -186,6 +253,17 @@ function ShelfPlaceholder({ label, fullWidth }: { label: string; fullWidth?: boo
       }
     >
       {label} <span className="text-[11px]">(coming soon)</span>
+    </div>
+  )
+}
+
+function StatBox({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-sm border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-3 text-center">
+      <div className="font-mono text-lg font-semibold tabular-nums text-[var(--color-paper)]">{value}</div>
+      <div className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.06em] text-[var(--color-paper-faint)]">
+        {label}
+      </div>
     </div>
   )
 }

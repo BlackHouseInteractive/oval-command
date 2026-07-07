@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils'
 import { Seal } from '@/components/Seal'
 import { ShareButton } from '@/components/ShareButton'
 import { computeSectorBreakdown } from '@/lib/law-sectors'
+import { getPresidentialQuote } from '@/lib/presidential-quote'
 import type { LegacyScore, GameOverReason } from '@/types/game'
 import type { PresidentialArchetype } from '@/lib/archetype-engine'
 
@@ -204,6 +205,17 @@ export function LegacyScreen({ legacy, reason, presidentName, archetype, passedL
               </div>
             ))}
           </div>
+
+          {archetype && (
+            <div className="mt-7 border-t border-[var(--color-border)] pt-5 text-center">
+              <p className="mx-auto max-w-sm text-sm italic leading-relaxed text-[var(--color-paper-dim)]">
+                “{getPresidentialQuote(archetype)}”
+              </p>
+              <p className="mt-2 font-[family-name:var(--font-signature)] text-xl text-[var(--color-brass)]">
+                Respectfully, President {presidentName}
+              </p>
+            </div>
+          )}
 
           <button
             onClick={onNewGame}
