@@ -18,8 +18,11 @@ const CONCESSION_BG = '/concession-night-bg.webp'
 // One backdrop per campaign beat — falls back to the debate stage for any
 // scenario id not listed here.
 const SCENARIO_BACKGROUNDS: Record<string, string> = {
+  running_mate: '/campaign-hangar-bg.webp',
+  october_surprise: '/press-scrum-bg.webp',
   final_debate: DEBATE_BG,
   last_stop: '/campaign-rally-bg.webp',
+  election_day_ground_game: '/field-office-bg.webp',
   victory_speech: VICTORY_BG,
 }
 
