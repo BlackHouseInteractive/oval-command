@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { dbToGame, dbToGameLog, getGameRow } from '@/lib/db-helpers'
 import { pickEvent, EVENTS } from '@/lib/game-engine'
 import { computePresidentialArchetype } from '@/lib/archetype-engine'
+import { computeYearInReview } from '@/lib/year-in-review'
 import { getInactivityWarning } from '@/lib/guest-cleanup'
 import { getEnabledOAuthProviders } from '@/lib/oauth-providers'
 import { GameClient } from '@/components/game/GameClient'
@@ -65,6 +66,16 @@ export default async function GamePage({ params }: PageProps) {
     finishedGameArchetype = computePresidentialArchetype(game, allLogRows.map(dbToGameLog))
   }
 
+  // Fired once per year boundary (see components/game/AnnualReport.tsx) —
+  // needs the FULL log history, not just this year's, since reconstructing
+  // economy's value at a month boundary requires walking backward through
+  // every log since then (see lib/year-in-review.ts).
+  let yearInReview = undefined
+  if (game.status === 'ACTIVE' && game.currentMonth % 12 === 0) {
+    const allLogRows = await prisma.gameLog.findMany({ where: { gameId: id }, orderBy: { month: 'asc' } })
+    yearInReview = computeYearInReview(game, allLogRows.map(dbToGameLog), game.currentMonth / 12)
+  }
+
   // Guest sessions are the only ones subject to expiration — session.user.name
   // is 'Guest' for exactly the accounts lib/guest-cleanup.ts targets, so this
   // reuses a signal already present on the session rather than a new query.
@@ -81,6 +92,7 @@ export default async function GamePage({ params }: PageProps) {
       githubEnabled={githubEnabled}
       googleEnabled={googleEnabled}
       finishedGameArchetype={finishedGameArchetype}
+      yearInReview={yearInReview}
     />
   )
 }

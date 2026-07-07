@@ -19,6 +19,7 @@ import { ApprovalGauge } from '@/components/game/ApprovalGauge'
 import { ActionCard, type ActionCardTag } from '@/components/game/ActionCard'
 import { PresidentialInbox } from '@/components/game/PresidentialInbox'
 import { DailyBrief } from '@/components/game/DailyBrief'
+import { AnnualReport } from '@/components/game/AnnualReport'
 import { OnboardingWelcome } from '@/components/game/OnboardingWelcome'
 import { GuestExpiryWarning } from '@/components/game/GuestExpiryWarning'
 import { getEventAccentColor, getRoomTreatment } from '@/lib/event-backgrounds'
@@ -29,6 +30,7 @@ import { computeStatTrend, getTopMovers } from '@/lib/stat-trends'
 import { cn, monthToDate, AVATAR_COLORS } from '@/lib/utils'
 import type { InactivityWarning } from '@/lib/guest-cleanup'
 import type { PresidentialArchetype } from '@/lib/archetype-engine'
+import type { YearInReview } from '@/lib/year-in-review'
 import type { Game, GameLog, CrisisEvent, TurnResult, ProcessTurnResponse } from '@/types/game'
 
 interface GameClientProps {
@@ -39,6 +41,7 @@ interface GameClientProps {
   githubEnabled: boolean
   googleEnabled: boolean
   finishedGameArchetype?: PresidentialArchetype
+  yearInReview?: YearInReview
 }
 
 type ViewState =
@@ -53,7 +56,7 @@ const SEVERITY_DOT: Record<string, string> = {
   opportunity: 'bg-[var(--color-good)]',
 }
 
-export function GameClient({ initialGame, initialEvent, recentLogs: initialRecentLogs, inactivityWarning, githubEnabled, googleEnabled, finishedGameArchetype }: GameClientProps) {
+export function GameClient({ initialGame, initialEvent, recentLogs: initialRecentLogs, inactivityWarning, githubEnabled, googleEnabled, finishedGameArchetype, yearInReview }: GameClientProps) {
   const router = useRouter()
   const [game, setGame] = useState(initialGame)
   const [event, setEvent] = useState(initialEvent)
@@ -196,7 +199,7 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
     <main className="mx-auto max-w-3xl px-6 py-10" style={roomAccentStyle(accentColor)}>
       <RoomAtmosphere color="var(--color-brass)" />
 
-      {view.phase === 'briefing' && (
+      {view.phase === 'briefing' && !yearInReview && (
         <DailyBrief
           gameId={game.id}
           month={game.currentMonth}
@@ -205,6 +208,10 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
           topMovers={topMovers}
           pendingCrisisTitle={event?.title ?? null}
         />
+      )}
+
+      {view.phase === 'briefing' && yearInReview && (
+        <AnnualReport gameId={game.id} review={yearInReview} />
       )}
 
       {/* 1. Greeting — no data of its own, just orients the player */}

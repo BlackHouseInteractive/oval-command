@@ -421,9 +421,9 @@ export function processChoice(
 // NPC REACTIONS
 // ============================================================
 
-type DialogueTier = 'high' | 'medium' | 'low' | 'critical'
+export type DialogueTier = 'high' | 'medium' | 'low' | 'critical'
 
-function getDialogueTier(val: number): DialogueTier {
+export function getDialogueTier(val: number): DialogueTier {
   if (val >= 70) return 'high'
   if (val >= 45) return 'medium'
   if (val >= 25) return 'low'
