@@ -274,11 +274,12 @@ function OvalOfficeEntry() {
         </a>
 
         <p style={{
-          color: '#6B6860',
+          color: '#A8A398',
           fontFamily: 'monospace',
           fontSize: 10,
           letterSpacing: '0.15em',
           textTransform: 'uppercase',
+          textShadow: '0 1px 6px rgba(0,0,0,0.9)',
         }}>
           48 Months · Infinite Consequences
         </p>
