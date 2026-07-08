@@ -88,15 +88,13 @@ export function RoomBackground({
 }
 
 /** A wood-toned strip along the bottom of the viewport — the front edge of
- * the desk/table the player is looking across, with a lighter highlight
- * line where the edge would catch light. */
+ * the desk/table the player is looking across. */
 function DeskEdge({ color }: { color: string }) {
   return (
     <div
       className="pointer-events-none fixed inset-x-0 bottom-0 -z-10 h-24"
       style={{
         background: `linear-gradient(to bottom, transparent 0%, color-mix(in srgb, ${color} 55%, transparent) 30%, ${color} 100%)`,
-        boxShadow: `inset 0 1px 0 0 color-mix(in srgb, ${color} 40%, white)`,
       }}
     />
   )
