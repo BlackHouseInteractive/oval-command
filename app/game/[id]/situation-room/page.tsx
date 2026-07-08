@@ -34,7 +34,7 @@ export default async function SituationRoomPage({ params }: PageProps) {
   const treatment = getRoomTreatment(roomImage)
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-10" style={roomAccentStyle('var(--color-cat-military)')}>
+    <main className="mx-auto flex min-h-[calc(100dvh-6rem)] max-w-3xl flex-col justify-center px-6 py-10" style={roomAccentStyle('var(--color-cat-military)')}>
       <RoomBackground
         image={roomImage}
         color="var(--color-cat-military)"

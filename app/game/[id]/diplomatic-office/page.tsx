@@ -33,7 +33,7 @@ export default async function DiplomaticOfficePage({ params }: PageProps) {
   const treatment = getRoomTreatment(roomImage)
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-10" style={roomAccentStyle('var(--color-cat-diplomacy)')}>
+    <main className="mx-auto flex min-h-[calc(100dvh-6rem)] max-w-3xl flex-col justify-center px-6 py-10" style={roomAccentStyle('var(--color-cat-diplomacy)')}>
       <RoomBackground
         image={roomImage}
         color="var(--color-cat-diplomacy)"
