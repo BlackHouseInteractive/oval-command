@@ -45,7 +45,12 @@ export function computeSpecialEditionCovers(game: Game, reason: GameOverReason, 
     })
   }
 
-  if (legacy.total >= LEGENDARY_LEGACY_THRESHOLD) {
+  // Gated to a completed term — a legacy score this high is reachable even
+  // on a DEBT_COLLAPSE ending (debt itself isn't a term in the score
+  // formula), which would otherwise print "one for the ages" on a
+  // presidency that just collapsed. "Legendary" is a verdict on a full
+  // term, not a stat snapshot.
+  if (reason === 'TERM_COMPLETE' && legacy.total >= LEGENDARY_LEGACY_THRESHOLD) {
     covers.push({
       id:       'special_legacy_95',
       icon:     '🏆',
@@ -55,11 +60,14 @@ export function computeSpecialEditionCovers(game: Game, reason: GameOverReason, 
   }
 
   // Guaranteed Final Edition — every administration gets a closing cover,
-  // even a quiet term with no achievements or specials earned.
+  // even a quiet term with no achievements or specials earned. Duration
+  // reflects how the term actually ended — "Four Years" would be wrong for
+  // any of the early-exit reasons, which end before month 48.
+  const duration = reason === 'TERM_COMPLETE' ? 'Four Years' : `${game.currentMonth} Month${game.currentMonth === 1 ? '' : 's'}`
   covers.push({
     id:       'final_edition',
     icon:     '🏛️',
-    headline: `${game.presidentName}: Four Years in Review`,
+    headline: `${game.presidentName}: ${duration} in Review`,
     subhead:  'Legacy Edition',
   })
 

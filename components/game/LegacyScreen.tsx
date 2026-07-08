@@ -35,6 +35,20 @@ export const REASON_LABEL: Record<GameOverReason, string> = {
   TERM_COMPLETE: 'Term Complete',
 }
 
+// The score-bracket verdict text below (from computeLegacyScore) is written
+// for a term that ran its full course — it can read as triumphant ("A
+// strong term...") even when the term actually ended early in disgrace,
+// since the legacy score formula doesn't penalize *why* the game ended,
+// only the stat snapshot at that moment. Override it for the four failure
+// endings so the paragraph directly under the REASON_LABEL badge never
+// contradicts that badge.
+const FAILURE_VERDICT: Record<Exclude<GameOverReason, 'TERM_COMPLETE'>, string> = {
+  IMPEACHMENT: 'Removed from office. Whatever this administration accomplished, history will lead with how it ended.',
+  DEBT_COLLAPSE: 'The economy collapsed under the weight of unsustainable debt before the term could reach its conclusion.',
+  SECURITY_FAILURE: 'A catastrophic breakdown in national security ended this presidency before its work was done.',
+  CONSTITUTIONAL_CRISIS: 'Civil unrest escalated beyond any institution’s ability to contain it, ending the term in crisis.',
+}
+
 function scoreTone(score: number) {
   if (score >= 65) return 'text-[var(--color-good)]'
   if (score >= 35) return 'text-[var(--color-warn)]'
@@ -84,7 +98,7 @@ export function LegacyScreen({ legacy, reason, presidentName, archetype, passedL
           </div>
 
           <p className="mx-auto mt-5 max-w-sm text-[15px] leading-relaxed text-[var(--color-paper-dim)]">
-            {legacy.verdict}
+            {reason === 'TERM_COMPLETE' ? legacy.verdict : FAILURE_VERDICT[reason]}
           </p>
 
           {archetype && (

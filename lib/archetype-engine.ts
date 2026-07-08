@@ -10,8 +10,9 @@
  * "I got The Crisis Manager" vs "I ended up as The Peacemaker."
  */
 
-import type { Game, GameLog } from '@/types/game'
+import type { Game, GameLog, GameOverReason } from '@/types/game'
 import { resolveRoster } from '@/lib/cabinet'
+import { checkGameOver } from '@/lib/game-engine'
 
 export interface PresidentialArchetype {
   title:                string   // "The Crisis Manager"
@@ -172,6 +173,67 @@ const ARCHETYPES: Array<{
   },
 ]
 
+// ── Failure Archetypes ────────────────────────────────────────────────────
+// The ARCHETYPES above are scored purely on governing style (military vs.
+// diplomatic, spending vs. austerity, etc.) using whatever the final stat
+// snapshot happens to be. That scoring has no idea the term ended abruptly —
+// a presidency that got impeached, ran the debt into collapse, let national
+// security fail outright, or lost the country to a constitutional crisis can
+// still land on a flattering style-based archetype ("The Diplomat") and a
+// score-bracket verdict ("historic presidency") if its other stats happened
+// to look fine at the moment everything fell apart. That directly
+// contradicts the REASON_LABEL badge shown right above it on the Legacy
+// screen. These four dedicated archetypes replace the style-based pick
+// whenever the term ended in one of these ways, so the identity, criticism,
+// and historical framing always agree with how the presidency actually
+// ended.
+type FailureReason = Exclude<GameOverReason, 'TERM_COMPLETE'>
+
+const FAILURE_ARCHETYPES: Record<FailureReason, Pick<PresidentialArchetype, 'title' | 'subtitle' | 'description' | 'traits' | 'icon'>> = {
+  IMPEACHMENT: {
+    title: 'The Disgraced',
+    subtitle: 'Removed before the work was done',
+    description: 'This presidency did not end on its own terms. Congress ended it. Whatever this administration accomplished along the way, it will forever be a footnote to how the term actually concluded.',
+    traits: ['Scandal-Plagued', 'Distrusted', 'Removed'],
+    icon: '🔨',
+  },
+  DEBT_COLLAPSE: {
+    title: 'The Bankrupt',
+    subtitle: 'Spent what the country didn’t have',
+    description: 'The bill came due before the term did. Debt spiraled past what the economy could sustain, and the administration ran out of runway. Every other line on this report now sits in the shadow of how it ended.',
+    traits: ['Overextended', 'Fiscally Reckless', 'Short-Sighted'],
+    icon: '💸',
+  },
+  SECURITY_FAILURE: {
+    title: 'The Besieged',
+    subtitle: 'Overwhelmed when it mattered most',
+    description: 'National security cannot be a secondary concern, and this administration learned that the hardest way possible. Whatever else defined this term, it will be remembered for the moment the country’s defenses gave way.',
+    traits: ['Exposed', 'Reactive', 'Overrun'],
+    icon: '🚨',
+  },
+  CONSTITUTIONAL_CRISIS: {
+    title: 'The Unraveling',
+    subtitle: 'Lost the room, then lost the country',
+    description: 'Civil unrest doesn’t reach a breaking point by accident. Something in how this administration governed — or failed to govern — pushed the country past the point its institutions could hold, ending the term in crisis rather than at the ballot box.',
+    traits: ['Polarizing', 'Overwhelmed', 'Destabilizing'],
+    icon: '🔥',
+  },
+}
+
+const FAILURE_CRITICISM: Record<FailureReason, string> = {
+  IMPEACHMENT: 'Removed from office before the term’s end — no accomplishment on this list survives that headline.',
+  DEBT_COLLAPSE: 'The national debt collapsed the term outright — the one failure no legislative record can offset.',
+  SECURITY_FAILURE: 'A catastrophic breakdown in national security ended this presidency — the one failure a Commander-in-Chief cannot recover from.',
+  CONSTITUTIONAL_CRISIS: 'Civil unrest spiraled beyond any institution’s ability to contain it, ending the term in crisis outright.',
+}
+
+const FAILURE_HISTORICAL_COMPARISON: Record<FailureReason, string> = {
+  IMPEACHMENT: 'History remembers removals from office above almost everything else a presidency does. This term will be taught primarily as a cautionary tale, regardless of what else it accomplished.',
+  DEBT_COLLAPSE: 'An economic collapse on this scale overshadows the rest of the record. Historians will treat the debt crisis as the defining — and disqualifying — feature of this term.',
+  SECURITY_FAILURE: 'A security failure at this scale reshapes how a presidency is remembered. This term will be studied primarily for the moment its defenses failed, not for what came before it.',
+  CONSTITUTIONAL_CRISIS: 'A term that ends in constitutional crisis is remembered for the crisis, not the record that preceded it. History will ask what could have been done differently long before it reached this point.',
+}
+
 // ── Relationship Legacy ──────────────────────────────────────────────────
 // Normalizes each NPC's final relationship into their own min/max range
 // (same 0-1 calculation CabinetCard.tsx's relationshipTone() uses) so the
@@ -201,10 +263,17 @@ function buildRelationshipLegacy(game: Game): string {
 export function computePresidentialArchetype(game: Game, logs: GameLog[]): PresidentialArchetype {
   const pattern = scorePattern(game, logs)
 
+  // checkGameOver is a pure function of the final persisted stats, so
+  // re-running it here reliably reconstructs the original ending reason
+  // (same reasoning app/presidencies/page.tsx and app/archive/[id]/page.tsx
+  // already rely on) without needing every call site to thread it through.
+  const reason: GameOverReason = checkGameOver(game) ?? 'TERM_COMPLETE'
+  const failureReason = reason === 'TERM_COMPLETE' ? null : (reason as FailureReason)
+
   const scored = ARCHETYPES.map(a => ({ archetype: a, score: a.match(pattern) }))
   scored.sort((a, b) => b.score - a.score)
 
-  const best = scored[0].archetype
+  const best = failureReason ? FAILURE_ARCHETYPES[failureReason] : scored[0].archetype
 
   // ── Accomplishments ─────────────────────────────────────────────────────
   // Derived entirely from actual game data — what really happened this term.
@@ -258,10 +327,17 @@ export function computePresidentialArchetype(game: Game, logs: GameLog[]): Presi
 
   // ── Biggest Criticism ────────────────────────────────────────────────────
   // Every presidency has a criticism — even good ones. The question is
-  // whether the criticism is a real indictment or a minor caveat.
+  // whether the criticism is a real indictment or a minor caveat. For a
+  // term that ended in failure, the ending itself always is the criticism —
+  // the stat-based branches below exist to find a real indictment in a
+  // term that otherwise ran its full course, and shouldn't be second-guessed
+  // by (for example) a security collapse that happened to leave approval
+  // and the legislative record untouched.
   let biggestCriticism = ''
 
-  if (game.passedLaws.length === 0) {
+  if (failureReason) {
+    biggestCriticism = FAILURE_CRITICISM[failureReason]
+  } else if (game.passedLaws.length === 0) {
     biggestCriticism = 'A four-year term with no major legislation — critics called it a wasted mandate.'
   } else if (game.stats.debt >= 58) {
     biggestCriticism = `The national debt rose to $${game.stats.debt.toFixed(1)}T — future generations will inherit the bill.`
@@ -288,6 +364,10 @@ export function computePresidentialArchetype(game: Game, logs: GameLog[]): Presi
   }
 
   // ── Historical Comparison ────────────────────────────────────────────────
+  // Note this formula has no security term — deliberately excluded below
+  // via failureReason, since a SECURITY_FAILURE ending can otherwise score
+  // very high here (security is capped at 15% of the *legacy* score and
+  // isn't in this formula at all) despite being the reason the term ended.
   const totalScore =
     game.stats.approval * 0.3 +
     game.stats.economy * 0.2 +
@@ -297,7 +377,9 @@ export function computePresidentialArchetype(game: Game, logs: GameLog[]): Presi
     game.passedLaws.length * 3
 
   let historicalComparison = ''
-  if (totalScore >= 80) {
+  if (failureReason) {
+    historicalComparison = FAILURE_HISTORICAL_COMPARISON[failureReason]
+  } else if (totalScore >= 80) {
     historicalComparison = 'Historians will likely rank this among the strongest presidencies of the modern era — steady governance, meaningful legislation, and a country left better than it was found.'
   } else if (totalScore >= 65) {
     historicalComparison = 'A solid, competent term that will age well in the history books — not transformative, but effective when it mattered.'
