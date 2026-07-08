@@ -14,6 +14,7 @@
 import { prisma } from '@/lib/prisma'
 import { LAWS, computeLegacyScore } from '@/lib/game-engine'
 import { toJson, toUnlockedAchievements } from '@/lib/db-helpers'
+import { SELECTABLE_SLOT_IDS } from '@/types/game'
 import type { Game, GameOverReason, LegacyScore, LawCategory, LawSector, Achievement, UnlockedAchievement } from '@/types/game'
 
 export const ACHIEVEMENTS: Achievement[] = [
@@ -101,6 +102,27 @@ export const ACHIEVEMENTS: Achievement[] = [
     icon: '🌐',
     perk: { id: 'renaissance_agenda', label: 'Broad Coalition', description: '+3 starting Approval', statBonus: { approval: 3 } },
   },
+  {
+    id: 'commander_in_chief',
+    title: 'Commander in Chief',
+    description: 'Authorized your Secretary of Defense’s Military Option during a crisis.',
+    icon: '⚔️',
+    perk: { id: 'commander_in_chief', label: 'War Room Access', description: '+4 starting Security', statBonus: { security: 4 } },
+  },
+  {
+    id: 'full_cabinet',
+    title: 'Full Cabinet',
+    description: 'Activated both Take the Hit and Economic Briefing in the same term.',
+    icon: '👥',
+    perk: { id: 'full_cabinet', label: 'Seasoned Team', description: '+3 starting Base Support', statBonus: { baseSupport: 3 } },
+  },
+  {
+    id: 'unbroken_trust',
+    title: 'Unbroken Trust',
+    description: 'Completed a full term without ever crossing a Cabinet member’s breaking point.',
+    icon: '🔐',
+    perk: { id: 'unbroken_trust', label: 'Public Trust', description: '+2 starting Approval', statBonus: { approval: 2 } },
+  },
 ]
 
 export const ALL_PERKS = ACHIEVEMENTS.flatMap(a => (a.perk ? [a.perk] : []))
@@ -117,9 +139,12 @@ export interface AchievementProgress {
  * conditions (peacemaker needs both zero conflicts AND reputation ≥70),
  * outcome-gated ones that only resolve at the end of a term
  * (two_term_president, battle_tested, spotless_record), the one
- * inverted "lower is better" condition (domestic_tranquility), and the
- * achievement for a bad ending (removed_from_office) — a progress bar
- * toward getting impeached doesn't read as an achievement bar.
+ * inverted "lower is better" condition (domestic_tranquility, and by the
+ * same logic unbroken_trust — a bar counting down toward zero broken
+ * trust flags reads backwards), the achievement for a bad ending
+ * (removed_from_office) — a progress bar toward getting impeached
+ * doesn't read as an achievement bar — and commander_in_chief, a single
+ * one-time action rather than something that climbs.
  */
 export function computeAchievementProgress(game: Game): Record<string, AchievementProgress> {
   const bipartisanPassed = LAWS.filter(l => game.passedLaws.includes(l.id) && l.category === 'bipartisan').length
@@ -134,6 +159,7 @@ export function computeAchievementProgress(game: Game): Record<string, Achieveme
     fortress:               { current: Math.min(Math.round(game.stats.security), 80), target: 80 },
     full_term_survivor:     { current: game.currentMonth, target: 48 },
     renaissance_agenda:     { current: Math.min(distinctSectorsPassed, 5), target: 5 },
+    full_cabinet:           { current: Math.min(game.usedNpcAbilities.length, 2), target: 2 },
   }
 }
 
@@ -161,6 +187,11 @@ export function evaluateAchievements(ctx: AchievementContext): Achievement[] {
   if (game.stats.security >= 80) earnedIds.add('fortress')
   if (reason === 'IMPEACHMENT') earnedIds.add('removed_from_office')
   if (new Set(passedLawSectors).size >= 5) earnedIds.add('renaissance_agenda')
+  if (game.flags['military_option_used']) earnedIds.add('commander_in_chief')
+  if (game.usedNpcAbilities.length >= 2) earnedIds.add('full_cabinet')
+  if (reason === 'TERM_COMPLETE' && SELECTABLE_SLOT_IDS.every(id => !game.flags[`${id}_broke_trust`])) {
+    earnedIds.add('unbroken_trust')
+  }
 
   return ACHIEVEMENTS.filter(a => earnedIds.has(a.id))
 }

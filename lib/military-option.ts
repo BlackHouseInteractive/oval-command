@@ -48,7 +48,7 @@ export function getMilitaryOptionChoice(event: CrisisEvent, game: Game): EventCh
       security: (base.effects.security ?? 0) + securityBonus,
       globalReputation: reputationRelief,
     },
-    sets_flags: base.sets_flags,
+    sets_flags: [...base.sets_flags, 'military_option_used'],
     outcome: 'Your Secretary of Defense oversees the operation personally. It goes exactly the way the briefing said it would — which almost never happens.',
   }
 }
