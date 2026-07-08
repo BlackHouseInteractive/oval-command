@@ -4,7 +4,10 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { dbToGame, dbToGameLog, getGameRow } from '@/lib/db-helpers'
 import { computeStatTrend } from '@/lib/stat-trends'
+import { EVENTS } from '@/lib/game-engine'
 import { GovernmentOverviewView } from '@/components/game/GovernmentOverviewView'
+import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
+import { getRoomTreatment, getRoomImage, isTenseMood } from '@/lib/event-backgrounds'
 import type { GameStats } from '@/types/game'
 
 interface PageProps {
@@ -27,6 +30,9 @@ export default async function GovernmentOverviewPage({ params }: PageProps) {
   if (row.userId !== session.user.id) redirect('/dashboard')
 
   const game = dbToGame(row)
+  const pendingEvent = row.currentEventId ? EVENTS.find(e => e.id === row.currentEventId) : undefined
+  const roomImage = getRoomImage('/oval-office-bg.webp', isTenseMood(game, pendingEvent))
+  const treatment = getRoomTreatment(roomImage)
 
   const recentLogRows = await prisma.gameLog.findMany({
     where: { gameId: id },
@@ -40,7 +46,13 @@ export default async function GovernmentOverviewPage({ params }: PageProps) {
   ) as Record<keyof GameStats, ReturnType<typeof computeStatTrend>>
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-10">
+    <main className="mx-auto max-w-3xl px-6 py-10" style={roomAccentStyle('var(--color-brass)')}>
+      <RoomBackground
+        image={roomImage}
+        color="var(--color-brass)"
+        backgroundPosition={treatment.backgroundPosition}
+        foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
+      />
       <Link
         href={`/game/${game.id}`}
         className="font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--color-paper-faint)] hover:text-[var(--color-paper)]"

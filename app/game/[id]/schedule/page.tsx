@@ -5,6 +5,8 @@ import { dbToGame, getGameRow } from '@/lib/db-helpers'
 import { EVENTS } from '@/lib/game-engine'
 import { getLegislativeOpportunity } from '@/lib/law-engine'
 import { hashSeed } from '@/lib/utils'
+import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
+import { getRoomTreatment, getRoomImage, isTenseMood } from '@/lib/event-backgrounds'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -28,6 +30,8 @@ export default async function SchedulePage({ params }: PageProps) {
 
   const game = dbToGame(row)
   const pendingEvent = row.currentEventId ? EVENTS.find(e => e.id === row.currentEventId) : undefined
+  const roomImage = getRoomImage('/oval-office-bg.webp', isTenseMood(game, pendingEvent))
+  const treatment = getRoomTreatment(roomImage)
   const opportunity = getLegislativeOpportunity(game)
 
   const items: ScheduleItem[] = []
@@ -62,7 +66,13 @@ export default async function SchedulePage({ params }: PageProps) {
   items.sort((a, b) => a.days - b.days)
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-10">
+    <main className="mx-auto max-w-3xl px-6 py-10" style={roomAccentStyle('var(--color-brass)')}>
+      <RoomBackground
+        image={roomImage}
+        color="var(--color-brass)"
+        backgroundPosition={treatment.backgroundPosition}
+        foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
+      />
       <Link
         href={`/game/${game.id}`}
         className="font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--color-paper-faint)] hover:text-[var(--color-paper)]"
