@@ -1522,5 +1522,206 @@
         "outcome": "They notice. Of course they notice. They don't say anything about it — yet."
       }
     ]
+  },
+  {
+    "id": "room_vp_security_briefing_clash",
+    "title": "Who Gets to Announce It",
+    "category": "personnel",
+    "description": "A crisis is breaking. Your Vice President wants to be the one who addresses it on camera. Your Secretary of Defense wants nothing said publicly until the briefing is finished.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 3,
+    "npcId": "vice_president",
+    "personnelMeta": { "tier": "room" },
+    "dialogueSequence": [
+      { "npcId": "vice_president", "line": "The public needs to hear from someone today, not after your briefing wraps. I can do it." },
+      { "npcId": "sec_defense", "line": "Anything said before we finish assessing the threat is a guess with your Vice President's face on it." }
+    ],
+    "choices": [
+      {
+        "index": 0, "text": "Let the Vice President address the cameras now.",
+        "effects": { "approval": 2, "security": -2 },
+        "relationshipDelta": 8,
+        "sets_flags": ["vp_addressed_crisis_early"],
+        "outcome": "\"I won't get ahead of the facts,\" they promise. Mostly, they keep it."
+      },
+      {
+        "index": 1, "text": "Hold everyone back until the briefing is done.",
+        "effects": { "security": 2, "approval": -1 },
+        "relationshipDelta": -6,
+        "sets_flags": ["vp_held_back_from_cameras"],
+        "outcome": "They stand down. The next time you need a surrogate on short notice, remember this."
+      }
+    ]
+  },
+  {
+    "id": "room_ag_defense_legal_clash",
+    "title": "The Authority Question",
+    "category": "personnel",
+    "description": "Your Secretary of Defense wants expanded surveillance authority to track a credible threat. Your Attorney General says the request is outside what current law actually allows.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 3,
+    "npcId": "attorney_general",
+    "personnelMeta": { "tier": "room" },
+    "dialogueSequence": [
+      { "npcId": "sec_defense", "line": "We have the target. We don't have the legal sign-off, and I don't have time to wait for one." },
+      { "npcId": "attorney_general", "line": "Then the answer is no — not 'ask me again after you've already done it.'" }
+    ],
+    "choices": [
+      {
+        "index": 0, "text": "Go through the courts, even if it costs time.",
+        "effects": { "security": -2, "congressSupport": 2 },
+        "relationshipDelta": 10,
+        "sets_flags": ["surveillance_by_the_book"],
+        "outcome": "\"That's how it's supposed to work,\" your Attorney General says, like it's a rare enough thing to remark on."
+      },
+      {
+        "index": 1, "text": "Authorize it now — sort out the legality after.",
+        "effects": { "security": 3 },
+        "relationshipDelta": -14,
+        "crossesBreakingPoint": "illegal_action",
+        "sets_flags": ["surveillance_authorized_early"],
+        "outcome": "Your Attorney General doesn't argue in the room. That's how you know it's serious."
+      }
+    ]
+  },
+  {
+    "id": "room_leak_investigation_split",
+    "title": "Who Talked",
+    "category": "personnel",
+    "description": "Internal budget memos leaked to a reporter this morning. Your Chief of Staff wants to handle it quietly. Your Attorney General wants a formal investigation. Your Press Secretary just wants to know what she's allowed to say at the two o'clock briefing.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 3,
+    "npcId": "chief_of_staff",
+    "personnelMeta": { "tier": "room" },
+    "dialogueSequence": [
+      { "npcId": "chief_of_staff", "line": "We find out who did this ourselves, quietly, and it doesn't happen twice." },
+      { "npcId": "attorney_general", "line": "Quietly isn't a legal process. If any of that memo is classified-adjacent, this goes through my office." },
+      { "npcId": "press_secretary", "line": "Either way, I have a briefing in three hours and reporters who already have the memo." }
+    ],
+    "choices": [
+      {
+        "index": 0, "text": "Let the Chief of Staff handle it internally.",
+        "effects": { "approval": 1 },
+        "relationshipDelta": 8,
+        "sets_flags": ["leak_handled_internally"],
+        "outcome": "\"Give me a week and a name,\" they say. They mean it."
+      },
+      {
+        "index": 1, "text": "Order the Attorney General's formal investigation.",
+        "effects": { "congressSupport": 1, "approval": -1 },
+        "relationshipDelta": -6,
+        "sets_flags": ["leak_formal_investigation"],
+        "outcome": "Your Chief of Staff doesn't object out loud. The set of their jaw says otherwise."
+      },
+      {
+        "index": 2, "text": "Tell the Press Secretary to get ahead of it before the briefing.",
+        "effects": { "mediaScore": 1 },
+        "relationshipDelta": 2,
+        "sets_flags": ["leak_press_managed"],
+        "outcome": "She walks out to face the room forty minutes later, ready. It buys everyone some time."
+      }
+    ]
+  },
+  {
+    "id": "room_treasury_vp_optics_clash",
+    "title": "The Number vs. The Narrative",
+    "category": "personnel",
+    "description": "Your Treasury Secretary wants to announce a round of spending cuts before the next jobs report. Your Vice President says announcing cuts two weeks before a special election is politically suicidal.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 3,
+    "npcId": "treasury_secretary",
+    "personnelMeta": { "tier": "room" },
+    "dialogueSequence": [
+      { "npcId": "treasury_secretary", "line": "The number needs to move before the next report, or the report moves the number for us." },
+      { "npcId": "vice_president", "line": "Two weeks before a special election is the single worst time to announce this. Ask literally anyone in politics." }
+    ],
+    "choices": [
+      {
+        "index": 0, "text": "Announce the cuts on Treasury's timeline.",
+        "effects": { "debt": -0.3, "approval": -2 },
+        "relationshipDelta": 9,
+        "sets_flags": ["cuts_announced_on_schedule"],
+        "outcome": "\"Finally,\" your Treasury Secretary says, like a weight left the room."
+      },
+      {
+        "index": 1, "text": "Delay the announcement until after the election.",
+        "effects": { "debt": 0.2, "approval": 1 },
+        "relationshipDelta": -7,
+        "sets_flags": ["cuts_delayed_for_politics"],
+        "outcome": "They don't say \"I told you so.\" The silence does it for them."
+      }
+    ]
+  },
+  {
+    "id": "room_defense_cos_timing_clash",
+    "title": "Not This Week",
+    "category": "personnel",
+    "description": "Your Secretary of Defense has an operation ready to execute. Your Chief of Staff wants it moved — the timing collides with an unrelated news cycle that's already going badly.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 3,
+    "npcId": "sec_defense",
+    "personnelMeta": { "tier": "room" },
+    "dialogueSequence": [
+      { "npcId": "sec_defense", "line": "The window is real and it's short. I need a decision today, not next week." },
+      { "npcId": "chief_of_staff", "line": "If this lands the same week as the inspector general report, nobody covers it on the merits." }
+    ],
+    "choices": [
+      {
+        "index": 0, "text": "Approve it on the original timeline.",
+        "effects": { "security": 3, "approval": -2 },
+        "relationshipDelta": 9,
+        "sets_flags": ["operation_on_original_timeline"],
+        "outcome": "\"Thank you for not letting a news cycle run the Pentagon,\" they say."
+      },
+      {
+        "index": 1, "text": "Delay it a week for better optics.",
+        "effects": { "approval": 1, "security": -2 },
+        "relationshipDelta": -8,
+        "sets_flags": ["operation_delayed_for_optics"],
+        "outcome": "They comply. They also make sure you know, precisely, what the delay cost."
+      }
+    ]
+  },
+  {
+    "id": "room_family_dinner_interruption",
+    "title": "Dinner, Interrupted",
+    "category": "personnel",
+    "description": "Your family scheduled a rare dinner together tonight. Your Chief of Staff shows up at the residence with something that genuinely cannot wait until morning.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 2,
+    "npcId": "chief_of_staff",
+    "personnelMeta": { "tier": "room" },
+    "dialogueSequence": [
+      { "npcId": "first_spouse", "line": "You said tonight. You always say 'this one time.' It's never one time." },
+      { "npcId": "chief_of_staff", "line": "I wouldn't be standing in your dining room if it could wait. I'm sorry — truly." }
+    ],
+    "choices": [
+      {
+        "index": 0, "text": "Step out and take the briefing.",
+        "effects": {},
+        "relationshipDelta": 6,
+        "sets_flags": ["dinner_interrupted_for_work"],
+        "outcome": "Your Chief of Staff looks almost as unhappy about this as you do. Almost."
+      },
+      {
+        "index": 1, "text": "Tell your Chief of Staff it waits until morning.",
+        "effects": {},
+        "relationshipDelta": -5,
+        "sets_flags": ["dinner_protected"],
+        "outcome": "\"Understood,\" they say, and you can hear them recalculating how urgent it actually was."
+      }
+    ]
   }
 ]

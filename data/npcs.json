@@ -1128,5 +1128,147 @@
       "lowRelationshipAutoTrigger": 30
     },
     "image": "/npcs/protest_leader.png"
+  },
+  {
+    "id": "press_secretary",
+    "name": "Press Secretary Maya Lin",
+    "shortName": "Press Sec. Lin",
+    "role": "White House Press Secretary",
+    "faction": "inner_circle",
+    "avatar": "ML",
+    "avatarColor": "gray",
+    "personality": {
+      "archetype": "The Human Shield",
+      "description": "She stands at that podium every single day and absorbs whatever the day is throwing, so you don't have to. She's sharp, unflappable on camera, and privately furious when she finds out something at the same time as the reporters she's supposed to be ahead of. Keep her informed and she is the best asset in the building. Blindside her once too often and she stops fighting for you in the room.",
+      "traits": [
+        "unflappable on camera",
+        "quietly protective of the administration",
+        "furious when kept out of the loop",
+        "trusted by a press corps that trusts almost no one"
+      ]
+    },
+    "relationship": {
+      "start": 55,
+      "min": 10,
+      "max": 95
+    },
+    "triggers": {
+      "onLowRelationship": {
+        "threshold": 30,
+        "event": "Press Secretary stops volunteering context to reporters and starts reading from the card verbatim",
+        "approvalDelta": -3
+      },
+      "onHighRelationship": {
+        "threshold": 75,
+        "benefit": "Briefing room coverage runs measurably friendlier — scandal damage reduced",
+        "scandalReduction": 0.15
+      }
+    },
+    "relationshipDeltas": {
+      "press_conference_held": 8,
+      "shield_law_passed": 10,
+      "whistleblower_attacked": -14,
+      "active_scandal_covered_up": -12,
+      "transparent_scandal_response": 6,
+      "ignored_media_3mo": -6,
+      "approval_above_58": 4
+    },
+    "monthlyDialogue": {
+      "high": [
+        "I actually enjoyed that briefing today. First time I can say that in a while.",
+        "Give me the bad news before the reporters get it. That's all I ask, and today you did.",
+        "The corps trusts what comes out of that podium right now. Let's not spend that carelessly."
+      ],
+      "medium": [
+        "I can sell this. I'd sell it better with more than forty minutes' notice next time.",
+        "Nothing today I can't handle. Ask me again after next week's numbers.",
+        "The follow-up questions are getting sharper. You should know what they're circling."
+      ],
+      "low": [
+        "I found out about that from a reporter, not from this building. That can't keep happening.",
+        "I stood up there today and I wasn't sure I believed what I was saying. That's a problem for both of us.",
+        "My credibility is the only thing that makes that podium worth anything. It's not infinite."
+      ],
+      "critical": [
+        "I'm not going to keep defending decisions nobody explains to me first.",
+        "The press corps stopped believing the podium weeks ago. I don't know how we get that back.",
+        "I took this job to tell the truth on your behalf. I need that to still be possible."
+      ]
+    },
+    "specialAbility": {
+      "name": "Off the Record",
+      "description": "Trusted, unofficial guidance to the press corps — no mechanical effect, just the sense that someone in this building still returns reporters' calls."
+    }
+  },
+  {
+    "id": "first_spouse",
+    "name": "Jordan Ellis",
+    "shortName": "Jordan Ellis",
+    "role": "First Spouse",
+    "faction": "inner_circle",
+    "avatar": "JE",
+    "avatarColor": "green",
+    "personality": {
+      "archetype": "The Person Who Knew You Before This",
+      "description": "No portfolio, no vote, no gavel, and somehow more influence over your mood than anyone with a title. Jordan didn't run for anything and didn't fully sign up for this, either — but shows up anyway, mostly. What's left of your private life mostly lives here.",
+      "traits": [
+        "unimpressed by titles, including yours",
+        "the one honest room in the building",
+        "quietly keeping score of what the job has cost",
+        "loyal, but not infinitely patient"
+      ]
+    },
+    "relationship": {
+      "start": 60,
+      "min": 15,
+      "max": 95
+    },
+    "triggers": {
+      "onLowRelationship": {
+        "threshold": 30,
+        "event": "A friend-of-the-family profile piece runs with an unflattering, on-the-record quote about the toll the job has taken at home",
+        "approvalDelta": -2
+      },
+      "onHighRelationship": {
+        "threshold": 75,
+        "benefit": "A warm, humanizing joint interview runs — a small, genuine approval bump",
+        "approvalBonus": 3
+      }
+    },
+    "relationshipDeltas": {
+      "scandal_resolved_fast": 6,
+      "active_scandal_covered_up": -10,
+      "approval_below_35": -5,
+      "at_war_decisive": -6,
+      "bipartisan_bill_passed": 3,
+      "debt_deal": 3,
+      "approval_above_60": 3
+    },
+    "monthlyDialogue": {
+      "high": [
+        "You actually looked like yourself at dinner tonight. I'd forgotten what that looked like.",
+        "I'm proud of you. I don't say that to be nice — I mean it about this one specifically.",
+        "Whatever's next, I'm here for it. I want to be clear about that."
+      ],
+      "medium": [
+        "I'm not asking you to talk about work tonight. I'm asking you to actually be here for one dinner.",
+        "You've been somewhere else for a week. I get why. I still notice.",
+        "Tell me the truth: are you sleeping, or just lying down in the dark scrolling briefings?"
+      ],
+      "low": [
+        "I didn't marry the job. I keep having to remind myself of that lately.",
+        "The kids ask why you're never at anything anymore. I don't have a good answer for them.",
+        "I'm not doing another dinner where staff interrupts three times. Fix that, or don't ask me to sit through it."
+      ],
+      "critical": [
+        "I don't know who's living in this house most nights. It doesn't feel like you.",
+        "I've defended this job to everyone who's asked. I'm running out of things to say.",
+        "We need to actually talk. Not tonight, because tonight there's always something. But soon."
+      ]
+    },
+    "specialAbility": {
+      "name": "The Home Front",
+      "description": "No official portfolio, no mechanical effect — just the one person in the building who remembers who you were before any of this."
+    }
   }
 ]
