@@ -359,13 +359,13 @@ export function NewGameForm({ unlockedPerks }: NewGameFormProps) {
   }
 
   if (phase.step === 'cabinet-assembly') {
-    const treatment = getRoomTreatment('/oval-office-bg.webp')
+    const treatment = getRoomTreatment('/inauguration-bg.webp')
     const onLastSlot = phase.slotIndex >= SELECTABLE_SLOT_IDS.length
 
     return (
       <main className="flex min-h-screen items-center justify-center px-6 py-12" style={roomAccentStyle('var(--color-brass)')}>
         <RoomBackground
-          image="/oval-office-bg.webp"
+          image="/inauguration-bg.webp"
           color="var(--color-brass)"
           backgroundPosition={treatment.backgroundPosition}
           foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}

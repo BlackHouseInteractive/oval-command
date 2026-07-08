@@ -12,6 +12,7 @@ const CATEGORY_BACKGROUNDS: Record<string, string> = {
   congress:  '/congress-bg.webp',
   diplomacy: '/diplomatic-summit-bg.webp',
   international: '/international-affairs-bg.webp',
+  personnel: '/personnel-matter-bg.webp',
 }
 
 const DEFAULT_BACKGROUND = '/oval-office-bg.webp'
@@ -65,6 +66,10 @@ const ROOM_TREATMENTS: Record<string, RoomTreatment> = {
   '/debate-podium-bg.webp':    { backgroundPosition: 'center center', foregroundStyle: 'desk',    foregroundColor: '#12141a' },
   // Same podium-edge composition, one per campaign-flow beat.
   '/campaign-rally-bg.webp':   { backgroundPosition: 'center center', foregroundStyle: 'desk',    foregroundColor: '#3d2b18' },
+  // The swearing-in itself — shown on the dashboard's empty-state hero
+  // and during cabinet assembly, both of which sit in the same
+  // pre-governing transition window.
+  '/inauguration-bg.webp':     { backgroundPosition: 'center center', foregroundStyle: 'desk',    foregroundColor: '#241a10' },
   '/victory-night-bg.webp':    { backgroundPosition: 'center center', foregroundStyle: 'desk',    foregroundColor: '#151824' },
   '/concession-night-bg.webp': { backgroundPosition: 'center center', foregroundStyle: 'desk',    foregroundColor: '#0d0f14' },
   // Tense-mood counterparts — same composition/foreground object as their
@@ -90,6 +95,7 @@ const ROOM_TREATMENTS: Record<string, RoomTreatment> = {
   '/diplomatic-summit-bg.webp': { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#241a10' },
   '/media-coverage-bg.webp':        { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#0a0e14' },
   '/international-affairs-bg.webp': { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#0d1218' },
+  '/personnel-matter-bg.webp':      { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#1c130c' },
 }
 
 export function getRoomTreatment(image: string): RoomTreatment {
