@@ -14,9 +14,13 @@ model User {
   image         String?
   createdAt     DateTime  @default(now())
   unlockedAchievements Json @default("[]")
+  // Founder Edition purchase flag — a standing account-level grant of every
+  // content id, current and future, rather than a per-content Purchase row.
+  founderAllFuture Boolean @default(false)
   accounts      Account[]
   sessions      Session[]
   games         Game[]
+  purchases     Purchase[]
 }
 
 model Account {
@@ -107,6 +111,41 @@ model GameLog {
   game        Game       @relation(fields: [gameId], references: [id], onDelete: Cascade)
 
   @@index([gameId, month])
+}
+
+// One-time content purchase (Stripe Checkout, mode: payment — no
+// subscriptions). Insert-only ledger, not a state machine: COMPLETED rows
+// are created by the Stripe webhook on checkout.session.completed;
+// REFUNDED is set manually via support tooling (not built yet) and is
+// the only other state a row can reach.
+model Purchase {
+  id                     String         @id @default(cuid())
+  userId                 String
+  // Key into lib/content-catalog.ts's PRODUCT_CATALOG (what was bought).
+  productId              String
+  // string[] snapshot of the content ids this product granted AT PURCHASE
+  // TIME — see lib/content-catalog.ts for why this isn't re-derived from
+  // productId at read time.
+  contentIds             Json
+  // lib/content-catalog.ts's CONTENT_CATALOG_VERSION at purchase time —
+  // support/audit trail only, never read for entitlement gating.
+  catalogVersion         Int
+  // Unique so the webhook's upsert is idempotent against Stripe's
+  // documented at-least-once event redelivery.
+  stripeSessionId        String         @unique
+  stripePaymentIntentId  String?
+  amountCents            Int
+  currency               String         @default("usd")
+  status                 PurchaseStatus @default(COMPLETED)
+  createdAt              DateTime       @default(now())
+  user                   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+enum PurchaseStatus {
+  COMPLETED
+  REFUNDED
 }
 
 enum Party {

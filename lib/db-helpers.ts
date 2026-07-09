@@ -143,6 +143,11 @@ export function toUnlockedAchievements(value: unknown): UnlockedAchievement[] {
   return (value as UnlockedAchievement[] | null) ?? []
 }
 
+/** Read a Purchase.contentIds Json column back into its real shape */
+export function toContentIds(value: unknown): string[] {
+  return (value as string[] | null) ?? []
+}
+
 /** Extract only the fields that change on every turn update */
 export function gameToDbUpdate(game: Game) {
   return {
