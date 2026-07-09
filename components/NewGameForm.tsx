@@ -12,6 +12,9 @@ import { CAMPAIGN_SCENARIOS, resolveCampaignChoices, computeElectionResult } fro
 import { CabinetSlotPicker } from '@/components/CabinetSlotPicker'
 import { getDefaultCabinetSelections } from '@/lib/cabinet'
 import { PRIORITY_DEFS, MIN_PRIORITIES, MAX_PRIORITIES } from '@/lib/priorities'
+import { getProductForContentId } from '@/lib/content-catalog'
+import { PurchaseButton } from '@/components/PurchaseButton'
+import { Lock } from 'lucide-react'
 import type { Party, Difficulty, Perk, CreateGameResponse, SelectableSlotId } from '@/types/game'
 import { SELECTABLE_SLOT_IDS } from '@/types/game'
 
@@ -34,6 +37,14 @@ const PARTIES: { value: Party; label: string; description: string }[] = [
   { value: 'DEMOCRAT', label: 'Democratic', description: 'Stronger starting base support, lower starting congress lean' },
   { value: 'REPUBLICAN', label: 'Republican', description: 'Stronger starting base support, moderate congress lean' },
   { value: 'INDEPENDENT', label: 'Independent', description: 'No party machine — hardest mode, lowest starting support' },
+]
+
+// contentId undefined = always free (today's only free era, 'modern').
+// Everything else is a Premium Campaign — locked unless owned, matching
+// the same visible-but-locked + PurchaseButton pattern as Cabinet Packs.
+const ERAS: { value: string; label: string; description: string; contentId?: string }[] = [
+  { value: 'modern', label: 'The Modern Presidency', description: 'The default term, set in the present day.' },
+  { value: 'cold_war', label: 'Cold War', description: 'An entirely different presidency — its own cabinet, crises, and laws.', contentId: 'campaign.cold_war' },
 ]
 
 interface NewGameFormProps {
@@ -62,6 +73,7 @@ export function NewGameForm({ unlockedPerks, ownedContent }: NewGameFormProps) {
   const [presidentName, setPresidentName] = useState('')
   const [party, setParty] = useState<Party>('DEMOCRAT')
   const [difficulty, setDifficulty] = useState<Difficulty>('normal')
+  const [campaignEra, setCampaignEra] = useState('modern')
   const [perkId, setPerkId] = useState<string | null>(null)
   const [phase, setPhase] = useState<Phase>({ step: 'setup' })
   const [loading, setLoading] = useState(false)
@@ -160,7 +172,7 @@ export function NewGameForm({ unlockedPerks, ownedContent }: NewGameFormProps) {
   // assembly every term, same precedent as handleSkipCampaign.
   function handleSkipAssembly() {
     if (phase.step !== 'cabinet-assembly') return
-    void handleTakeOath(getDefaultCabinetSelections(), [])
+    void handleTakeOath(getDefaultCabinetSelections(campaignEra), [])
   }
 
   // The rare "conceded the race" result isn't a real game-over — it's an
@@ -185,6 +197,7 @@ export function NewGameForm({ unlockedPerks, ownedContent }: NewGameFormProps) {
           presidentName: presidentName.trim(),
           party,
           difficulty,
+          campaignEra,
           perkId: perkId ?? undefined,
           campaignChoiceIds: phase.choiceIds,
           cabinetSelections: selections,
@@ -401,6 +414,7 @@ export function NewGameForm({ unlockedPerks, ownedContent }: NewGameFormProps) {
                   selectedCandidateId={phase.selections[SELECTABLE_SLOT_IDS[phase.slotIndex]]}
                   onSelect={handleSelectCandidate}
                   ownedContent={ownedContent}
+                  era={campaignEra}
                 />
               </div>
             </>
@@ -494,6 +508,56 @@ export function NewGameForm({ unlockedPerks, ownedContent }: NewGameFormProps) {
               maxLength={60}
               className="mt-2 w-full rounded-sm border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-3.5 py-2.5 text-sm text-[var(--color-paper)] placeholder:text-[var(--color-paper-faint)] focus:border-[var(--color-brass)]"
             />
+          </div>
+
+          <div>
+            <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--color-paper-faint)]">
+              Presidency
+            </span>
+            <div className="mt-2 space-y-2">
+              {ERAS.map(e => {
+                const locked = e.contentId !== undefined && !ownedContent.includes(e.contentId)
+                const product = locked ? getProductForContentId(e.contentId!) : undefined
+                if (locked) {
+                  return (
+                    <div
+                      key={e.value}
+                      className="w-full rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 opacity-60"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-sm font-medium text-[var(--color-paper)]">{e.label}</span>
+                          <Lock className="h-3 w-3 flex-shrink-0 text-[var(--color-paper-faint)]" />
+                        </div>
+                        {product && (
+                          <PurchaseButton
+                            productId={product.productId}
+                            label={`Unlock — $${(product.priceCents / 100).toFixed(2)}`}
+                          />
+                        )}
+                      </div>
+                      <div className="mt-0.5 text-xs text-[var(--color-paper-faint)]">{e.description}</div>
+                    </div>
+                  )
+                }
+                return (
+                  <button
+                    key={e.value}
+                    type="button"
+                    onClick={() => setCampaignEra(e.value)}
+                    className={cn(
+                      'w-full rounded-sm border px-4 py-3 text-left transition-colors',
+                      campaignEra === e.value
+                        ? 'border-[var(--color-brass)] bg-[var(--color-surface-2)]'
+                        : 'border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-border-strong)]'
+                    )}
+                  >
+                    <div className="text-sm font-medium text-[var(--color-paper)]">{e.label}</div>
+                    <div className="mt-0.5 text-xs text-[var(--color-paper-faint)]">{e.description}</div>
+                  </button>
+                )
+              })}
+            </div>
           </div>
 
           <div>

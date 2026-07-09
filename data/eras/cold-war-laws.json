@@ -1,0 +1,395 @@
+[
+  {
+    "id": "civil_rights_enforcement_act",
+    "title": "Federal Civil Rights Enforcement Act",
+    "shortTitle": "Civil Rights Enforcement Act",
+    "category": "progressive",
+    "sector": "justice_civil_rights",
+    "description": "Grants the Justice Department expanded authority to enforce desegregation and anti-discrimination law against states resisting compliance, with federal marshals authorized to intervene where local enforcement fails.",
+    "flavor": "The Constitution doesn't have an asterisk for states that disagree with it.",
+    "cost": "medium",
+    "debtImpact": 1.2,
+    "annualCostBn": 350,
+    "passage": {
+      "congressMin": 55,
+      "partyUnityMin": 50,
+      "approvalBonus": { "threshold": 55, "bonus": 10 },
+      "approvalPenalty": { "threshold": 30, "penalty": 15 },
+      "lobbyOpposition": [{ "name": "States' Rights Coalition", "penalty": 15 }],
+      "basePassProbability": 35
+    },
+    "effects": {
+      "onPass": { "approval": 8, "unrest": -4, "globalReputation": 6, "baseSupport": 6, "congressSupport": -4 },
+      "passive": { "unrest": -1 },
+      "description": "Passive: -1 unrest/mo for remainder of term"
+    },
+    "sets_flags": ["civil_rights_enforced"],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "attorney_general": { "relationship": 15, "quote": "The Attorney General calls it 'the tool this department has needed for a decade.'" },
+      "protest_leader": { "relationship": 18, "quote": "The movement calls it 'proof that marching in the streets still moves Washington.'" },
+      "opposition_leader": { "relationship": -10, "quote": "The opposition leader warns of 'federal overreach into matters best left to the states.'" }
+    }
+  },
+  {
+    "id": "voting_rights_protection_act",
+    "title": "Voting Rights Protection Act",
+    "shortTitle": "Voting Rights Act",
+    "category": "progressive",
+    "sector": "justice_civil_rights",
+    "description": "Bars discriminatory voter registration practices nationwide and establishes federal oversight of registration procedures in jurisdictions with a documented history of suppression.",
+    "flavor": "A right you can't exercise isn't a right. It's a promise, and promises aren't self-enforcing.",
+    "cost": "low",
+    "debtImpact": 0.3,
+    "annualCostBn": 60,
+    "passage": {
+      "congressMin": 58,
+      "partyUnityMin": 55,
+      "approvalBonus": { "threshold": 55, "bonus": 8 },
+      "approvalPenalty": { "threshold": 30, "penalty": 12 },
+      "lobbyOpposition": [{ "name": "States' Rights Coalition", "penalty": 12 }],
+      "basePassProbability": 32
+    },
+    "effects": {
+      "onPass": { "approval": 6, "globalReputation": 5, "baseSupport": 5, "unrest": -3 },
+      "passive": { "approval": 1 },
+      "description": "Passive: +1 approval/mo for remainder of term"
+    },
+    "sets_flags": ["voting_rights_protected"],
+    "requires_flags": ["civil_rights_enforced"],
+    "prereqLabel": "Requires the Federal Civil Rights Enforcement Act to pass first",
+    "blocks_laws": [],
+    "npc_reactions": {
+      "attorney_general": { "relationship": 10, "quote": "The Attorney General calls it 'the natural next step after enforcement.'" },
+      "protest_leader": { "relationship": 15, "quote": "The movement calls it 'the follow-through we were promised.'" },
+      "senate_leader": { "relationship": 6, "quote": "The Senate Leader says it 'closes a gap that should have closed generations ago.'" }
+    }
+  },
+  {
+    "id": "interstate_defense_highway_act",
+    "title": "National Interstate and Defense Highway Act",
+    "shortTitle": "Interstate Defense Highway Act",
+    "category": "bipartisan",
+    "sector": "infrastructure",
+    "description": "Funds a nationwide interstate highway network justified on both economic and military-mobility grounds — moving goods, workers, and if necessary, troops and equipment, faster than ever before.",
+    "flavor": "Sold as national defense. Built as the backbone of the modern economy.",
+    "cost": "high",
+    "debtImpact": 3.5,
+    "annualCostBn": 1200,
+    "passage": {
+      "congressMin": 50,
+      "partyUnityMin": 40,
+      "approvalBonus": { "threshold": 55, "bonus": 10 },
+      "approvalPenalty": { "threshold": 30, "penalty": 10 },
+      "lobbyOpposition": [{ "name": "Fiscal Hawk Coalition", "penalty": 10 }],
+      "basePassProbability": 48
+    },
+    "effects": {
+      "onPass": { "economy": 10, "approval": 6, "congressSupport": 5, "unemployment": -0.4 },
+      "passive": { "economy": 2 },
+      "description": "Passive: +2 economy/mo for remainder of term"
+    },
+    "sets_flags": ["highway_system_built"],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "treasury_secretary": { "relationship": 10, "quote": "The Treasury Secretary calls it 'infrastructure that pays for itself many times over.'" },
+      "sec_defense": { "relationship": 8, "quote": "The Secretary of Defense notes 'the mobility value alone justifies the investment.'" },
+      "speaker": { "relationship": 7, "quote": "The Speaker calls it 'the rare bill every district wants a piece of.'" }
+    }
+  },
+  {
+    "id": "space_exploration_act",
+    "title": "National Space Exploration Act",
+    "shortTitle": "Space Exploration Act",
+    "category": "bipartisan",
+    "sector": "technology",
+    "description": "Establishes a dedicated civilian space agency with authority and funding to pursue an ambitious program of orbital and eventual crewed deep-space missions.",
+    "flavor": "The high ground of the next century isn't a hill. It's an orbit.",
+    "cost": "high",
+    "debtImpact": 2.8,
+    "annualCostBn": 900,
+    "passage": {
+      "congressMin": 52,
+      "partyUnityMin": 45,
+      "approvalBonus": { "threshold": 55, "bonus": 12 },
+      "approvalPenalty": { "threshold": 30, "penalty": 10 },
+      "lobbyOpposition": [{ "name": "Fiscal Hawk Coalition", "penalty": 8 }],
+      "basePassProbability": 42
+    },
+    "effects": {
+      "onPass": { "approval": 10, "globalReputation": 8, "economy": 3, "congressSupport": 3 },
+      "passive": { "globalReputation": 1 },
+      "description": "Passive: +1 global reputation/mo for remainder of term"
+    },
+    "sets_flags": ["space_agency_established"],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "sec_defense": { "relationship": 5, "quote": "The Secretary of Defense sees 'obvious dual-use value in the technology this program will produce.'" },
+      "foreign_ally": { "relationship": 6, "quote": "PM Faircross calls it 'a program the whole alliance can take pride in.'" },
+      "treasury_secretary": { "relationship": -4, "quote": "The Treasury Secretary warns the price tag 'will be felt for a generation.'" }
+    }
+  },
+  {
+    "id": "satellite_communications_act",
+    "title": "National Satellite Communications Act",
+    "shortTitle": "Satellite Communications Act",
+    "category": "bipartisan",
+    "sector": "technology",
+    "description": "Funds development of a satellite communications network for both civilian broadcast use and secure military command-and-control — dual-purpose infrastructure for the space age.",
+    "flavor": "Whoever owns the sky owns the conversation.",
+    "cost": "medium",
+    "debtImpact": 1.0,
+    "annualCostBn": 280,
+    "passage": {
+      "congressMin": 50,
+      "partyUnityMin": 40,
+      "approvalBonus": { "threshold": 55, "bonus": 6 },
+      "approvalPenalty": { "threshold": 30, "penalty": 8 },
+      "lobbyOpposition": [],
+      "basePassProbability": 50
+    },
+    "effects": {
+      "onPass": { "security": 5, "economy": 3, "globalReputation": 3 },
+      "passive": { "security": 1 },
+      "description": "Passive: +1 security/mo for remainder of term"
+    },
+    "sets_flags": ["satellite_network_built"],
+    "requires_flags": ["space_agency_established"],
+    "prereqLabel": "Requires the National Space Exploration Act to pass first",
+    "blocks_laws": [],
+    "npc_reactions": {
+      "sec_defense": { "relationship": 8, "quote": "The Secretary of Defense calls it 'command-and-control infrastructure two decades overdue.'" },
+      "media_anchor": { "relationship": 5, "quote": "Anchor Sato notes 'broadcast reach like this changes how the whole country gets its news.'" }
+    }
+  },
+  {
+    "id": "national_defense_education_act",
+    "title": "National Defense Education Act",
+    "shortTitle": "Defense Education Act",
+    "category": "bipartisan",
+    "sector": "education",
+    "description": "Provides federal funding for science, mathematics, and language education at every level, framed explicitly as a response to falling behind rivals in trained scientists and engineers.",
+    "flavor": "The next war might be won or lost in a high school classroom.",
+    "cost": "medium",
+    "debtImpact": 1.1,
+    "annualCostBn": 320,
+    "passage": {
+      "congressMin": 52,
+      "partyUnityMin": 45,
+      "approvalBonus": { "threshold": 55, "bonus": 8 },
+      "approvalPenalty": { "threshold": 30, "penalty": 8 },
+      "lobbyOpposition": [],
+      "basePassProbability": 50
+    },
+    "effects": {
+      "onPass": { "approval": 6, "economy": 4, "congressSupport": 3 },
+      "passive": { "economy": 1 },
+      "description": "Passive: +1 economy/mo for remainder of term"
+    },
+    "sets_flags": ["defense_education_funded"],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "treasury_secretary": { "relationship": 6, "quote": "The Treasury Secretary calls it 'an investment that compounds for thirty years.'" },
+      "speaker": { "relationship": 5, "quote": "The Speaker notes 'not a single district objects to more scientists and engineers.'" }
+    }
+  },
+  {
+    "id": "elderly_healthcare_act",
+    "title": "Elderly and Disabled Healthcare Act",
+    "shortTitle": "Elderly Healthcare Act",
+    "category": "progressive",
+    "sector": "healthcare",
+    "description": "Establishes a federal health insurance program for Americans over 65 and those with qualifying disabilities, financed through a combination of payroll contributions and general revenue.",
+    "flavor": "A lifetime of paying in should mean something when you can no longer work.",
+    "cost": "high",
+    "debtImpact": 3.8,
+    "annualCostBn": 1400,
+    "passage": {
+      "congressMin": 60,
+      "partyUnityMin": 55,
+      "approvalBonus": { "threshold": 55, "bonus": 12 },
+      "approvalPenalty": { "threshold": 30, "penalty": 15 },
+      "lobbyOpposition": [{ "name": "Insurance Industry Coalition", "penalty": 15 }],
+      "basePassProbability": 30
+    },
+    "effects": {
+      "onPass": { "approval": 12, "unrest": -5, "baseSupport": 10, "congressSupport": -3 },
+      "passive": { "approval": 2 },
+      "description": "Passive: +2 approval/mo for remainder of term"
+    },
+    "sets_flags": ["elderly_healthcare_passed"],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "protest_leader": { "relationship": 12, "quote": "Director Marsh calls it 'the kind of bill people remember at the ballot box for a generation.'" },
+      "first_spouse": { "relationship": 8, "quote": "First Spouse Hayes says 'every family I meet on the road has a story about why this matters.'" },
+      "opposition_leader": { "relationship": -8, "quote": "The opposition leader calls it 'a spending commitment the Treasury cannot sustain.'" }
+    }
+  },
+  {
+    "id": "arms_limitation_treaty_act",
+    "title": "Strategic Arms Limitation Ratification Act",
+    "shortTitle": "Arms Limitation Act",
+    "category": "bipartisan",
+    "sector": "defense_security",
+    "description": "Ratifies a negotiated arms limitation treaty with the rival superpower, capping the growth of both nations' strategic arsenals and establishing mutual verification procedures.",
+    "flavor": "The only arms race anyone truly wins is the one that never has to be run.",
+    "cost": "none",
+    "debtImpact": -0.5,
+    "annualCostBn": -80,
+    "passage": {
+      "congressMin": 62,
+      "partyUnityMin": 50,
+      "approvalBonus": { "threshold": 55, "bonus": 8 },
+      "approvalPenalty": { "threshold": 30, "penalty": 12 },
+      "lobbyOpposition": [{ "name": "Defense Industry Coalition", "penalty": 12 }],
+      "basePassProbability": 34
+    },
+    "effects": {
+      "onPass": { "globalReputation": 12, "security": 4, "debt": -0.5, "congressSupport": -4 },
+      "passive": { "globalReputation": 1 },
+      "description": "Passive: +1 global reputation/mo for remainder of term"
+    },
+    "sets_flags": ["arms_treaty_ratified"],
+    "requires_flags": [],
+    "blocks_laws": ["military_modernization_act"],
+    "npc_reactions": {
+      "sec_defense": { "relationship": -6, "quote": "The Secretary of Defense warns 'verification procedures on paper are not the same as security in practice.'" },
+      "foreign_adversary": { "relationship": 12, "quote": "Premier Rostov calls it 'proof that both our nations can still choose reason over ruin.'" },
+      "senate_leader": { "relationship": 8, "quote": "The Senate Leader calls it 'the treaty this chamber has waited a generation to ratify.'" }
+    }
+  },
+  {
+    "id": "military_modernization_act",
+    "title": "Strategic Forces Modernization Act",
+    "shortTitle": "Military Modernization Act",
+    "category": "conservative",
+    "sector": "defense_security",
+    "description": "Authorizes a major expansion and modernization of strategic forces, funding next-generation delivery systems and expanded production capacity across the defense industrial base.",
+    "flavor": "Peace through strength only works if the strength is real.",
+    "cost": "high",
+    "debtImpact": 4.2,
+    "annualCostBn": 1600,
+    "passage": {
+      "congressMin": 55,
+      "partyUnityMin": 50,
+      "approvalBonus": { "threshold": 55, "bonus": 6 },
+      "approvalPenalty": { "threshold": 30, "penalty": 10 },
+      "lobbyOpposition": [{ "name": "Arms Control Advocacy Group", "penalty": 10 }],
+      "basePassProbability": 40
+    },
+    "effects": {
+      "onPass": { "security": 12, "militaryReadiness": 10, "globalReputation": -6, "debt": 1.0 },
+      "passive": { "militaryReadiness": 2 },
+      "description": "Passive: +2 military readiness/mo for remainder of term"
+    },
+    "sets_flags": ["military_modernized"],
+    "requires_flags": [],
+    "blocks_laws": ["arms_limitation_treaty_act"],
+    "npc_reactions": {
+      "sec_defense": { "relationship": 12, "quote": "The Secretary of Defense calls it 'the modernization the Joint Chiefs have requested for years.'" },
+      "foreign_adversary": { "relationship": -10, "quote": "Premier Rostov calls it 'a provocation dressed up as prudence.'" },
+      "treasury_secretary": { "relationship": -4, "quote": "The Treasury Secretary flags 'a bill this size will define the budget for a decade.'" }
+    }
+  },
+  {
+    "id": "atomic_energy_development_act",
+    "title": "Peaceful Atomic Energy Development Act",
+    "shortTitle": "Atomic Energy Act",
+    "category": "bipartisan",
+    "sector": "energy_environment",
+    "description": "Funds civilian nuclear power research and development, subsidizing the construction of the first generation of commercial reactors and positioning atomic energy as a peacetime dividend of the nuclear age.",
+    "flavor": "The same science that built the bomb can also light a city.",
+    "cost": "medium",
+    "debtImpact": 1.3,
+    "annualCostBn": 400,
+    "passage": {
+      "congressMin": 50,
+      "partyUnityMin": 40,
+      "approvalBonus": { "threshold": 55, "bonus": 6 },
+      "approvalPenalty": { "threshold": 30, "penalty": 8 },
+      "lobbyOpposition": [{ "name": "Public Safety Advocacy Group", "penalty": 8 }],
+      "basePassProbability": 44
+    },
+    "effects": {
+      "onPass": { "economy": 6, "globalReputation": 4, "approval": 3 },
+      "passive": { "economy": 1 },
+      "description": "Passive: +1 economy/mo for remainder of term"
+    },
+    "sets_flags": ["atomic_energy_developed"],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "treasury_secretary": { "relationship": 6, "quote": "The Treasury Secretary calls it 'cheap power that pays dividends for decades.'" },
+      "protest_leader": { "relationship": -4, "quote": "Director Marsh raises 'real questions about safety that deserve more than a press release.'" }
+    }
+  },
+  {
+    "id": "strategic_grain_reserve_act",
+    "title": "Strategic Grain Reserve Act",
+    "shortTitle": "Grain Reserve Act",
+    "category": "bipartisan",
+    "sector": "economy_finance",
+    "description": "Establishes a federally managed strategic grain reserve, stabilizing farm income against price swings while giving the government a reserve to draw on for both emergencies and diplomacy.",
+    "flavor": "Food is a weapon whether or not you choose to use it that way.",
+    "cost": "medium",
+    "debtImpact": 0.9,
+    "annualCostBn": 220,
+    "passage": {
+      "congressMin": 48,
+      "partyUnityMin": 40,
+      "approvalBonus": { "threshold": 55, "bonus": 5 },
+      "approvalPenalty": { "threshold": 30, "penalty": 6 },
+      "lobbyOpposition": [],
+      "basePassProbability": 52
+    },
+    "effects": {
+      "onPass": { "economy": 5, "baseSupport": 4, "globalReputation": 2 },
+      "passive": { "economy": 1 },
+      "description": "Passive: +1 economy/mo for remainder of term"
+    },
+    "sets_flags": ["grain_reserve_established"],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "treasury_secretary": { "relationship": 5, "quote": "The Treasury Secretary calls it 'stability farm-state economies have wanted for years.'" },
+      "speaker": { "relationship": 6, "quote": "The Speaker notes 'this one clears the House without much of a fight.'" }
+    }
+  },
+  {
+    "id": "federal_worker_pension_act",
+    "title": "Federal and Defense Worker Pension Act",
+    "shortTitle": "Worker Pension Act",
+    "category": "progressive",
+    "sector": "social_services",
+    "description": "Expands and guarantees pension protections for federal employees and defense-industry workers, many of whom have spent careers in classified or hazardous roles without adequate retirement security.",
+    "flavor": "The people who kept the secrets deserve more than a handshake on the way out.",
+    "cost": "medium",
+    "debtImpact": 1.0,
+    "annualCostBn": 260,
+    "passage": {
+      "congressMin": 52,
+      "partyUnityMin": 45,
+      "approvalBonus": { "threshold": 55, "bonus": 6 },
+      "approvalPenalty": { "threshold": 30, "penalty": 8 },
+      "lobbyOpposition": [{ "name": "Fiscal Hawk Coalition", "penalty": 6 }],
+      "basePassProbability": 46
+    },
+    "effects": {
+      "onPass": { "approval": 5, "unrest": -3, "baseSupport": 5 },
+      "passive": { "unrest": -1 },
+      "description": "Passive: -1 unrest/mo for remainder of term"
+    },
+    "sets_flags": ["worker_pensions_expanded"],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "protest_leader": { "relationship": 8, "quote": "Director Marsh calls it 'overdue recognition for workers this country asked a lot of.'" },
+      "sec_defense": { "relationship": 5, "quote": "The Secretary of Defense notes 'morale in the defense workforce genuinely depends on this kind of security.'" }
+    }
+  }
+]

@@ -48,6 +48,8 @@ interface CabinetSlotPickerProps {
   excludeCandidateId?:  string
   /** This user's owned content ids — a Cabinet Pack candidate whose contentId isn't in here renders locked (visible, dimmed, with an "Unlock" CTA) rather than being hidden. */
   ownedContent:         string[]
+  /** Which era's roster to draw candidates from — defaults to 'modern'. New-game assembly passes the phase-selected era; mid-game fire/replace passes the game's own campaignEra. */
+  era?:                 string
 }
 
 /**
@@ -64,9 +66,9 @@ interface CabinetSlotPickerProps {
  * sale. Fetches the full 'all' roster rather than filtering by ownership,
  * since locked candidates still need to render.
  */
-export function CabinetSlotPicker({ slotId, selectedCandidateId, onSelect, excludeCandidateId, ownedContent }: CabinetSlotPickerProps) {
+export function CabinetSlotPicker({ slotId, selectedCandidateId, onSelect, excludeCandidateId, ownedContent, era = 'modern' }: CabinetSlotPickerProps) {
   const ownedSet = new Set(ownedContent)
-  const candidates = getCandidatesForSlot(slotId, 'all').filter(c => c.candidateId !== excludeCandidateId)
+  const candidates = getCandidatesForSlot(slotId, 'all', era).filter(c => c.candidateId !== excludeCandidateId)
 
   return (
     <div className="space-y-3">

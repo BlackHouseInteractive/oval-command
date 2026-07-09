@@ -18,7 +18,7 @@
 
 import { LAWS, ALL_LAWS, computePassProbability, rollLawPassage } from '@/lib/game-engine'
 import { getEligibleLaws, type OwnedContent } from '@/lib/content-sources'
-import { FIXED_NPCS, resolveRoster } from '@/lib/cabinet'
+import { resolveRoster } from '@/lib/cabinet'
 import type { Game, Law, NpcReactionResult } from '@/types/game'
 
 export interface LawPassageOptions {
@@ -47,7 +47,10 @@ export function canUseNpcAbility(
   npcId: 'senate_leader' | 'speaker',
 ): { eligible: boolean; reason?: string } {
   const config = ABILITY_CONFIG[npcId]
-  const npc = FIXED_NPCS.find(n => n.id === npcId)
+  // resolveRoster, not the old free-only FIXED_NPCS constant — a Cold War
+  // game's Speaker/Senate Leader are entirely different characters (see
+  // data/eras/cold-war-npcs.json), and this must resolve the right one.
+  const npc = resolveRoster(game).find(n => n.id === npcId)
   if (!npc) return { eligible: false, reason: 'NPC not found' }
 
   if (game.usedNpcAbilities.includes(npcId)) {
@@ -127,14 +130,15 @@ export function applyLawPassage(
 }
 
 /**
- * Look up a law by id. Defaults to 'all' (full catalog, ownership ignored)
- * for read-back call sites like AdvisorConversationPanel, which are only
- * ever describing a law already surfaced through some other eligible path.
- * app/api/game/[id]/law/route.ts passes the requesting user's real
- * ownedContent Set instead — the actual new-proposal entitlement gate.
+ * Look up a law by id. Defaults to 'all'/'all' (full catalog, ownership AND
+ * era both ignored) for read-back call sites like AdvisorConversationPanel,
+ * which are only ever describing a law already surfaced through some other
+ * eligible path. app/api/game/[id]/law/route.ts passes the requesting
+ * user's real ownedContent Set and the game's actual campaignEra instead —
+ * the actual new-proposal entitlement + era gate.
  */
-export function getLawById(lawId: string, ownedContent: OwnedContent = 'all'): Law | undefined {
-  const pool = ownedContent === 'all' ? ALL_LAWS : getEligibleLaws(ownedContent, 'modern')
+export function getLawById(lawId: string, ownedContent: OwnedContent = 'all', era = 'all'): Law | undefined {
+  const pool = ownedContent === 'all' && era === 'all' ? ALL_LAWS : getEligibleLaws(ownedContent, era)
   return pool.find(l => l.id === lawId)
 }
 
@@ -188,7 +192,13 @@ export interface LegislativeOpportunity {
  */
 export function getLegislativeOpportunity(game: Game): LegislativeOpportunity | null {
   const congressFavorable = game.stats.congressSupport > 55
-  const availableLaws = LAWS.filter(l => !game.passedLaws.includes(l.id))
+  // Modern games get the free-only suggestion pool (a deliberate
+  // limitation — doesn't yet suggest owned Story Pack laws, though they're
+  // still fully proposable from the Congress room directly). A non-Modern
+  // game's entire era is already an owned entitlement by the time it
+  // exists (validated at creation), so its full era-scoped pool is used.
+  const availableLaws = (game.campaignEra === 'modern' ? LAWS : getEligibleLaws('all', game.campaignEra))
+    .filter(l => !game.passedLaws.includes(l.id))
   const noLawsThisTerm = game.passedLaws.length === 0
   const congressHighlyFavorable = game.stats.congressSupport > 65
 

@@ -71,7 +71,7 @@ export function checkResignationRisk(game: Game): CrisisEvent | null {
 /** goalTag for whichever candidate currently fills a slot — resolved from cabinetSelections against the static candidate list, not the flattened Npc. */
 function activeGoalTag(game: Game, slotId: SelectableSlotId): string | undefined {
   const candidateId = game.cabinetSelections[slotId]
-  return getCandidatesForSlot(slotId, 'all').find(c => c.candidateId === candidateId)?.goalTag
+  return getCandidatesForSlot(slotId, 'all', game.campaignEra).find(c => c.candidateId === candidateId)?.goalTag
 }
 
 export function checkNpcInitiatives(game: Game): CrisisEvent | null {
@@ -307,7 +307,7 @@ export function resolvePersonnelChoice(
     if (npc) {
       if (choice.crossesBreakingPoint && isSelectableSlot(event.npcId)) {
         const candidateId = game.cabinetSelections[event.npcId]
-        const candidate = getCandidatesForSlot(event.npcId, 'all').find(c => c.candidateId === candidateId)
+        const candidate = getCandidatesForSlot(event.npcId, 'all', game.campaignEra).find(c => c.candidateId === candidateId)
         if (candidate?.breakingPointTag === choice.crossesBreakingPoint) {
           newFlags[`${event.npcId}_broke_trust`] = true
         }

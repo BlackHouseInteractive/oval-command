@@ -46,17 +46,18 @@ export async function POST(req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: 'candidateId is required' }, { status: 400 })
   }
 
-  const ownedContent = await getOwnedContent(session.user.id)
-  if (!getCandidatesForSlot(slotId as SelectableSlotId, ownedContent).some(c => c.candidateId === candidateId)) {
-    return NextResponse.json({ error: 'Unknown candidate for this slot' }, { status: 400 })
-  }
-
   const row = await prisma.game.findUnique({ where: { id } })
   if (!row) return NextResponse.json({ error: 'Game not found' }, { status: 404 })
   if (row.userId !== session.user.id) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   if (row.status !== 'ACTIVE') return NextResponse.json({ error: 'Game is not active' }, { status: 400 })
 
   const game = dbToGame(row)
+
+  const ownedContent = await getOwnedContent(session.user.id)
+  if (!getCandidatesForSlot(slotId as SelectableSlotId, ownedContent, game.campaignEra).some(c => c.candidateId === candidateId)) {
+    return NextResponse.json({ error: 'Unknown candidate for this slot' }, { status: 400 })
+  }
+
   const roster = resolveRoster(game)
   const currentCandidateId = game.cabinetSelections[slotId as SelectableSlotId]
   if (currentCandidateId === candidateId) {

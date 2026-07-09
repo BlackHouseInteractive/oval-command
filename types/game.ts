@@ -479,6 +479,8 @@ export interface Game {
   presidentName:    string
   party:            Party
   difficulty:       Difficulty
+  /** Which era's content pool this game draws from (see lib/content-sources.ts) — 'modern' (free) or a Premium Campaign era id (e.g. 'cold_war'). Set once at creation, read-only after. */
+  campaignEra:      string
   currentMonth:     number
   status:           GameStatus
   stats:            GameStats
@@ -587,6 +589,7 @@ export interface CreateGameRequest {
   presidentName:     string
   party:             Party
   difficulty?:       Difficulty
+  campaignEra?:      string
   perkId?:           string
   campaignChoiceIds?: string[]
   cabinetSelections?: Partial<Record<string, string>>

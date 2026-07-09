@@ -43,6 +43,7 @@ function buildBlurb(traits: NpcTraits): string | null {
 export function buildLegacyIntelligence(
   cabinetSelections: Game['cabinetSelections'],
   npcTraits: Game['npcTraits'],
+  campaignEra: string = 'modern',
 ): LegacyIntelligenceEntry[] {
   const entries: LegacyIntelligenceEntry[] = []
 
@@ -51,13 +52,13 @@ export function buildLegacyIntelligence(
     if (!traits) continue
 
     const candidateId = cabinetSelections[slotId]
-    const candidate = getCandidatesForSlot(slotId, 'all').find(c => c.candidateId === candidateId)
+    const candidate = getCandidatesForSlot(slotId, 'all', campaignEra).find(c => c.candidateId === candidateId)
     if (!candidate) continue
 
     entries.push({
       slotId,
       name:   candidate.name,
-      role:   getSlotRole(slotId),
+      role:   getSlotRole(slotId, campaignEra),
       traits,
       blurb:  buildBlurb(traits),
     })

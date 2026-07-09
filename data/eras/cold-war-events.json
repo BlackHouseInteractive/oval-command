@@ -1,0 +1,767 @@
+[
+  {
+    "id": "nuclear_standoff",
+    "title": "Reconnaissance Confirms Missile Installations on Allied Doorstep",
+    "category": "security",
+    "description": "Intelligence photographs confirm the rival superpower is installing nuclear-capable missiles within striking range of the mainland. The Joint Chiefs are recommending options ranging from a naval blockade to airstrikes. You have days, not weeks, to decide.",
+    "isHistorical": true,
+    "historicalContext": "Inspired by the nuclear brinkmanship crises of the Cold War, when reconnaissance of missile installations forced a president into an extraordinarily narrow decision window.",
+    "triggers": { "always_available": true, "nuclear_standoff_started": false },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 2,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Order a naval blockade and demand withdrawal",
+        "effects": { "security": 6, "approval": 5, "unrest": 6, "globalReputation": -3 },
+        "sets_flags": ["nuclear_standoff_started", "standoff_blockade"],
+        "outcome": "The fleet moves into position within hours. The world holds its breath. Congress is united behind you for the first time all year."
+      },
+      {
+        "index": 1,
+        "text": "Open back-channel negotiations before going public",
+        "effects": { "globalReputation": 5, "security": 2, "congressSupport": -4 },
+        "sets_flags": ["nuclear_standoff_started", "standoff_backchannel"],
+        "outcome": "Quiet diplomacy buys time, but hawks in Congress accuse you of weakness before you can explain the strategy."
+      },
+      {
+        "index": 2,
+        "text": "Authorize precision airstrikes on the installations",
+        "effects": { "security": 8, "unrest": 10, "globalReputation": -8, "approval": -2 },
+        "sets_flags": ["nuclear_standoff_started", "standoff_airstrike"],
+        "outcome": "The strikes succeed militarily. Diplomats worldwide warn the response could spiral beyond anyone's control.",
+        "delayed_effects": [
+          { "delay_months": 1, "effects": { "globalReputation": -5, "unrest": 5 }, "headline": "Allied capitals express alarm at the speed of the escalation" }
+        ]
+      },
+      {
+        "index": 3,
+        "text": "Take the case to the United Nations before acting",
+        "effects": { "globalReputation": 6, "congressSupport": -3, "security": -2 },
+        "sets_flags": ["nuclear_standoff_started", "standoff_un"],
+        "outcome": "The UN session buys diplomatic cover but costs precious time. Critics call it a delay dressed up as principle."
+      }
+    ]
+  },
+  {
+    "id": "nuclear_standoff_resolution",
+    "title": "The World Waits for the Next Move",
+    "category": "security",
+    "description": "Whatever path you chose, the standoff has not resolved itself. Both sides are signaling and posturing through back-channels while the public watches every broadcast for signs of how close the world really is to the brink.",
+    "triggers": { "always_available": true, "nuclear_standoff_resolved": false },
+    "sets_flags": [],
+    "requires_flags": ["nuclear_standoff_started"],
+    "weight": 2,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Accept a face-saving withdrawal agreement for both sides",
+        "effects": { "security": 8, "globalReputation": 6, "approval": 6, "unrest": -8 },
+        "sets_flags": ["nuclear_standoff_resolved", "standoff_deescalated"],
+        "outcome": "Both sides quietly stand down. History will remember it as the moment the world stepped back from the edge."
+      },
+      {
+        "index": 1,
+        "text": "Demand a public, unconditional capitulation",
+        "effects": { "approval": 8, "baseSupport": 6, "globalReputation": -6, "security": 3 },
+        "sets_flags": ["nuclear_standoff_resolved", "standoff_hardline"],
+        "outcome": "The public celebrates a clear victory. Diplomats worry the humiliation will breed a more dangerous rival for years to come."
+      },
+      {
+        "index": 2,
+        "text": "Propose a formal arms limitation framework as part of the resolution",
+        "effects": { "globalReputation": 8, "security": 4, "congressSupport": -3 },
+        "sets_flags": ["nuclear_standoff_resolved", "standoff_arms_framework"],
+        "outcome": "The crisis becomes the unlikely foundation for the first real arms control talks in a generation."
+      },
+      {
+        "index": 3,
+        "text": "Let military advisors manage the drawdown quietly",
+        "effects": { "security": 5, "unrest": -3, "approval": 2 },
+        "sets_flags": ["nuclear_standoff_resolved"],
+        "outcome": "The standoff fades from headlines within weeks. No one is quite sure who backed down first, which suits everyone involved."
+      }
+    ]
+  },
+  {
+    "id": "proxy_war_escalation",
+    "title": "Advisors Report Rival Weapons Flowing Into a Regional Conflict",
+    "category": "military",
+    "description": "A regional civil conflict is quietly becoming a proxy battlefield. Intelligence confirms the rival superpower is arming one faction. Your own military advisors want to match the commitment before the balance tips.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 6,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Send military advisors and equipment to the opposing faction",
+        "effects": { "security": 4, "debt": 0.4, "unrest": 4, "globalReputation": -2 },
+        "sets_flags": ["proxy_war_engaged"],
+        "outcome": "The commitment is modest but real. Critics warn about how these commitments have a way of growing."
+      },
+      {
+        "index": 1,
+        "text": "Provide humanitarian aid but stay out of the arms flow",
+        "effects": { "globalReputation": 5, "security": -2 },
+        "sets_flags": ["proxy_war_humanitarian"],
+        "outcome": "Aid workers praise the approach. Hawks in Congress call it a missed opportunity to contain the rival's influence."
+      },
+      {
+        "index": 2,
+        "text": "Match the rival's commitment dollar for dollar and weapon for weapon",
+        "effects": { "security": 7, "debt": 0.7, "congressSupport": 4, "globalReputation": -5 },
+        "sets_flags": ["proxy_war_matched"],
+        "outcome": "The regional balance holds. The conflict grinds on longer and bloodier than anyone in the briefing room predicted."
+      },
+      {
+        "index": 3,
+        "text": "Push for an internationally brokered ceasefire instead",
+        "effects": { "globalReputation": 7, "security": -3, "congressSupport": -3 },
+        "sets_flags": ["proxy_war_ceasefire_attempt"],
+        "outcome": "The ceasefire push earns praise abroad. Both factions ignore it within weeks, and the fighting continues."
+      }
+    ]
+  },
+  {
+    "id": "space_program_milestone",
+    "title": "Space Agency Requests a Decision on the Next Launch Window",
+    "category": "diplomacy",
+    "description": "The space program stands at a genuine crossroads: a bold, risky mission that could cement national prestige, or a slower, safer path that preserves the budget for other priorities. The rival superpower's program is watching closely too.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 6,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Commit to an ambitious, high-profile mission timeline",
+        "effects": { "approval": 6, "globalReputation": 5, "debt": 0.5, "security": 2 },
+        "sets_flags": ["space_program_ambitious"],
+        "outcome": "The announcement dominates headlines for weeks. Engineers privately worry the timeline is aggressive to the point of risky."
+      },
+      {
+        "index": 1,
+        "text": "Fund a slower, more conservative program",
+        "effects": { "debt": -0.2, "globalReputation": -2, "approval": -1 },
+        "sets_flags": ["space_program_conservative"],
+        "outcome": "The program proceeds safely and quietly. It generates far fewer headlines than the rival's more dramatic milestones."
+      },
+      {
+        "index": 2,
+        "text": "Propose a joint scientific mission with the rival superpower",
+        "effects": { "globalReputation": 8, "approval": -2, "baseSupport": -4 },
+        "sets_flags": ["space_program_joint_proposal"],
+        "outcome": "The proposal is diplomatically bold. Hardliners on both sides call it naive; scientists call it overdue."
+      },
+      {
+        "index": 3,
+        "text": "Redirect space funding toward military satellite programs",
+        "effects": { "security": 6, "globalReputation": -3, "economy": 1 },
+        "sets_flags": ["space_program_militarized"],
+        "outcome": "The public space program stalls while military applications quietly accelerate."
+      }
+    ]
+  },
+  {
+    "id": "high_profile_defection",
+    "title": "Senior Rival Diplomat Requests Asylum",
+    "category": "diplomacy",
+    "description": "A senior official from the rival superpower's embassy has walked into a field office requesting asylum — and claiming to carry documents detailing the other side's true military capabilities and intentions.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 7,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Grant asylum immediately and publicize the defection",
+        "effects": { "globalReputation": 6, "security": 3, "unrest": 3 },
+        "sets_flags": ["defection_public"],
+        "outcome": "The propaganda value is immense. The rival government issues furious denunciations, which only make it look worse for them."
+      },
+      {
+        "index": 1,
+        "text": "Grant asylum quietly and debrief without publicity",
+        "effects": { "security": 6, "globalReputation": 1 },
+        "sets_flags": ["defection_quiet"],
+        "outcome": "Intelligence gains are substantial. Without the propaganda spotlight, the diplomatic fallout stays contained."
+      },
+      {
+        "index": 2,
+        "text": "Verify the intelligence claims before making any decision",
+        "effects": { "security": 2, "congressSupport": 2 },
+        "sets_flags": ["defection_verified"],
+        "outcome": "The caution pays off — some claims check out, others don't. The delay draws quiet criticism from the intelligence community."
+      },
+      {
+        "index": 3,
+        "text": "Decline asylum to avoid a diplomatic incident",
+        "effects": { "globalReputation": -6, "security": -3, "approval": -2 },
+        "sets_flags": ["defection_declined"],
+        "outcome": "The decision avoids one incident and creates another — allies quietly question whether you can be trusted with a defector's safety."
+      }
+    ]
+  },
+  {
+    "id": "arms_limitation_summit",
+    "title": "Rival Government Signals Openness to Arms Talks",
+    "category": "diplomacy",
+    "description": "Through back channels, the rival superpower has signaled genuine interest in formal arms limitation talks — the first such opening in years. Your advisors are split on whether it's a real opportunity or a stalling tactic.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 6,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Accept and schedule a full summit",
+        "effects": { "globalReputation": 7, "security": 2, "congressSupport": -3 },
+        "sets_flags": ["arms_summit_scheduled"],
+        "outcome": "The summit is announced to global fanfare. Hardliners on both sides warn against expecting too much."
+      },
+      {
+        "index": 1,
+        "text": "Insist on preliminary verification measures first",
+        "effects": { "security": 4, "globalReputation": 3, "congressSupport": 2 },
+        "sets_flags": ["arms_summit_conditions"],
+        "outcome": "The cautious approach slows momentum but strengthens the eventual deal's credibility with skeptics."
+      },
+      {
+        "index": 2,
+        "text": "Decline, citing recent provocations",
+        "effects": { "security": -3, "globalReputation": -5, "baseSupport": 4 },
+        "sets_flags": ["arms_summit_declined"],
+        "outcome": "Hawks at home approve. Allies abroad worry a genuine opening has been squandered."
+      },
+      {
+        "index": 3,
+        "text": "Propose expanding the talks to include allied nations",
+        "effects": { "globalReputation": 5, "congressSupport": -2, "security": 1 },
+        "sets_flags": ["arms_summit_multilateral"],
+        "outcome": "Allies welcome the inclusion. The rival government calls it an attempt to gang up on them at the table."
+      }
+    ]
+  },
+  {
+    "id": "antiwar_movement_grows",
+    "title": "Campus and City Demonstrations Draw National Attention",
+    "category": "social",
+    "description": "A wave of demonstrations against military spending and troop commitments has spread from campuses to major cities. Organizers are calling for a national day of action. The optics — and the politics — cut in every direction.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 6,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Meet with movement leaders and acknowledge their concerns",
+        "effects": { "unrest": -6, "baseSupport": -3, "approval": 3 },
+        "sets_flags": ["antiwar_engaged"],
+        "outcome": "The meeting draws praise for openness and criticism from hardliners who call it a legitimizing gesture."
+      },
+      {
+        "index": 1,
+        "text": "Deploy additional security around planned demonstration sites",
+        "effects": { "security": 4, "unrest": 6, "globalReputation": -3 },
+        "sets_flags": ["antiwar_security_response"],
+        "outcome": "The heavy security presence prevents disorder but generates its own wave of unflattering coverage."
+      },
+      {
+        "index": 2,
+        "text": "Give a national address defending the current defense posture",
+        "effects": { "baseSupport": 5, "unrest": 3, "approval": 1 },
+        "sets_flags": ["antiwar_address_given"],
+        "outcome": "The speech rallies the base. It does nothing to quiet the demonstrations, which continue regardless."
+      },
+      {
+        "index": 3,
+        "text": "Announce a review of troop commitment levels",
+        "effects": { "unrest": -8, "security": -4, "congressSupport": -3 },
+        "sets_flags": ["antiwar_review_announced"],
+        "outcome": "The announcement takes real wind out of the movement's sails. Military leadership privately expresses frustration."
+      }
+    ]
+  },
+  {
+    "id": "grain_export_deal",
+    "title": "Rival Bloc Requests Emergency Grain Purchases",
+    "category": "economy",
+    "description": "A poor harvest has left the rival superpower facing real food shortages. Their government has quietly asked to purchase American grain reserves at scale — an economic opportunity wrapped in an awkward political question.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 6,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Approve the sale — grain is grain, and farmers need the market",
+        "effects": { "economy": 5, "baseSupport": 3, "globalReputation": 2, "unemployment": -0.2 },
+        "sets_flags": ["grain_deal_approved"],
+        "outcome": "Farm-state economies get a real boost. Hardliners accuse you of propping up an adversary's failing system."
+      },
+      {
+        "index": 1,
+        "text": "Approve the sale but attach human rights conditions",
+        "effects": { "economy": 3, "globalReputation": 5, "congressSupport": 2 },
+        "sets_flags": ["grain_deal_conditional"],
+        "outcome": "The conditions draw praise from human rights advocates. The rival government calls it an insult wrapped in commerce."
+      },
+      {
+        "index": 2,
+        "text": "Deny the sale to maintain economic pressure",
+        "effects": { "security": 3, "economy": -2, "globalReputation": -3 },
+        "sets_flags": ["grain_deal_denied"],
+        "outcome": "Hardliners approve of the pressure. Farm-state legislators are furious about the lost market."
+      },
+      {
+        "index": 3,
+        "text": "Route the sale through international humanitarian channels",
+        "effects": { "globalReputation": 6, "economy": 2 },
+        "sets_flags": ["grain_deal_humanitarian"],
+        "outcome": "The arrangement threads the needle diplomatically, though it takes longer to actually deliver the grain."
+      }
+    ]
+  },
+  {
+    "id": "loyalty_hearings_controversy",
+    "title": "Congressional Committee Demands Loyalty Testimony From Officials",
+    "category": "congress",
+    "description": "A congressional committee has launched aggressive hearings into alleged Communist sympathizers within the federal government, subpoenaing several of your own appointees. Civil libertarians call it a witch hunt; the committee chair calls it overdue vigilance.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Publicly defend your appointees and criticize the hearings",
+        "effects": { "congressSupport": -6, "globalReputation": 3, "approval": 2 },
+        "sets_flags": ["loyalty_hearings_defended"],
+        "outcome": "Civil libertarians praise the stand. The committee chair accuses you of being soft on the threat."
+      },
+      {
+        "index": 1,
+        "text": "Cooperate fully and let the process play out",
+        "effects": { "congressSupport": 4, "unrest": 4, "globalReputation": -3 },
+        "sets_flags": ["loyalty_hearings_cooperated"],
+        "outcome": "The hearings proceed with your cooperation. Several careers are damaged on thin evidence, and history will judge it harshly."
+      },
+      {
+        "index": 2,
+        "text": "Quietly reassign the officials under scrutiny",
+        "effects": { "congressSupport": 2, "unrest": -2, "approval": -3 },
+        "sets_flags": ["loyalty_hearings_reassigned"],
+        "outcome": "The quiet reassignment defuses the immediate confrontation. It satisfies no one and looks evasive to everyone."
+      },
+      {
+        "index": 3,
+        "text": "Push for a Justice Department review of the committee's own conduct",
+        "effects": { "congressSupport": -8, "globalReputation": 5, "unrest": -3 },
+        "sets_flags": ["loyalty_hearings_reviewed"],
+        "outcome": "The countermove is bold and controversial. It permanently damages your relationship with the committee's allies in Congress."
+      }
+    ]
+  },
+  {
+    "id": "civil_defense_debate",
+    "title": "Cities Debate Mandatory Fallout Shelter Requirements",
+    "category": "social",
+    "description": "Major cities are debating whether to mandate fallout shelters in new construction. Supporters call it basic preparedness; critics say it normalizes the idea of nuclear war and terrifies the public for no real protective benefit.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Endorse a national civil defense construction standard",
+        "effects": { "security": 3, "unrest": 4, "debt": 0.2 },
+        "sets_flags": ["civil_defense_endorsed"],
+        "outcome": "The program moves forward. Critics say the shelters offer false comfort while normalizing catastrophe."
+      },
+      {
+        "index": 1,
+        "text": "Leave the decision entirely to local governments",
+        "effects": { "unrest": -1, "congressSupport": 1 },
+        "sets_flags": ["civil_defense_local"],
+        "outcome": "Cities go their own way. The patchwork result satisfies no one but avoids a national controversy."
+      },
+      {
+        "index": 2,
+        "text": "Redirect the funding toward diplomatic de-escalation efforts instead",
+        "effects": { "globalReputation": 4, "unrest": -3, "baseSupport": -3 },
+        "sets_flags": ["civil_defense_redirected"],
+        "outcome": "The reframe draws praise from peace advocates and sharp criticism from those who call it dangerously complacent."
+      },
+      {
+        "index": 3,
+        "text": "Launch a public information campaign on preparedness without new mandates",
+        "effects": { "unrest": 2, "approval": 1 },
+        "sets_flags": ["civil_defense_campaign"],
+        "outcome": "The campaign is well-received as a middle path, though some call it preparedness theater."
+      }
+    ]
+  },
+  {
+    "id": "classified_leak_scandal",
+    "title": "Classified Defense Documents Found in a Reporter's Possession",
+    "category": "scandal",
+    "description": "A prominent investigative reporter has published excerpts from a classified defense assessment, raising urgent questions about a leak inside the administration — and about how much of the truth about the arms race has been kept from the public.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Launch an aggressive internal investigation to find the source",
+        "effects": { "security": 3, "mediaScore": -0.3, "unrest": 2 },
+        "sets_flags": ["leak_investigated"],
+        "outcome": "The investigation finds the leak but generates weeks of unflattering coverage about internal dysfunction."
+      },
+      {
+        "index": 1,
+        "text": "Pursue legal action against the publication",
+        "effects": { "security": 2, "mediaScore": -0.6, "globalReputation": -4 },
+        "sets_flags": ["leak_prosecuted"],
+        "outcome": "The legal fight becomes a press-freedom flashpoint that dominates headlines far longer than the original leak."
+      },
+      {
+        "index": 2,
+        "text": "Declassify additional context to get ahead of the story",
+        "effects": { "globalReputation": 4, "mediaScore": 0.2, "security": -3 },
+        "sets_flags": ["leak_declassified"],
+        "outcome": "The transparency earns credibility, though intelligence officials are furious about the precedent."
+      },
+      {
+        "index": 3,
+        "text": "Say nothing and let the story pass",
+        "effects": { "mediaScore": -0.4, "approval": -2 },
+        "sets_flags": ["leak_ignored"],
+        "outcome": "The silence doesn't work. Reporters fill the vacuum with speculation that's worse than the truth would have been."
+      }
+    ]
+  },
+  {
+    "id": "allied_government_instability",
+    "title": "Allied Nation's Government Teeters on the Brink of Collapse",
+    "category": "diplomacy",
+    "description": "A key allied government is facing a no-confidence vote amid economic turmoil and public anger over the cost of hosting American forces. If the government falls, the entire regional alliance structure could be thrown into question.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 6,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Offer emergency economic assistance to stabilize the government",
+        "effects": { "globalReputation": 5, "debt": 0.3, "economy": -1 },
+        "sets_flags": ["ally_stabilized"],
+        "outcome": "The assistance package steadies the government, at least for now. Critics at home ask why American taxpayers are footing the bill."
+      },
+      {
+        "index": 1,
+        "text": "Publicly stay neutral on the domestic political matter",
+        "effects": { "globalReputation": -3, "security": -2 },
+        "sets_flags": ["ally_neutral"],
+        "outcome": "The hands-off approach respects sovereignty but leaves allies uncertain about the depth of American commitment."
+      },
+      {
+        "index": 2,
+        "text": "Quietly signal support for opposition leaders more favorable to American interests",
+        "effects": { "security": 3, "globalReputation": -6 },
+        "sets_flags": ["ally_interference"],
+        "outcome": "The maneuver works in the short term. If it becomes public, it will look like exactly what it is."
+      },
+      {
+        "index": 3,
+        "text": "Reaffirm the alliance publicly without conditions",
+        "effects": { "globalReputation": 4, "security": 2, "debt": 0.1 },
+        "sets_flags": ["ally_reaffirmed"],
+        "outcome": "The unconditional show of support calms markets and reassures the government, at least for the moment."
+      }
+    ]
+  },
+  {
+    "id": "satellite_reconnaissance_breakthrough",
+    "title": "New Satellite Program Delivers Unprecedented Intelligence",
+    "category": "military",
+    "description": "A classified satellite reconnaissance program has achieved a breakthrough, providing detailed imagery of rival military installations previously hidden from view. The intelligence value is enormous — and so are the questions about how to use it.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 6,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Use the intelligence to quietly recalibrate defense posture",
+        "effects": { "security": 6, "militaryReadiness": 3 },
+        "sets_flags": ["satellite_recalibrated"],
+        "outcome": "The recalibration is subtle enough that no one outside the program notices, exactly as intended."
+      },
+      {
+        "index": 1,
+        "text": "Share select findings with allied intelligence services",
+        "effects": { "globalReputation": 5, "security": 2 },
+        "sets_flags": ["satellite_shared"],
+        "outcome": "Allies are grateful for the intelligence-sharing. Some in the program worry about the security risk of wider distribution."
+      },
+      {
+        "index": 2,
+        "text": "Keep the program's existence entirely secret, even from most of Congress",
+        "effects": { "security": 4, "congressSupport": -3 },
+        "sets_flags": ["satellite_secret"],
+        "outcome": "Secrecy is maintained. When a handful of legislators eventually learn they were kept out of the loop, they are furious."
+      },
+      {
+        "index": 3,
+        "text": "Brief congressional leadership fully to secure long-term program funding",
+        "effects": { "congressSupport": 4, "security": 3 },
+        "sets_flags": ["satellite_briefed"],
+        "outcome": "The briefing secures durable bipartisan funding, at the cost of a wider circle knowing the program exists."
+      }
+    ]
+  },
+  {
+    "id": "draft_expansion_debate",
+    "title": "Pentagon Requests Expanded Conscription Authority",
+    "category": "military",
+    "description": "With troop commitments rising, the Pentagon is requesting expanded authority to draft additional personnel. The request lands in the middle of an already tense national debate over the fairness and necessity of the draft itself.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Approve the expanded draft authority",
+        "effects": { "militaryReadiness": 6, "unrest": 8, "baseSupport": -4 },
+        "sets_flags": ["draft_expanded"],
+        "outcome": "Military readiness improves. Draft boards across the country become the focal point of a new wave of protests."
+      },
+      {
+        "index": 1,
+        "text": "Approve a smaller expansion tied to volunteer incentive programs",
+        "effects": { "militaryReadiness": 3, "unrest": 3, "economy": 1 },
+        "sets_flags": ["draft_incentives"],
+        "outcome": "The compromise draws less fire than a straight expansion, though it doesn't fully solve the Pentagon's staffing needs."
+      },
+      {
+        "index": 2,
+        "text": "Deny the request and push for an all-volunteer force instead",
+        "effects": { "militaryReadiness": -3, "unrest": -6, "approval": 3 },
+        "sets_flags": ["draft_denied"],
+        "outcome": "The decision is popular with the public and deeply unpopular with military planners worried about troop levels."
+      },
+      {
+        "index": 3,
+        "text": "Commission a review of draft fairness before deciding",
+        "effects": { "congressSupport": 2, "unrest": -2 },
+        "sets_flags": ["draft_review"],
+        "outcome": "The review buys time and goodwill, but the Pentagon's staffing problem remains unresolved."
+      }
+    ]
+  },
+  {
+    "id": "market_panic_cold_war",
+    "title": "Markets Tumble on Fears of Imminent Confrontation",
+    "category": "economy",
+    "description": "A wave of alarming rhetoric from both capitals has spooked markets, triggering the steepest single-week decline in years. Analysts are split on whether this is a genuine economic threat or a temporary panic that will pass.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 6,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Issue a calming public statement emphasizing stability",
+        "effects": { "economy": 3, "approval": 2 },
+        "sets_flags": ["market_panic_calmed"],
+        "outcome": "The statement helps steady nerves. Markets recover most of their losses within the week."
+      },
+      {
+        "index": 1,
+        "text": "Direct the Treasury to intervene directly in markets",
+        "effects": { "economy": 5, "debt": 0.3, "congressSupport": -2 },
+        "sets_flags": ["market_panic_intervention"],
+        "outcome": "The intervention works, though critics question the precedent of the government propping up markets."
+      },
+      {
+        "index": 2,
+        "text": "Tone down public rhetoric to reduce tension",
+        "effects": { "economy": 2, "security": -2, "globalReputation": 2 },
+        "sets_flags": ["market_panic_rhetoric_reduced"],
+        "outcome": "The quieter tone helps markets and diplomacy alike, though hardliners accuse you of going soft under pressure."
+      },
+      {
+        "index": 3,
+        "text": "Let the market correct on its own without intervention",
+        "effects": { "economy": -3, "unemployment": 0.2 },
+        "sets_flags": ["market_panic_uncontrolled"],
+        "outcome": "The hands-off approach draws praise from free-market purists and criticism from everyone watching their savings shrink."
+      }
+    ]
+  },
+  {
+    "id": "assassination_plot_uncovered_cw",
+    "title": "Secret Service Uncovers Credible Threat Against the President",
+    "category": "security",
+    "description": "Intelligence services have uncovered a credible, specific plot against your life, reportedly connected to extremist elements sympathetic to the rival superpower. Security recommendations range from a drastic lockdown of public appearances to a defiant show of normalcy.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 3,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Accept a temporary lockdown of public appearances",
+        "effects": { "security": 5, "approval": -3, "unrest": 2 },
+        "sets_flags": ["assassination_plot_lockdown"],
+        "outcome": "The lockdown likely saves lives. The public reads the absence as unsettling rather than reassuring."
+      },
+      {
+        "index": 1,
+        "text": "Continue the public schedule with enhanced security",
+        "effects": { "approval": 5, "security": -2, "unrest": -2 },
+        "sets_flags": ["assassination_plot_defiant"],
+        "outcome": "The defiant normalcy plays well publicly. The Secret Service is furious about the elevated risk."
+      },
+      {
+        "index": 2,
+        "text": "Use the plot as justification for expanded security legislation",
+        "effects": { "security": 6, "congressSupport": 3, "globalReputation": -3 },
+        "sets_flags": ["assassination_plot_legislation"],
+        "outcome": "The legislation passes swiftly amid the scare. Civil liberties advocates warn about the precedent it sets."
+      },
+      {
+        "index": 3,
+        "text": "Keep the threat entirely confidential to avoid public panic",
+        "effects": { "security": 2, "mediaScore": -0.2 },
+        "sets_flags": ["assassination_plot_confidential"],
+        "outcome": "The secrecy avoids panic. When details eventually surface, the lack of transparency becomes its own controversy."
+      }
+    ]
+  },
+  {
+    "id": "technology_export_controls",
+    "title": "Allies Push Back on Strict Technology Export Controls",
+    "category": "economy",
+    "description": "Export controls meant to keep sensitive technology out of rival hands are frustrating allied governments and domestic manufacturers alike, who say the restrictions are costing them contracts to less-scrupulous competitors.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Maintain strict controls despite the economic cost",
+        "effects": { "security": 4, "economy": -3, "globalReputation": -2 },
+        "sets_flags": ["export_controls_maintained"],
+        "outcome": "Security officials are pleased. Manufacturers and allied governments are increasingly frustrated."
+      },
+      {
+        "index": 1,
+        "text": "Loosen controls on clearly civilian technology",
+        "effects": { "economy": 4, "security": -2 },
+        "sets_flags": ["export_controls_loosened"],
+        "outcome": "Trade relationships improve immediately. Intelligence officials warn the line between civilian and military use is blurrier than it looks."
+      },
+      {
+        "index": 2,
+        "text": "Negotiate a coordinated allied export control framework",
+        "effects": { "globalReputation": 5, "security": 3, "economy": -1 },
+        "sets_flags": ["export_controls_coordinated"],
+        "outcome": "The coordinated approach closes loopholes and eases some allied frustration, though negotiations take months."
+      },
+      {
+        "index": 3,
+        "text": "Create a fast-track review process for contested export cases",
+        "effects": { "economy": 2, "security": 1 },
+        "sets_flags": ["export_controls_reviewed"],
+        "outcome": "The new process reduces friction without loosening the underlying policy — a rare genuine win-win."
+      }
+    ]
+  },
+  {
+    "id": "border_incident_cold_war",
+    "title": "Reconnaissance Aircraft Reported Down Near Contested Border",
+    "category": "military",
+    "description": "A reconnaissance aircraft has gone down near a heavily contested border, and it's unclear whether it was shot down or suffered mechanical failure. The rival government is demanding answers you're not yet sure how to give.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Publicly acknowledge the mission and demand the crew's return",
+        "effects": { "globalReputation": -2, "congressSupport": 3, "security": 2 },
+        "sets_flags": ["border_incident_acknowledged"],
+        "outcome": "The candor is politically costly abroad but earns respect at home for not hiding behind denials."
+      },
+      {
+        "index": 1,
+        "text": "Deny any knowledge of the mission publicly",
+        "effects": { "mediaScore": -0.3, "globalReputation": -4 },
+        "sets_flags": ["border_incident_denied"],
+        "outcome": "The denial collapses within days when contradicting evidence surfaces, damaging credibility badly."
+      },
+      {
+        "index": 2,
+        "text": "Open quiet diplomatic channels to negotiate the crew's release",
+        "effects": { "globalReputation": 3, "security": 1 },
+        "sets_flags": ["border_incident_negotiated"],
+        "outcome": "Quiet diplomacy makes real progress, out of the public eye where both sides can save face."
+      },
+      {
+        "index": 3,
+        "text": "Suspend the reconnaissance program pending review",
+        "effects": { "security": -4, "globalReputation": 4 },
+        "sets_flags": ["border_incident_suspended"],
+        "outcome": "The suspension is a diplomatic olive branch. Intelligence officials warn it creates a dangerous blind spot."
+      }
+    ]
+  },
+  {
+    "id": "cultural_exchange_proposal",
+    "title": "Cultural Diplomacy Office Proposes an Artistic and Scientific Exchange",
+    "category": "diplomacy",
+    "description": "Career diplomats are pushing a modest but symbolically significant proposal: an exchange of musicians, scientists, and students with the rival bloc, aimed at building person-to-person understanding beneath the geopolitical freeze.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Approve a full cultural and scientific exchange program",
+        "effects": { "globalReputation": 6, "baseSupport": -3, "unrest": -2 },
+        "sets_flags": ["cultural_exchange_approved"],
+        "outcome": "The exchange becomes a modest but genuine bright spot in an otherwise tense relationship."
+      },
+      {
+        "index": 1,
+        "text": "Approve a limited student-only exchange",
+        "effects": { "globalReputation": 3, "baseSupport": -1 },
+        "sets_flags": ["cultural_exchange_limited"],
+        "outcome": "The smaller program proceeds with little controversy and modest but real diplomatic value."
+      },
+      {
+        "index": 2,
+        "text": "Reject the proposal as premature given current tensions",
+        "effects": { "baseSupport": 3, "globalReputation": -4 },
+        "sets_flags": ["cultural_exchange_rejected"],
+        "outcome": "Hardliners approve. Career diplomats quietly call it a missed opportunity for genuine goodwill."
+      },
+      {
+        "index": 3,
+        "text": "Approve the exchange but require security vetting of all participants",
+        "effects": { "globalReputation": 3, "security": 2 },
+        "sets_flags": ["cultural_exchange_vetted"],
+        "outcome": "The compromise satisfies security concerns while preserving most of the program's diplomatic value."
+      }
+    ]
+  }
+]

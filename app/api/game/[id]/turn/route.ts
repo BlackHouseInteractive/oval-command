@@ -61,7 +61,7 @@ export async function POST(req: NextRequest, { params }: Params) {
   // Same "never trust client ids" posture as everywhere else — a crafted
   // request for a Story Pack eventId this user doesn't own simply isn't in
   // the pool, same as an eventId that never existed.
-  const submittedEvent = getEligibleEvents(ownedContent, 'modern').find(e => e.id === eventId)
+  const submittedEvent = getEligibleEvents(ownedContent, game.campaignEra).find(e => e.id === eventId)
   if (!submittedEvent) {
     return NextResponse.json({ error: 'Unknown event' }, { status: 400 })
   }

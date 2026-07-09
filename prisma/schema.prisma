@@ -63,6 +63,11 @@ model Game {
   presidentName   String
   party           Party
   difficulty      String     @default("normal")
+  // Plain string, not an enum, so a new Premium Campaign era ships as a
+  // pure data-file change (see lib/content-sources.ts) with no migration —
+  // same precedent as difficulty above. Set once at creation, never
+  // re-derived or changed after (see lib/db-helpers.ts's dbToGame).
+  campaignEra     String     @default("modern")
   currentMonth    Int        @default(1)
   status          GameStatus @default(ACTIVE)
   stats           Json

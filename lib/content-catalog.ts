@@ -156,6 +156,21 @@ export function getProduct(productId: string): ProductDefinition | undefined {
   return PRODUCT_CATALOG.find(p => p.productId === productId)
 }
 
+/**
+ * Every known Premium Campaign era id ('modern', 'cold_war', ...), derived
+ * from CONTENT_CATALOG's 'campaign' entries rather than duplicated as a
+ * separate list — a new era only needs one CONTENT_CATALOG entry to become
+ * both purchasable AND a valid Game.campaignEra value.
+ */
+export const KNOWN_CAMPAIGN_ERAS = CONTENT_CATALOG
+  .filter(c => c.category === 'campaign')
+  .map(c => c.contentId.slice('campaign.'.length))
+
+/** The content id gating a given campaign era — 'cold_war' -> 'campaign.cold_war'. Undefined for an unknown era id. */
+export function getCampaignEraContentId(era: string): string | undefined {
+  return KNOWN_CAMPAIGN_ERAS.includes(era) ? `campaign.${era}` : undefined
+}
+
 export function getContentEntry(contentId: string): ContentCatalogEntry | undefined {
   return CONTENT_CATALOG.find(c => c.contentId === contentId)
 }

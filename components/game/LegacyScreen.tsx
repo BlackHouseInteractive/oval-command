@@ -15,6 +15,7 @@ interface LegacyScreenProps {
   passedLaws: string[]
   cabinetSelections: Game['cabinetSelections']
   npcTraits: Game['npcTraits']
+  campaignEra: string
   onNewGame: () => void
 }
 
@@ -61,9 +62,9 @@ function sealTone(score: number) {
   return 'text-[var(--color-bad)]'
 }
 
-export function LegacyScreen({ legacy, reason, presidentName, archetype, passedLaws, cabinetSelections, npcTraits, onNewGame }: LegacyScreenProps) {
+export function LegacyScreen({ legacy, reason, presidentName, archetype, passedLaws, cabinetSelections, npcTraits, campaignEra, onNewGame }: LegacyScreenProps) {
   const sectorBreakdown = computeSectorBreakdown(passedLaws)
-  const intelligence = buildLegacyIntelligence(cabinetSelections, npcTraits)
+  const intelligence = buildLegacyIntelligence(cabinetSelections, npcTraits, campaignEra)
 
   const breakdown = [
     { label: 'Approval',         value: legacy.breakdown.approval },

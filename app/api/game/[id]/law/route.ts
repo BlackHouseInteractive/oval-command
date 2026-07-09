@@ -44,22 +44,23 @@ export async function POST(req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: 'Invalid useNpcAbility value' }, { status: 400 })
   }
 
-  // Real ownedContent, not the 'all' default — this is the new-proposal
-  // entitlement gate, same "never trust client ids" posture as everywhere
-  // else (a crafted request for a Story Pack lawId this user doesn't own
-  // simply isn't in the pool, same as a lawId that never existed).
-  const ownedContent = await getOwnedContent(session.user.id)
-  const law = getLawById(lawId, ownedContent)
-  if (!law) {
-    return NextResponse.json({ error: 'Unknown law' }, { status: 404 })
-  }
-
   const row = await prisma.game.findUnique({ where: { id } })
   if (!row) return NextResponse.json({ error: 'Game not found' }, { status: 404 })
   if (row.userId !== session.user.id) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   if (row.status !== 'ACTIVE') return NextResponse.json({ error: 'Game is not active' }, { status: 400 })
 
   const game = dbToGame(row)
+
+  // Real ownedContent, not the 'all' default, and this game's own era —
+  // this is the new-proposal entitlement + era gate, same "never trust
+  // client ids" posture as everywhere else (a crafted request for a Story
+  // Pack lawId this user doesn't own, or a law from a different era, simply
+  // isn't in the pool, same as a lawId that never existed).
+  const ownedContent = await getOwnedContent(session.user.id)
+  const law = getLawById(lawId, ownedContent, game.campaignEra)
+  if (!law) {
+    return NextResponse.json({ error: 'Unknown law' }, { status: 404 })
+  }
 
   if (game.passedLaws.includes(lawId)) {
     return NextResponse.json({ error: 'This law has already passed' }, { status: 400 })

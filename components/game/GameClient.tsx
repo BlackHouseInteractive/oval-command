@@ -225,6 +225,7 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
           passedLaws={game.passedLaws}
           cabinetSelections={game.cabinetSelections}
           npcTraits={game.npcTraits}
+          campaignEra={game.campaignEra}
           onNewGame={() => router.push('/new-game')}
         />
         {view.phase === 'gameover' && (
@@ -281,6 +282,7 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
                 excludeCandidateId={game.cabinetSelections[view.slotId as SelectableSlotId]}
                 onSelect={handlePickReplacement}
                 ownedContent={ownedContent}
+                era={game.campaignEra}
               />
             </div>
           </div>

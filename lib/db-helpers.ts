@@ -29,6 +29,7 @@ interface DbGame {
   presidentName:    string
   party:            string
   difficulty:       string
+  campaignEra:      string
   currentMonth:     number
   status:           string
   stats:            unknown
@@ -72,6 +73,7 @@ export function dbToGame(row: DbGame): Game {
     presidentName:    row.presidentName,
     party:            row.party as Game['party'],
     difficulty:       (row.difficulty ?? 'normal') as Game['difficulty'],
+    campaignEra:      row.campaignEra ?? 'modern',
     currentMonth:     row.currentMonth,
     status:           row.status as Game['status'],
     stats:            row.stats as Game['stats'],

@@ -43,14 +43,21 @@ import { FREE_CONTENT_IDS } from '@/lib/content-catalog'
 export const EVENTS = getEligibleEvents(new Set(FREE_CONTENT_IDS), 'modern')
 export const LAWS   = getEligibleLaws(new Set(FREE_CONTENT_IDS), 'modern')
 
-// Full catalog, ownership ignored — for resolving something ALREADY
-// persisted on a Game row (a pending currentEventId, a passedLaws entry, a
-// GameLog's eventId/lawId) rather than deciding what's newly eligible. Same
+// Full catalog, ownership AND era both ignored ('all'/'all') — for
+// resolving something ALREADY persisted on a Game row (a pending
+// currentEventId, a passedLaws entry, a GameLog's eventId/lawId) by id,
+// rather than deciding what's newly eligible for a specific game. Same
 // content-id lifecycle/save-compatibility principle as lib/cabinet.ts's
-// ALL_NPC_ENTRIES: once a Story Pack event/law is legitimately picked or
-// passed, resolving it later must never re-check ownership.
-export const ALL_EVENTS = getEligibleEvents('all', 'modern')
-export const ALL_LAWS   = getEligibleLaws('all', 'modern')
+// per-game roster resolution: once an event/law is legitimately picked or
+// passed, resolving it later must never re-check ownership OR era — a
+// finished Cold War game's history must keep resolving Cold War content
+// even though 'modern' is the default era elsewhere. Safe here specifically
+// because these are `.find(id)` lookups into a flat pool, never an
+// enumeration of "everything in this game's roster" (see resolveRoster,
+// which is NOT allowed to do this — a Modern game must never see Cold War
+// NPCs just because they exist somewhere in the catalog).
+export const ALL_EVENTS = getEligibleEvents('all', 'all')
+export const ALL_LAWS   = getEligibleLaws('all', 'all')
 
 // ============================================================
 // STAT HELPERS
@@ -407,7 +414,7 @@ export function pickEvent(game: Game, ownedContent: Set<string> = new Set(FREE_C
   // briefing pool — they're only ever surfaced explicitly, either by the
   // player (Cabinet Room "Discuss") or by the NPC Initiative Engine (see
   // lib/cabinet-narrative.ts), never picked at random for the Oval Office.
-  const pool = getEligibleEvents(ownedContent, 'modern')
+  const pool = getEligibleEvents(ownedContent, game.campaignEra)
   const nonPersonnel = pool.filter(e => e.category !== 'personnel')
   const eligible = nonPersonnel.filter(event => isEventEligible(event, game, { poolSize: nonPersonnel.length }))
 
@@ -890,6 +897,21 @@ const DIFFICULTY_MODS: Record<import('@/types/game').Difficulty, Partial<GameSta
   expert: { approval: -14, congressSupport: -16, debt: 5,  unrest: 20, globalReputation: -14, partyUnity: -14 },
 }
 
+/**
+ * Each Premium Campaign era's starting-condition delta on top of
+ * INITIAL_STATS/PARTY_STAT_MODS — the one place an era's "different world"
+ * shows up mechanically at game creation, since its content pool is
+ * already handled entirely by lib/content-sources.ts. 'modern' is
+ * deliberately absent (no delta — INITIAL_STATS already IS the Modern
+ * baseline), so only a genuinely different era needs an entry here.
+ */
+const ERA_STAT_BASELINES: Record<string, Partial<GameStats>> = {
+  cold_war: {
+    security: 12, globalReputation: -6, militaryReadiness: 15,
+    unrest: 8, congressSupport: 6, debt: -20, inflation: -1,
+  },
+}
+
 export function createInitialGame(
   userId: string,
   presidentName: string,
@@ -899,14 +921,17 @@ export function createInitialGame(
   cabinetSelections: Record<SelectableSlotId, string>,
   rosterState: { npcRelationships: Record<string, number>; npcTraits: Record<string, NpcTraits> },
   priorities: string[] = [],
+  campaignEra = 'modern',
 ): Omit<Game, 'id' | 'createdAt' | 'updatedAt'> {
   const { npcRelationships, npcTraits } = rosterState
 
   const diffMods = DIFFICULTY_MODS[difficulty] ?? {}
+  const eraMods = ERA_STAT_BASELINES[campaignEra] ?? {}
   const baseStats: GameStats = { ...INITIAL_STATS, ...(PARTY_STAT_MODS[party] ?? {}) }
 
-  // Apply difficulty modifiers and clamp to valid ranges
-  const afterDifficulty = applyDelta(baseStats, diffMods)
+  // Apply era baseline, then difficulty modifiers, and clamp to valid ranges
+  const afterEra = applyDelta(baseStats, eraMods)
+  const afterDifficulty = applyDelta(afterEra, diffMods)
   // Unlocked starting perk (see lib/achievements.ts) applies on top, same
   // clamping/diminishing-returns pipeline as difficulty mods.
   const stats = perkBonus ? applyDelta(afterDifficulty, perkBonus) : afterDifficulty
@@ -916,6 +941,7 @@ export function createInitialGame(
     presidentName,
     party,
     difficulty,
+    campaignEra,
     currentMonth:     1,
     status:           'ACTIVE',
     stats,

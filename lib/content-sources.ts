@@ -23,6 +23,9 @@ import npcsRaw               from '@/data/npcs.json'
 import economicExpertsRaw   from '@/data/cabinet-packs/economic-experts-candidates.json'
 import shutdownEventsRaw    from '@/data/story-packs/government-shutdown-events.json'
 import shutdownLawsRaw      from '@/data/story-packs/government-shutdown-laws.json'
+import coldWarNpcsRaw       from '@/data/eras/cold-war-npcs.json'
+import coldWarEventsRaw     from '@/data/eras/cold-war-events.json'
+import coldWarLawsRaw       from '@/data/eras/cold-war-laws.json'
 import type { CrisisEvent, Law, NpcEntry, CabinetSlot, CabinetCandidate } from '@/types/game'
 
 /** A DLC cabinet pack adds candidates to an EXISTING slot — it can't be a flat NpcEntry[] like base content, since a CabinetCandidate only makes sense nested inside its slot's `candidates` array. */
@@ -81,8 +84,17 @@ export const CONTENT_SOURCES: ContentSource[] = [
     events: shutdownEventsRaw as unknown as CrisisEvent[],
     laws:   shutdownLawsRaw   as unknown as Law[],
   },
-  // Phase 4 (Premium Campaigns) adds one more entry here — see the
-  // monetization plan's worked example (campaign.cold_war).
+  {
+    // A Premium Campaign era is gated by BOTH contentId (ownership) AND
+    // eras (only ever eligible when Game.campaignEra === 'cold_war') —
+    // unlike a Story Pack, its content isn't meant to leak into other eras.
+    contentId: 'campaign.cold_war',
+    eras: ['cold_war'],
+    origin: 'dlc',
+    events:     coldWarEventsRaw as unknown as CrisisEvent[],
+    laws:       coldWarLawsRaw   as unknown as Law[],
+    npcEntries: coldWarNpcsRaw   as unknown as NpcEntry[],
+  },
 ]
 
 function isCabinetSlot(entry: NpcEntry): entry is CabinetSlot {
@@ -101,9 +113,18 @@ function isCabinetSlot(entry: NpcEntry): entry is CabinetSlot {
  */
 export type OwnedContent = Set<string> | 'all'
 
+/**
+ * era is either a real era id (only sources matching that specific era, or
+ * era-agnostic sources, are eligible — the gate for what a specific GAME
+ * can draw from) or the literal 'all' (every era's content is eligible —
+ * used only for resolving something already persisted, e.g. ALL_EVENTS/
+ * ALL_LAWS's cross-era id lookups, never for deciding a game's actual
+ * content pool — see lib/cabinet.ts's resolveRoster for why NPC entries in
+ * particular must NEVER be resolved this way, only individual event/law ids).
+ */
 function isEligible(source: ContentSource, ownedContent: OwnedContent, era: string): boolean {
   const ownsContent = ownedContent === 'all' || !source.contentId || ownedContent.has(source.contentId)
-  const matchesEra  = !source.eras || source.eras.includes(era)
+  const matchesEra  = era === 'all' || !source.eras || source.eras.includes(era)
   return ownsContent && matchesEra
 }
 

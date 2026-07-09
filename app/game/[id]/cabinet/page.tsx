@@ -117,7 +117,7 @@ export default async function CabinetPage({ params }: PageProps) {
                 // every other NPC on this page is fixed and has neither.
                 const isSelectable = (SELECTABLE_SLOT_IDS as readonly string[]).includes(npc.id)
                 const candidate = isSelectable
-                  ? getCandidatesForSlot(npc.id as SelectableSlotId, 'all').find(c => c.candidateId === game.cabinetSelections[npc.id as SelectableSlotId])
+                  ? getCandidatesForSlot(npc.id as SelectableSlotId, 'all', game.campaignEra).find(c => c.candidateId === game.cabinetSelections[npc.id as SelectableSlotId])
                   : undefined
                 const isFireable = isActive && isSelectable && npc.id !== 'vice_president'
 

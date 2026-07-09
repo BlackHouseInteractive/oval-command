@@ -1,31 +1,48 @@
 /**
  * Cabinet roster resolution — "stable slot id, swappable occupant."
  *
- * data/npcs.json's 5 appointable positions (vice_president, chief_of_staff,
- * sec_defense, treasury_secretary, attorney_general) are CabinetSlots with
- * 3+ CabinetCandidates each (base game gives 3; Cabinet Expansion Packs add
- * more via lib/content-sources.ts's extraCandidates merge), rather than a
- * single fixed Npc. The slot id itself never changes — that's what keeps
- * data/laws.json's 71 npc_reactions entries, advisor-engine.ts's rules, and
- * npc-milestones.ts's flavor text working unmodified, since they're all
- * keyed by slot id and tolerant of whichever candidate is actually resolved
- * behind it.
+ * Each era's content source (see lib/content-sources.ts) defines its own 5
+ * appointable positions (vice_president, chief_of_staff, sec_defense,
+ * treasury_secretary, attorney_general) as CabinetSlots with 3+
+ * CabinetCandidates each (base game gives 3; Cabinet Expansion Packs add
+ * more via the extraCandidates merge), rather than a single fixed Npc. The
+ * slot id itself never changes across eras — that's what keeps
+ * data/laws.json's npc_reactions entries, advisor-engine.ts's rules, and
+ * npc-milestones.ts's flavor text working unmodified regardless of which
+ * era or which candidate is actually resolved behind a given slot.
  *
  * Ownership gating (see lib/entitlements.ts) only ever applies at the
  * moment a NEW candidate is being selected — getCandidatesForSlot's default
- * is the free roster, and callers pass a real ownedContent Set to widen
- * that for a specific user. Once a candidate is already persisted in
- * game.cabinetSelections, resolving it (resolveNpc/resolveRoster) NEVER
- * re-checks ownership — a save stays valid even if the entitlement behind
- * an already-selected pack candidate is later revoked (refund, manual
+ * is the free Modern roster, and callers pass a real ownedContent Set to
+ * widen that for a specific user. Once a candidate is already persisted in
+ * game.cabinetSelections, resolving it (resolveRoster) NEVER re-checks
+ * ownership — a save stays valid even if the entitlement behind an
+ * already-selected pack candidate is later revoked (refund, manual
  * toggle). See the monetization plan's content-id lifecycle principle.
+ *
+ * era is threaded the same way throughout: every function that resolves
+ * something ALREADY DECIDED for a specific game (resolveRoster, hireCandidate)
+ * reads `game.campaignEra` directly rather than taking a separate param, so
+ * every one of resolveRoster's ~15 call sites needed zero changes when
+ * Premium Campaigns landed — they already pass a full Game object. Functions
+ * used before a Game row exists (getDefaultCabinetSelections,
+ * validateCabinetSelections, sumStartingBonuses, seedRosterState, at
+ * new-game creation) take an explicit `era` parameter instead, defaulting
+ * to 'modern' so any not-yet-migrated caller keeps today's exact behavior.
  *
  * Deliberately has NO dependency on game-engine.ts's EVENTS/LAWS exports —
  * only `applyDelta`, which is pure stat math. Every game-engine.ts function
- * that used to read a module-level NPCS constant now takes a `roster: Npc[]`
- * parameter instead, computed by the caller via resolveRoster(game). That
- * keeps the dependency one-directional (cabinet.ts -> game-engine.ts) and
- * avoids a circular import.
+ * that used to read a module-level NPCS constant instead takes a
+ * `roster: Npc[]` parameter, computed by the caller via resolveRoster(game).
+ * That keeps the dependency one-directional (cabinet.ts -> game-engine.ts)
+ * and avoids a circular import.
+ *
+ * Deliberately NOT computed once at module load and cached: unlike
+ * game-engine.ts's EVENTS/LAWS (which only ever needed a free-vs-owned
+ * split), a per-game roster also varies by era, so every lookup here calls
+ * getEligibleNpcEntries fresh with that game's actual era. It's a handful
+ * of array filters over ~15-30 entries — cheap enough that caching isn't
+ * worth the complexity of a per-era cache.
  */
 
 import { applyDelta } from '@/lib/game-engine'
@@ -46,29 +63,16 @@ import {
 /** Real Set = only that user's owned content is eligible (the gate for a NEW selection). 'all' = every content id treated as owned, used only to resolve something already persisted — never to decide what's newly selectable. */
 type OwnedContent = Set<string> | 'all'
 
-// Back-compat alias over lib/content-sources.ts's registry, scoped to the
-// free Modern era with no extra entitlements — i.e. exactly today's base
-// roster. Everything below that needs the FULL roster regardless of
-// ownership (resolving an already-persisted selection) uses ALL_NPC_ENTRIES
-// instead.
-export const NPC_ENTRIES = getEligibleNpcEntries(new Set(FREE_CONTENT_IDS), 'modern')
-
-/** Every candidate that could ever be selected, across every pack, ignoring ownership — see the OwnedContent doc comment above. */
-const ALL_NPC_ENTRIES = getEligibleNpcEntries('all', 'modern')
-
 function isCabinetSlot(entry: NpcEntry): entry is CabinetSlot {
   return (entry as CabinetSlot).selectable === true
 }
 
-/** The 7 fixed (non-selectable) NPCs — identical every game, never swapped. */
-export const FIXED_NPCS: Npc[] = NPC_ENTRIES.filter((e): e is Npc => !isCabinetSlot(e))
-
 /**
- * Candidates for one slot. Defaults to the free roster (today's 3 base
- * candidates); pass a specific user's owned-content Set to widen that with
- * any Cabinet Packs they own, or 'all' to ignore ownership entirely (only
- * appropriate for resolving an already-persisted selection — see the
- * OwnedContent doc comment above).
+ * Candidates for one slot in a given era. Defaults to the free Modern
+ * roster (today's 3 base candidates); pass a specific user's owned-content
+ * Set to widen that with any Cabinet Packs they own, or 'all' to ignore
+ * ownership entirely (only appropriate for resolving an already-persisted
+ * selection — see the OwnedContent doc comment above).
  */
 export function getCandidatesForSlot(
   slotId: SelectableSlotId,
@@ -80,9 +84,10 @@ export function getCandidatesForSlot(
   return slot && isCabinetSlot(slot) ? slot.candidates : []
 }
 
-/** The job title for a selectable slot (e.g. "Secretary of the Treasury") — shared across the assembly picker and the Legacy Intelligence Report so both use the same label. Slot metadata (not candidates) is base-content only, so this doesn't need ownership awareness. */
-export function getSlotRole(slotId: SelectableSlotId): string {
-  const slot = NPC_ENTRIES.find(e => e.id === slotId)
+/** The job title for a selectable slot (e.g. "Secretary of the Treasury") — shared across the assembly picker and the Legacy Intelligence Report so both use the same label. Slot metadata (not candidates) is base-content only within an era, so this doesn't need ownership awareness, only an era. */
+export function getSlotRole(slotId: SelectableSlotId, era = 'modern'): string {
+  const entries = getEligibleNpcEntries(new Set(FREE_CONTENT_IDS), era)
+  const slot = entries.find(e => e.id === slotId)
   return slot && isCabinetSlot(slot) ? slot.role : slotId
 }
 
@@ -105,43 +110,51 @@ function candidateToNpc(slot: CabinetSlot, candidate: CabinetCandidate): Npc {
   }
 }
 
-/** Resolve one entry id to its currently-active Npc for this game. Fixed NPCs pass through unchanged; an unrecognized/missing selection falls back to that slot's first (free) candidate. Searches ALL_NPC_ENTRIES, not the free-only NPC_ENTRIES — a previously-selected pack candidate must keep resolving even if the pack is no longer owned (save compatibility). */
-export function resolveNpc(entryId: string, cabinetSelections: Game['cabinetSelections']): Npc | undefined {
-  const entry = ALL_NPC_ENTRIES.find(e => e.id === entryId)
-  if (!entry) return undefined
-  if (!isCabinetSlot(entry)) return entry
-
-  const selectedId = cabinetSelections[entry.id as SelectableSlotId]
-  const candidate = entry.candidates.find(c => c.candidateId === selectedId) ?? entry.candidates[0]
-  return candidateToNpc(entry, candidate)
-}
-
-/** The full per-game roster — replaces every direct NPCS import. Pure function of game.cabinetSelections. */
-export function resolveRoster(game: Pick<Game, 'cabinetSelections'>): Npc[] {
-  return ALL_NPC_ENTRIES
-    .map(entry => resolveNpc(entry.id, game.cabinetSelections))
+/**
+ * The full per-game roster — replaces every direct NPCS import. Pure
+ * function of game.cabinetSelections and game.campaignEra. Resolves against
+ * getEligibleNpcEntries('all', game.campaignEra) — ownership is never
+ * re-checked here (a previously-selected pack candidate must keep
+ * resolving even if the pack is no longer owned, see the content-id
+ * lifecycle principle above) — but era IS strictly scoped to this specific
+ * game, unlike ownership: a Modern game must never see Cold War NPCs just
+ * because they exist somewhere in the catalog, so this can't reuse a
+ * single cross-era module constant the way game-engine.ts's ALL_EVENTS/
+ * ALL_LAWS safely can (those are `.find(id)` lookups into a flat pool;
+ * this is an enumeration of "everything in this game's roster").
+ */
+export function resolveRoster(game: Pick<Game, 'cabinetSelections' | 'campaignEra'>): Npc[] {
+  const entries = getEligibleNpcEntries('all', game.campaignEra)
+  return entries
+    .map(entry => {
+      if (!isCabinetSlot(entry)) return entry
+      const selectedId = game.cabinetSelections[entry.id as SelectableSlotId]
+      const candidate = entry.candidates.find(c => c.candidateId === selectedId) ?? entry.candidates[0]
+      return candidateToNpc(entry, candidate)
+    })
     .filter((n): n is Npc => n !== undefined)
 }
 
-/** Sensible defaults when nothing was submitted — deliberately always the free roster (a non-paying player should never get auto-defaulted into a locked candidate). */
-export function getDefaultCabinetSelections(): Record<SelectableSlotId, string> {
+/** Sensible defaults when nothing was submitted — deliberately always the free roster for that era (a non-paying player should never get auto-defaulted into a locked candidate). */
+export function getDefaultCabinetSelections(era = 'modern'): Record<SelectableSlotId, string> {
   const defaults = {} as Record<SelectableSlotId, string>
   for (const slotId of SELECTABLE_SLOT_IDS) {
-    defaults[slotId] = getCandidatesForSlot(slotId)[0]?.candidateId ?? ''
+    defaults[slotId] = getCandidatesForSlot(slotId, new Set(FREE_CONTENT_IDS), era)[0]?.candidateId ?? ''
   }
   return defaults
 }
 
-/** Validate a client-submitted selections map against what this specific user actually owns, falling back to defaults for anything missing/invalid/locked — same "never trust client ids" posture as perkId/campaignChoiceIds in app/api/game/route.ts. */
+/** Validate a client-submitted selections map against what this specific user actually owns for the given era, falling back to defaults for anything missing/invalid/locked — same "never trust client ids" posture as perkId/campaignChoiceIds in app/api/game/route.ts. */
 export function validateCabinetSelections(
   submitted: Partial<Record<string, string>> | undefined,
   ownedContent: Set<string>,
+  era = 'modern',
 ): Record<SelectableSlotId, string> {
-  const resolved = getDefaultCabinetSelections()
+  const resolved = getDefaultCabinetSelections(era)
   if (!submitted) return resolved
   for (const slotId of SELECTABLE_SLOT_IDS) {
     const candidateId = submitted[slotId]
-    if (candidateId && getCandidatesForSlot(slotId, ownedContent).some(c => c.candidateId === candidateId)) {
+    if (candidateId && getCandidatesForSlot(slotId, ownedContent, era).some(c => c.candidateId === candidateId)) {
       resolved[slotId] = candidateId
     }
   }
@@ -149,10 +162,10 @@ export function validateCabinetSelections(
 }
 
 /** Sum of every selected candidate's startingBonus — folded into the same combinedBonus pipeline as perk/campaign bonuses before the one applyDelta call in createInitialGame. Runs on selections already validated by validateCabinetSelections, so it resolves via 'all' rather than re-checking ownership. */
-export function sumStartingBonuses(selections: Record<SelectableSlotId, string>): StatDelta {
+export function sumStartingBonuses(selections: Record<SelectableSlotId, string>, era = 'modern'): StatDelta {
   const bonus: StatDelta = {}
   for (const slotId of SELECTABLE_SLOT_IDS) {
-    const candidate = getCandidatesForSlot(slotId, 'all').find(c => c.candidateId === selections[slotId])
+    const candidate = getCandidatesForSlot(slotId, 'all', era).find(c => c.candidateId === selections[slotId])
     if (!candidate?.startingBonus) continue
     for (const [key, value] of Object.entries(candidate.startingBonus) as [keyof StatDelta, number][]) {
       bonus[key] = ((bonus[key] ?? 0) as number) + value
@@ -162,14 +175,14 @@ export function sumStartingBonuses(selections: Record<SelectableSlotId, string>)
 }
 
 /** Seed npcRelationships/npcTraits for the full roster at game creation. Same 'all' reasoning as sumStartingBonuses — selections are already trusted by this point. */
-export function seedRosterState(selections: Record<SelectableSlotId, string>): {
+export function seedRosterState(selections: Record<SelectableSlotId, string>, era = 'modern'): {
   npcRelationships: Record<string, number>
   npcTraits: Record<string, NpcTraits>
 } {
   const npcRelationships: Record<string, number> = {}
   const npcTraits: Record<string, NpcTraits> = {}
 
-  for (const entry of ALL_NPC_ENTRIES) {
+  for (const entry of getEligibleNpcEntries('all', era)) {
     if (isCabinetSlot(entry)) {
       const candidate = entry.candidates.find(c => c.candidateId === selections[entry.id as SelectableSlotId]) ?? entry.candidates[0]
       npcRelationships[entry.id] = candidate.relationship.start
@@ -194,10 +207,11 @@ export function seedRosterState(selections: Record<SelectableSlotId, string>): {
  * can't fire-and-rehire into a locked candidate they don't own. The
  * "Unknown candidate" error below already covers both "invalid id" and
  * "valid id but locked," since a locked candidate simply isn't in the
- * filtered list.
+ * filtered list. era comes from game.campaignEra directly (not a separate
+ * param) since a real, persisted Game is always the caller's starting point.
  */
 export function hireCandidate(game: Game, slotId: SelectableSlotId, candidateId: string, ownedContent: Set<string>): Game {
-  const candidate = getCandidatesForSlot(slotId, ownedContent).find(c => c.candidateId === candidateId)
+  const candidate = getCandidatesForSlot(slotId, ownedContent, game.campaignEra).find(c => c.candidateId === candidateId)
   if (!candidate) throw new Error(`Unknown candidate ${candidateId} for slot ${slotId}`)
 
   const stats = candidate.startingBonus ? applyDelta(game.stats, candidate.startingBonus) : game.stats

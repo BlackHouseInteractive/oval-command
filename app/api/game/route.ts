@@ -8,6 +8,7 @@ import { resolveCampaignChoices } from '@/lib/campaign'
 import { validateCabinetSelections, sumStartingBonuses, seedRosterState } from '@/lib/cabinet'
 import { validatePriorities } from '@/lib/priorities'
 import { getOwnedContent } from '@/lib/entitlements'
+import { getCampaignEraContentId } from '@/lib/content-catalog'
 import { dbToGame, toJson, toUnlockedAchievements } from '@/lib/db-helpers'
 import type { CreateGameRequest, StatDelta } from '@/types/game'
 
@@ -37,7 +38,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  const { presidentName, party, difficulty = 'normal', perkId, campaignChoiceIds, cabinetSelections, priorities } = body
+  const { presidentName, party, difficulty = 'normal', campaignEra = 'modern', perkId, campaignChoiceIds, cabinetSelections, priorities } = body
 
   if (!presidentName?.trim() || presidentName.trim().length > 60) {
     return NextResponse.json({ error: 'President name must be 1–60 characters' }, { status: 400 })
@@ -47,6 +48,18 @@ export async function POST(req: NextRequest) {
   }
   if (!['easy', 'normal', 'hard', 'expert'].includes(difficulty)) {
     return NextResponse.json({ error: 'Invalid difficulty' }, { status: 400 })
+  }
+
+  // A Premium Campaign era (e.g. 'cold_war') must both be a known era AND
+  // be owned — exact mirror of the perkId block below, just gating a whole
+  // era's content pool instead of one starting-stat bonus.
+  const eraContentId = getCampaignEraContentId(campaignEra)
+  if (!eraContentId) {
+    return NextResponse.json({ error: 'Unknown campaign era' }, { status: 400 })
+  }
+  const ownedContent = await getOwnedContent(session.user.id)
+  if (!ownedContent.has(eraContentId)) {
+    return NextResponse.json({ error: 'This campaign era has not been unlocked' }, { status: 400 })
   }
 
   let perkBonus: StatDelta | undefined = undefined
@@ -68,9 +81,8 @@ export async function POST(req: NextRequest) {
   const campaignBonus = Array.isArray(campaignChoiceIds) ? resolveCampaignChoices(campaignChoiceIds) : {}
   // Same "never trust client ids" posture — falls back to each slot's
   // first candidate for anything missing/invalid/unowned, see lib/cabinet.ts.
-  const ownedContent = await getOwnedContent(session.user.id)
-  const resolvedCabinetSelections = validateCabinetSelections(cabinetSelections, ownedContent)
-  const cabinetBonus = sumStartingBonuses(resolvedCabinetSelections)
+  const resolvedCabinetSelections = validateCabinetSelections(cabinetSelections, ownedContent, campaignEra)
+  const cabinetBonus = sumStartingBonuses(resolvedCabinetSelections, campaignEra)
   const resolvedPriorities = validatePriorities(priorities)
 
   const combinedBonus: StatDelta = { ...perkBonus }
@@ -81,7 +93,7 @@ export async function POST(req: NextRequest) {
     combinedBonus[key] = ((combinedBonus[key] ?? 0) as number) + value
   }
 
-  const rosterState = seedRosterState(resolvedCabinetSelections)
+  const rosterState = seedRosterState(resolvedCabinetSelections, campaignEra)
   const initial = createInitialGame(
     session.user.id,
     presidentName.trim(),
@@ -91,6 +103,7 @@ export async function POST(req: NextRequest) {
     resolvedCabinetSelections,
     rosterState,
     resolvedPriorities,
+    campaignEra,
   )
 
   let dbGame
@@ -101,6 +114,7 @@ export async function POST(req: NextRequest) {
         presidentName:       initial.presidentName,
         party:               initial.party,
         difficulty:          initial.difficulty,
+        campaignEra:         initial.campaignEra,
         currentMonth:        initial.currentMonth,
         status:              initial.status,
         stats:               toJson(initial.stats),

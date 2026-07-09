@@ -2,7 +2,8 @@ import { redirect, notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import { auth } from '@/lib/auth'
 import { dbToGame, getGameRow } from '@/lib/db-helpers'
-import { ALL_LAWS, ALL_EVENTS, computePassProbability } from '@/lib/game-engine'
+import { ALL_EVENTS, computePassProbability } from '@/lib/game-engine'
+import { getEligibleLaws } from '@/lib/content-sources'
 import { canUseNpcAbility } from '@/lib/law-engine'
 import { getOwnedContent } from '@/lib/entitlements'
 import { CongressClient } from '@/components/game/CongressClient'
@@ -23,10 +24,13 @@ export default async function CongressPage({ params }: PageProps) {
   const game = dbToGame(row)
   const ownedContent = await getOwnedContent(session.user.id)
 
-  // ALL_LAWS, not the free-only LAWS alias — locked Story Pack laws are
-  // shown (dimmed, with an Unlock CTA) rather than hidden, same "the point
-  // of comparison IS the point of sale" precedent as CabinetSlotPicker.
-  const lawsWithOdds = ALL_LAWS.map(law => ({
+  // getEligibleLaws('all', game.campaignEra), not the global cross-era
+  // ALL_LAWS — this is a browse/propose surface (a NEW-selection gate),
+  // strictly scoped to this game's own era, unlike the read-back lookups
+  // below. Locked Story Pack laws are shown (dimmed, with an Unlock CTA)
+  // rather than hidden, same "the point of comparison IS the point of
+  // sale" precedent as CabinetSlotPicker.
+  const lawsWithOdds = getEligibleLaws('all', game.campaignEra).map(law => ({
     law,
     probability: computePassProbability(law, game),
     alreadyPassed: game.passedLaws.includes(law.id),
