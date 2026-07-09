@@ -2,7 +2,7 @@ import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { auth } from '@/lib/auth'
 import { dbToGame, getGameRow } from '@/lib/db-helpers'
-import { EVENTS } from '@/lib/game-engine'
+import { ALL_EVENTS } from '@/lib/game-engine'
 import { getLegislativeOpportunity } from '@/lib/law-engine'
 import { hashSeed } from '@/lib/utils'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
@@ -29,7 +29,7 @@ export default async function SchedulePage({ params }: PageProps) {
   if (row.userId !== session.user.id) redirect('/dashboard')
 
   const game = dbToGame(row)
-  const pendingEvent = row.currentEventId ? EVENTS.find(e => e.id === row.currentEventId) : undefined
+  const pendingEvent = row.currentEventId ? ALL_EVENTS.find(e => e.id === row.currentEventId) : undefined
   const roomImage = getRoomImage('/oval-office-bg.webp', isTenseMood(game, pendingEvent))
   const treatment = getRoomTreatment(roomImage)
   const opportunity = getLegislativeOpportunity(game)

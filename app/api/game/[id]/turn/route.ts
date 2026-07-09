@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { processEventTurn, pickEvent, isEventEligible, EVENTS, computeLegacyScore } from '@/lib/game-engine'
+import { processEventTurn, pickEvent, isEventEligible, computeLegacyScore } from '@/lib/game-engine'
+import { getEligibleEvents } from '@/lib/content-sources'
+import { getOwnedContent } from '@/lib/entitlements'
 import { resolveRoster } from '@/lib/cabinet'
 import { driftTraits } from '@/lib/cabinet-traits'
 import { applyCabinetNarrative, pickAmbientHeadline } from '@/lib/cabinet-narrative'
@@ -54,8 +56,12 @@ export async function POST(req: NextRequest, { params }: Params) {
   }
 
   const game = dbToGame(row)
+  const ownedContent = await getOwnedContent(session.user.id)
 
-  const submittedEvent = EVENTS.find(e => e.id === eventId)
+  // Same "never trust client ids" posture as everywhere else — a crafted
+  // request for a Story Pack eventId this user doesn't own simply isn't in
+  // the pool, same as an eventId that never existed.
+  const submittedEvent = getEligibleEvents(ownedContent, 'modern').find(e => e.id === eventId)
   if (!submittedEvent) {
     return NextResponse.json({ error: 'Unknown event' }, { status: 400 })
   }
@@ -122,7 +128,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     headlines: ambientHeadline ? [...result.headlines, ambientHeadline] : result.headlines,
   }
 
-  const nextEvent = suggestedEvent ?? (result.game.status === 'ACTIVE' ? pickEvent(result.game) : null)
+  const nextEvent = suggestedEvent ?? (result.game.status === 'ACTIVE' ? pickEvent(result.game, ownedContent) : null)
 
   const [updateResult] = await prisma.$transaction([
     prisma.game.updateMany({

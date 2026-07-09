@@ -1,0 +1,156 @@
+[
+  {
+    "id": "funding_standoff",
+    "title": "Congress Deadlocked as Funding Deadline Approaches",
+    "category": "congress",
+    "description": "The federal government runs out of appropriated funding in seventy-two hours and Congress is nowhere near a deal. Both chamber leaders are blaming each other on camera. Agency heads are quietly drafting shutdown contingency plans.",
+    "triggers": {
+      "always_available": true,
+      "shutdown_crisis_started": false
+    },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 6,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Personally negotiate a stopgap funding bill with both chambers' leadership",
+        "effects": {
+          "congressSupport": 6,
+          "approval": 2,
+          "debt": 0.1
+        },
+        "sets_flags": [
+          "stopgap_negotiated",
+          "shutdown_crisis_started"
+        ],
+        "outcome": "A 45-day stopgap clears both chambers by a narrow margin. Nobody got what they wanted, which both leaders privately call a good sign."
+      },
+      {
+        "index": 1,
+        "text": "Hold a press conference blaming Congress for the impasse",
+        "effects": {
+          "baseSupport": 5,
+          "congressSupport": -6,
+          "approval": 1
+        },
+        "sets_flags": [
+          "shutdown_blame_congress",
+          "shutdown_crisis_started"
+        ],
+        "outcome": "The base loves it. Congressional leadership in both parties calls it grandstanding — and means it."
+      },
+      {
+        "index": 2,
+        "text": "Offer major concessions to secure a bipartisan deal",
+        "effects": {
+          "congressSupport": 9,
+          "baseSupport": -6,
+          "approval": 2
+        },
+        "sets_flags": [
+          "shutdown_concessions",
+          "shutdown_crisis_started"
+        ],
+        "outcome": "The deal passes comfortably. Your own party's leadership calls the concessions 'unnecessary and unwise' in a joint statement."
+      },
+      {
+        "index": 3,
+        "text": "Let the funding deadline pass and let the shutdown begin",
+        "effects": {
+          "unrest": 4,
+          "approval": -3
+        },
+        "sets_flags": [
+          "shutdown_occurred",
+          "shutdown_crisis_started"
+        ],
+        "outcome": "Midnight comes and goes with no deal. Nonessential federal operations go dark for the first time in years.",
+        "delayed_effects": [
+          {
+            "delay_months": 2,
+            "effects": {
+              "economy": -3,
+              "approval": -4
+            },
+            "headline": "Economists estimate the shutdown shaved measurable growth off last quarter's numbers"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "shutdown_fallout",
+    "title": "Washington Reckons With the Funding Fight's Aftermath",
+    "category": "congress",
+    "description": "The immediate standoff is over, but its aftershocks aren't. Furloughed workers are asking about back pay, agencies are behind on everything from permit approvals to national park maintenance, and the next funding deadline is already on the calendar.",
+    "triggers": {
+      "always_available": true,
+      "shutdown_crisis_resolved": false
+    },
+    "sets_flags": [],
+    "requires_flags": [
+      "shutdown_crisis_started"
+    ],
+    "weight": 6,
+    "callbacks": [
+      {
+        "flag": "shutdown_occurred",
+        "text": "The shutdown you allowed to happen is still the first thing reporters bring up in every briefing."
+      }
+    ],
+    "choices": [
+      {
+        "index": 0,
+        "text": "Push a bipartisan budget-process reform to prevent this from recurring",
+        "effects": {
+          "congressSupport": 5,
+          "approval": 3,
+          "debt": 0.2
+        },
+        "sets_flags": [
+          "shutdown_process_reformed"
+        ],
+        "outcome": "The reform passes with an odd-couple coalition. Budget wonks call it the most consequential process change in a generation. Voters barely notice."
+      },
+      {
+        "index": 1,
+        "text": "Guarantee full back pay and protections for every furloughed federal worker",
+        "effects": {
+          "unrest": -4,
+          "approval": 4,
+          "debt": 0.3
+        },
+        "sets_flags": [
+          "shutdown_workers_protected"
+        ],
+        "outcome": "Federal employee unions publicly thank the administration. The bill for it lands quietly in next year's deficit projections."
+      },
+      {
+        "index": 2,
+        "text": "Negotiate a long-term funding bill to avoid another cliff",
+        "effects": {
+          "economy": 3,
+          "congressSupport": -3,
+          "debt": 0.4
+        },
+        "sets_flags": [
+          "shutdown_long_term_funding"
+        ],
+        "outcome": "Markets like the certainty. Fiscal hawks in Congress do not, and say so, loudly, for weeks."
+      },
+      {
+        "index": 3,
+        "text": "Move on and let agencies absorb the disruption on their own",
+        "effects": {
+          "approval": -2,
+          "baseSupport": 3
+        },
+        "sets_flags": [
+          "shutdown_unaddressed"
+        ],
+        "outcome": "Nothing changes structurally. The base appreciates that you didn't 'cave' to anyone. Agency backlogs quietly pile up."
+      }
+    ]
+  }
+]

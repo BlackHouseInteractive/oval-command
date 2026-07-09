@@ -2,11 +2,12 @@ import { redirect, notFound } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { dbToGame, dbToGameLog, getGameRow } from '@/lib/db-helpers'
-import { pickEvent, EVENTS } from '@/lib/game-engine'
+import { pickEvent, ALL_EVENTS } from '@/lib/game-engine'
 import { computePresidentialArchetype } from '@/lib/archetype-engine'
 import { computeYearInReview } from '@/lib/year-in-review'
 import { getInactivityWarning } from '@/lib/guest-cleanup'
 import { getEnabledOAuthProviders } from '@/lib/oauth-providers'
+import { getOwnedContent } from '@/lib/entitlements'
 import { GameClient } from '@/components/game/GameClient'
 
 interface PageProps {
@@ -25,13 +26,14 @@ export default async function GamePage({ params, searchParams }: PageProps) {
   if (row.userId !== session.user.id) redirect('/dashboard')
 
   const game = dbToGame(row)
+  const ownedContentSet = await getOwnedContent(session.user.id)
 
   // A Cabinet Room "Discuss [Role]" link lands here as ?discuss=slotId —
   // shown in place of the normal briefing WITHOUT persisting it as
   // currentEventId, since it's player-initiated and ad hoc: if they
   // navigate away without resolving it, nothing is lost, and the real
   // pending crisis/personnel event (if any) is untouched underneath.
-  const discussEvent = discuss ? EVENTS.find(e => e.id === `discuss_${discuss}` && e.category === 'personnel') : undefined
+  const discussEvent = discuss ? ALL_EVENTS.find(e => e.id === `discuss_${discuss}` && e.category === 'personnel') : undefined
 
   // Reuse the event already persisted for this turn instead of picking a
   // fresh one on every load — otherwise reloading the page (or navigating
@@ -42,9 +44,9 @@ export default async function GamePage({ params, searchParams }: PageProps) {
     if (discussEvent) {
       currentEvent = discussEvent
     } else if (row.currentEventId) {
-      currentEvent = EVENTS.find(e => e.id === row.currentEventId) ?? null
+      currentEvent = ALL_EVENTS.find(e => e.id === row.currentEventId) ?? null
     } else {
-      currentEvent = pickEvent(game)
+      currentEvent = pickEvent(game, ownedContentSet)
       if (currentEvent) {
         await prisma.game.update({
           where: { id },
@@ -93,6 +95,7 @@ export default async function GamePage({ params, searchParams }: PageProps) {
   const isGuest = session.user.name === 'Guest'
   const inactivityWarning = isGuest ? getInactivityWarning(row.updatedAt) : null
   const { githubEnabled, googleEnabled } = getEnabledOAuthProviders()
+  const ownedContent = Array.from(ownedContentSet)
 
   return (
     <GameClient
@@ -104,6 +107,7 @@ export default async function GamePage({ params, searchParams }: PageProps) {
       googleEnabled={googleEnabled}
       finishedGameArchetype={finishedGameArchetype}
       yearInReview={yearInReview}
+      ownedContent={ownedContent}
     />
   )
 }

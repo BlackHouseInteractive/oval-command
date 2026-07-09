@@ -1,7 +1,7 @@
 import { redirect, notFound } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { dbToGame, getGameRow } from '@/lib/db-helpers'
-import { EVENTS } from '@/lib/game-engine'
+import { ALL_EVENTS } from '@/lib/game-engine'
 import { resolveRoster } from '@/lib/cabinet'
 import { StatCard } from '@/components/game/StatCard'
 import { CabinetCard } from '@/components/game/CabinetCard'
@@ -26,7 +26,7 @@ export default async function DiplomaticOfficePage({ params }: PageProps) {
 
   const game = dbToGame(row)
   const worldLeaders = resolveRoster(game).filter(n => n.faction === 'international')
-  const pendingEvent = row.currentEventId ? EVENTS.find(e => e.id === row.currentEventId) : undefined
+  const pendingEvent = row.currentEventId ? ALL_EVENTS.find(e => e.id === row.currentEventId) : undefined
   const showBanner = game.status === 'ACTIVE' && pendingEvent && MATCHING_CATEGORIES.includes(pendingEvent.category)
 
   const roomImage = getRoomImage('/diplomatic-office-bg.webp', isTenseMood(game, pendingEvent))

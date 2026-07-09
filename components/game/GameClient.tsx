@@ -46,6 +46,7 @@ interface GameClientProps {
   googleEnabled: boolean
   finishedGameArchetype?: PresidentialArchetype
   yearInReview?: YearInReview
+  ownedContent: string[]
 }
 
 type ViewState =
@@ -62,7 +63,7 @@ const SEVERITY_DOT: Record<string, string> = {
   opportunity: 'bg-[var(--color-good)]',
 }
 
-export function GameClient({ initialGame, initialEvent, recentLogs: initialRecentLogs, inactivityWarning, githubEnabled, googleEnabled, finishedGameArchetype, yearInReview }: GameClientProps) {
+export function GameClient({ initialGame, initialEvent, recentLogs: initialRecentLogs, inactivityWarning, githubEnabled, googleEnabled, finishedGameArchetype, yearInReview, ownedContent }: GameClientProps) {
   const router = useRouter()
   const [game, setGame] = useState(initialGame)
   const [event, setEvent] = useState(initialEvent)
@@ -279,6 +280,7 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
                 slotId={view.slotId as SelectableSlotId}
                 excludeCandidateId={game.cabinetSelections[view.slotId as SelectableSlotId]}
                 onSelect={handlePickReplacement}
+                ownedContent={ownedContent}
               />
             </div>
           </div>

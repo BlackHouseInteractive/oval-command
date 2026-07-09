@@ -1,0 +1,116 @@
+[
+  {
+    "id": "shutdown_prevention_act",
+    "title": "Government Funding Stability Act",
+    "shortTitle": "Funding Stability Act",
+    "category": "bipartisan",
+    "sector": "economy_finance",
+    "description": "Overhauls the federal appropriations process with automatic continuing-resolution triggers, ending the recurring cycle of funding-deadline brinkmanship.",
+    "flavor": "The most boring bill in Washington might also be the most useful one.",
+    "cost": "low",
+    "debtImpact": 0.3,
+    "annualCostBn": 15,
+    "passage": {
+      "congressMin": 50,
+      "partyUnityMin": 40,
+      "approvalBonus": {
+        "threshold": 55,
+        "bonus": 5
+      },
+      "approvalPenalty": {
+        "threshold": 30,
+        "penalty": 8
+      },
+      "lobbyOpposition": [],
+      "basePassProbability": 45
+    },
+    "effects": {
+      "onPass": {
+        "congressSupport": 8,
+        "approval": 4,
+        "unrest": -3
+      },
+      "passive": {
+        "congressSupport": 1
+      },
+      "description": "Passive: +1 congress support/mo for remainder of term"
+    },
+    "sets_flags": [
+      "shutdown_process_reformed"
+    ],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "speaker": {
+        "relationship": 8,
+        "quote": "The Speaker calls it 'the rare reform both sides actually wanted — we just needed someone to force the vote.'"
+      },
+      "senate_leader": {
+        "relationship": 8,
+        "quote": "The Senate Leader says it 'takes the hostage-taking out of budgeting, which is long overdue.'"
+      },
+      "opposition_leader": {
+        "relationship": 4,
+        "quote": "The opposition leader admits, off the record, that this one was hard to vote against."
+      }
+    }
+  },
+  {
+    "id": "essential_workers_protection_act",
+    "title": "Federal Workforce Shutdown Protections Act",
+    "shortTitle": "Workforce Protections Act",
+    "category": "progressive",
+    "sector": "social_services",
+    "description": "Guarantees automatic back pay, protects benefits, and bars furloughs of safety-critical federal employees during any future funding lapse.",
+    "flavor": "Nobody voted to make air traffic controllers work without pay. Now nobody has to again.",
+    "cost": "medium",
+    "debtImpact": 0.8,
+    "annualCostBn": 40,
+    "passage": {
+      "congressMin": 55,
+      "partyUnityMin": 55,
+      "approvalBonus": {
+        "threshold": 55,
+        "bonus": 8
+      },
+      "approvalPenalty": {
+        "threshold": 30,
+        "penalty": 10
+      },
+      "lobbyOpposition": [
+        {
+          "name": "Federal Budget Watchdog Group",
+          "penalty": 8
+        }
+      ],
+      "basePassProbability": 38
+    },
+    "effects": {
+      "onPass": {
+        "approval": 7,
+        "unrest": -5,
+        "baseSupport": 6,
+        "debt": 0.2
+      },
+      "passive": {
+        "unrest": -1
+      },
+      "description": "Passive: -1 unrest/mo for remainder of term"
+    },
+    "sets_flags": [
+      "shutdown_workers_protected_law"
+    ],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "protest_leader": {
+        "relationship": 10,
+        "quote": "The protest leader calls it 'proof that organizing federal workers actually moved Congress.'"
+      },
+      "senate_leader": {
+        "relationship": -4,
+        "quote": "The Senate Leader warns the price tag 'sets a precedent we'll be paying for every future shutdown, real or threatened.'"
+      }
+    }
+  }
+]

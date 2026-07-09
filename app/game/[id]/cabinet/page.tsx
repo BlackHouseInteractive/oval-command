@@ -1,7 +1,7 @@
 import { redirect, notFound } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { dbToGame, getGameRow } from '@/lib/db-helpers'
-import { EVENTS } from '@/lib/game-engine'
+import { ALL_EVENTS } from '@/lib/game-engine'
 import { resolveRoster, getCandidatesForSlot } from '@/lib/cabinet'
 import { CabinetCard } from '@/components/game/CabinetCard'
 import { SELECTABLE_SLOT_IDS, type SelectableSlotId } from '@/types/game'
@@ -51,7 +51,7 @@ export default async function CabinetPage({ params }: PageProps) {
   // but without this gate a finished presidency viewed via the National
   // Archives still rendered them as live, clickable prompts.
   const recommendations = isActive ? getAdvisorRecommendations(game) : []
-  const pendingEvent = row.currentEventId ? EVENTS.find(e => e.id === row.currentEventId) : undefined
+  const pendingEvent = row.currentEventId ? ALL_EVENTS.find(e => e.id === row.currentEventId) : undefined
   const showBanner = isActive && pendingEvent && MATCHING_CATEGORIES.includes(pendingEvent.category)
 
   const roomImage = getRoomImage('/cabinet-room-bg.webp', isTenseMood(game, pendingEvent))
@@ -117,7 +117,7 @@ export default async function CabinetPage({ params }: PageProps) {
                 // every other NPC on this page is fixed and has neither.
                 const isSelectable = (SELECTABLE_SLOT_IDS as readonly string[]).includes(npc.id)
                 const candidate = isSelectable
-                  ? getCandidatesForSlot(npc.id as SelectableSlotId).find(c => c.candidateId === game.cabinetSelections[npc.id as SelectableSlotId])
+                  ? getCandidatesForSlot(npc.id as SelectableSlotId, 'all').find(c => c.candidateId === game.cabinetSelections[npc.id as SelectableSlotId])
                   : undefined
                 const isFireable = isActive && isSelectable && npc.id !== 'vice_president'
 

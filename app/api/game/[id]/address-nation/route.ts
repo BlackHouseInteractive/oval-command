@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { dbToGame, gameToDbUpdate, toJson, safeErrorMessage } from '@/lib/db-helpers'
 import { resolveSpeech, SPEECH_THEMES } from '@/lib/address-nation'
 import { applyDelta, pickEvent, advanceMonth, computeLegacyScore } from '@/lib/game-engine'
+import { getOwnedContent } from '@/lib/entitlements'
 import { resolveRoster } from '@/lib/cabinet'
 import { driftTraits } from '@/lib/cabinet-traits'
 import { applyCabinetNarrative, pickAmbientHeadline } from '@/lib/cabinet-narrative'
@@ -50,6 +51,7 @@ export async function POST(req: NextRequest, { params }: Params) {
   if (row.status !== 'ACTIVE') return NextResponse.json({ error: 'Game is not active' }, { status: 400 })
 
   const game = dbToGame(row)
+  const ownedContent = await getOwnedContent(session.user.id)
 
   let updatedGame: ReturnType<typeof dbToGame>
   let effective: boolean
@@ -84,7 +86,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: message }, { status: 400 })
   }
 
-  const nextEvent = suggestedEvent ?? (updatedGame.status === 'ACTIVE' ? pickEvent(updatedGame) : null)
+  const nextEvent = suggestedEvent ?? (updatedGame.status === 'ACTIVE' ? pickEvent(updatedGame, ownedContent) : null)
 
   const narrative = effective
     ? 'The speech lands — the message matched the moment.'

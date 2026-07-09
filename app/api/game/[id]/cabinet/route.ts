@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { resolveRoster, getCandidatesForSlot } from '@/lib/cabinet'
 import { applyCabinetChange } from '@/lib/cabinet-narrative'
+import { getOwnedContent } from '@/lib/entitlements'
 import { dbToGame, gameToDbUpdate, toJson, safeErrorMessage } from '@/lib/db-helpers'
 import { SELECTABLE_SLOT_IDS, type SelectableSlotId } from '@/types/game'
 
@@ -44,7 +45,9 @@ export async function POST(req: NextRequest, { params }: Params) {
   if (!candidateId || typeof candidateId !== 'string') {
     return NextResponse.json({ error: 'candidateId is required' }, { status: 400 })
   }
-  if (!getCandidatesForSlot(slotId as SelectableSlotId).some(c => c.candidateId === candidateId)) {
+
+  const ownedContent = await getOwnedContent(session.user.id)
+  if (!getCandidatesForSlot(slotId as SelectableSlotId, ownedContent).some(c => c.candidateId === candidateId)) {
     return NextResponse.json({ error: 'Unknown candidate for this slot' }, { status: 400 })
   }
 
@@ -62,7 +65,7 @@ export async function POST(req: NextRequest, { params }: Params) {
 
   let result: ReturnType<typeof applyCabinetChange>
   try {
-    result = applyCabinetChange(game, roster, slotId as SelectableSlotId, candidateId, resigned)
+    result = applyCabinetChange(game, roster, slotId as SelectableSlotId, candidateId, ownedContent, resigned)
   } catch (err) {
     const message = safeErrorMessage(err, 'This Cabinet change could not be made')
     return NextResponse.json({ error: message }, { status: 400 })

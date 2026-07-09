@@ -1,0 +1,42 @@
+[
+  {
+    "slotId": "treasury_secretary",
+    "candidates": [
+      {
+        "candidateId": "anand",
+        "name": "Treasury Secretary Dr. Priya Anand",
+        "shortName": "SecTreas Anand",
+        "avatar": "PA",
+        "avatarColor": "blue",
+        "personality": {
+          "archetype": "The Productivity Economist",
+          "description": "Former Fed research director who spent two decades studying why growth compounds in some economies and stalls in others. She isn't a deficit hawk and she isn't a stimulus dove — she just wants every dollar spent on something that pays off in a decade, not a news cycle.",
+          "traits": ["thinks in decades, not news cycles", "obsessed with R&D and automation", "impatient with both austerity and giveaways for their own sake", "will say the unpopular long-term thing in the room"]
+        },
+        "relationship": { "start": 60, "min": 10, "max": 100 },
+        "triggers": {
+          "onLowRelationship": { "threshold": 35, "event": "SecTreas Anand warns publicly that the administration is 'coasting on yesterday's economy'", "approvalDelta": -3, "economyDelta": -2 },
+          "onVeryLowRelationship": { "threshold": 22, "event": "SecTreas Anand resigns, saying the administration has no plan for the economy of the next decade", "approvalDelta": -6, "economyDelta": -3 },
+          "onHighRelationship": { "threshold": 80, "benefit": "Anand's productivity agenda starts showing up in the numbers, and growth compounds", "approvalBonus": 3 }
+        },
+        "relationshipDeltas": {
+          "infrastructure_passed": 6, "recession_handled_well": 5, "tax_cuts_passed": 2,
+          "corporate_tax_raised": -4, "debt_above_50t": -5, "ai_regulation": 3
+        },
+        "monthlyDialogue": {
+          "high": ["The R&D pipeline is finally showing up in the productivity numbers. This is the long game paying off.", "Three more semiconductor plants broke ground this quarter. That's not luck, that's policy."],
+          "medium": ["I'd rather fund the retraining program than the check — one of them still pays off in five years.", "The automation numbers turn into job numbers if we get the timing right. Give me room to work with this."],
+          "low": ["We're spending like it's still last decade's economy. I need this administration to think past the next headline.", "I've said this in three meetings now — cutting R&D to fund a short-term win is how we lose the decade."],
+          "critical": ["I didn't take this job to watch us starve the one thing that actually compounds.", "If this administration doesn't have a plan for the next economy, I'm not the right person to keep pretending it does."]
+        },
+        "specialAbility": { "name": "Innovation Surge", "description": "Once per term, Treasury Secretary can provide an economic intervention that boosts economy +8 and reduces debt by $200B. Requires relationship above 58.", "usesPerTerm": 1, "requiresRelationship": 58, "playerActivated": true },
+        "traits": { "loyalty": 60, "ambition": 50, "integrity": 75, "politicalSkill": 60, "stress": 45, "ideology": 50 },
+        "goal": "Wants sustained investment in R&D, automation, and workforce retraining over either tax cuts or bailouts.",
+        "goalTag": "innovation_agenda",
+        "breakingPoint": "Will not defend a budget that guts federal R&D funding for a short-term political win.",
+        "breakingPointTag": "rd_funding_cuts",
+        "startingBonus": { "economy": 2, "unemployment": -0.1 }
+      }
+    ]
+  }
+]

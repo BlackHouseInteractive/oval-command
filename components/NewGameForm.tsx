@@ -38,6 +38,7 @@ const PARTIES: { value: Party; label: string; description: string }[] = [
 
 interface NewGameFormProps {
   unlockedPerks: Perk[]
+  ownedContent:  string[]
 }
 
 // The campaign choices and election-night reveal are a lead-in before the
@@ -56,7 +57,7 @@ type Phase =
       priorities: string[]
     }
 
-export function NewGameForm({ unlockedPerks }: NewGameFormProps) {
+export function NewGameForm({ unlockedPerks, ownedContent }: NewGameFormProps) {
   const router = useRouter()
   const [presidentName, setPresidentName] = useState('')
   const [party, setParty] = useState<Party>('DEMOCRAT')
@@ -399,6 +400,7 @@ export function NewGameForm({ unlockedPerks }: NewGameFormProps) {
                   slotId={SELECTABLE_SLOT_IDS[phase.slotIndex]}
                   selectedCandidateId={phase.selections[SELECTABLE_SLOT_IDS[phase.slotIndex]]}
                   onSelect={handleSelectCandidate}
+                  ownedContent={ownedContent}
                 />
               </div>
             </>

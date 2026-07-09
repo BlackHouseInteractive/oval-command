@@ -4,7 +4,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { dbToGame, dbToGameLog, getGameRow } from '@/lib/db-helpers'
 import { computeStatTrend } from '@/lib/stat-trends'
-import { EVENTS } from '@/lib/game-engine'
+import { ALL_EVENTS } from '@/lib/game-engine'
 import { GovernmentOverviewView } from '@/components/game/GovernmentOverviewView'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
 import { getRoomTreatment, getRoomImage, isTenseMood } from '@/lib/event-backgrounds'
@@ -30,7 +30,7 @@ export default async function GovernmentOverviewPage({ params }: PageProps) {
   if (row.userId !== session.user.id) redirect('/dashboard')
 
   const game = dbToGame(row)
-  const pendingEvent = row.currentEventId ? EVENTS.find(e => e.id === row.currentEventId) : undefined
+  const pendingEvent = row.currentEventId ? ALL_EVENTS.find(e => e.id === row.currentEventId) : undefined
   const roomImage = getRoomImage('/oval-office-bg.webp', isTenseMood(game, pendingEvent))
   const treatment = getRoomTreatment(roomImage)
 

@@ -2,7 +2,7 @@ import { redirect, notFound } from 'next/navigation'
 import { ViewTransition } from 'react'
 import { auth } from '@/lib/auth'
 import { getGameRow } from '@/lib/db-helpers'
-import { EVENTS, isBreakingEvent } from '@/lib/game-engine'
+import { ALL_EVENTS, isBreakingEvent } from '@/lib/game-engine'
 import { RoomNav } from '@/components/game/RoomNav'
 import { GameMenuButton } from '@/components/game/GameMenuButton'
 
@@ -20,7 +20,7 @@ export default async function GameLayout({ children, params }: LayoutProps) {
   if (!row) notFound()
   if (row.userId !== session.user.id) redirect('/dashboard')
 
-  const pendingEvent = row.currentEventId ? EVENTS.find(e => e.id === row.currentEventId) : undefined
+  const pendingEvent = row.currentEventId ? ALL_EVENTS.find(e => e.id === row.currentEventId) : undefined
   const breakingEvent = row.status === 'ACTIVE' && pendingEvent && isBreakingEvent(pendingEvent)
     ? { id: pendingEvent.id, title: pendingEvent.title }
     : null

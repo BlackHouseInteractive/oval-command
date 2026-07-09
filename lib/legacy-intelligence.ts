@@ -51,7 +51,7 @@ export function buildLegacyIntelligence(
     if (!traits) continue
 
     const candidateId = cabinetSelections[slotId]
-    const candidate = getCandidatesForSlot(slotId).find(c => c.candidateId === candidateId)
+    const candidate = getCandidatesForSlot(slotId, 'all').find(c => c.candidateId === candidateId)
     if (!candidate) continue
 
     entries.push({

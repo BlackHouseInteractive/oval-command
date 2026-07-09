@@ -20,6 +20,8 @@ interface LawWithOdds {
   alreadyPassed: boolean
   blocked: boolean
   locked: boolean
+  /** True when law.contentId is set and the requesting user doesn't own it — a Story Pack law not yet purchased, distinct from `locked`'s flag-gating. */
+  contentLocked: boolean
 }
 
 interface CongressClientProps {
@@ -240,7 +242,7 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
       )}
 
       <div className="mt-5 space-y-3">
-        {filtered.map(({ law, probability, alreadyPassed, blocked, locked }) => (
+        {filtered.map(({ law, probability, alreadyPassed, blocked, locked, contentLocked }) => (
           <div
             key={law.id}
             ref={law.id === highlightedLawId ? highlightRef : undefined}
@@ -255,8 +257,9 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
               alreadyPassed={alreadyPassed}
               blocked={blocked}
               locked={locked}
-              canUseSenateAbility={canUseSenateAbility && !alreadyPassed && !blocked && !locked}
-              canUseSpeakerAbility={canUseSpeakerAbility && !alreadyPassed && !blocked && !locked}
+              contentLocked={contentLocked}
+              canUseSenateAbility={canUseSenateAbility && !alreadyPassed && !blocked && !locked && !contentLocked}
+              canUseSpeakerAbility={canUseSpeakerAbility && !alreadyPassed && !blocked && !locked && !contentLocked}
               onPropose={handlePropose}
               disabled={submitting}
               pendingProposal={pendingProposal}

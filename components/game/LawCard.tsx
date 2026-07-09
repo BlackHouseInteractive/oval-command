@@ -2,6 +2,8 @@
 
 import { cn, formatDelta, isDeltaGood, getStatLabel } from '@/lib/utils'
 import { LAW_SECTOR_META } from '@/lib/law-sectors'
+import { getProductForContentId } from '@/lib/content-catalog'
+import { PurchaseButton } from '@/components/PurchaseButton'
 import type { Law, GameStats } from '@/types/game'
 
 interface LawCardProps {
@@ -10,6 +12,8 @@ interface LawCardProps {
   alreadyPassed: boolean
   blocked: boolean
   locked?: boolean
+  /** True when law.contentId is set and this user doesn't own it — a Story Pack law, distinct from `locked`'s flag-gating. */
+  contentLocked?: boolean
   canUseSenateAbility: boolean
   canUseSpeakerAbility: boolean
   onPropose: (lawId: string, useNpcAbility?: 'senate_leader' | 'speaker') => void
@@ -37,6 +41,7 @@ export function LawCard({
   alreadyPassed,
   blocked,
   locked,
+  contentLocked,
   canUseSenateAbility,
   canUseSpeakerAbility,
   onPropose,
@@ -48,6 +53,7 @@ export function LawCard({
   const costInfo = COST_LABEL[law.cost]
   const sectorInfo = LAW_SECTOR_META[law.sector]
   const SectorIcon = sectorInfo.icon
+  const product = contentLocked && law.contentId ? getProductForContentId(law.contentId) : undefined
 
   // Each button (plain propose, Senate whip, Speaker fast-track) arms its
   // own confirmation independently — armed(undefined) is the plain button,
@@ -110,6 +116,19 @@ export function LawCard({
         </p>
       )}
 
+      {contentLocked && product && (
+        <div className="mt-4 flex items-center justify-between border-t border-[var(--color-border)] pt-3.5">
+          <span className="font-mono text-xs text-[var(--color-paper-faint)]">
+            🔒 {product.description} — requires {product.displayName}
+          </span>
+          <PurchaseButton
+            productId={product.productId}
+            label={`Unlock — $${(product.priceCents / 100).toFixed(2)}`}
+          />
+        </div>
+      )}
+
+      {!contentLocked && (
       <div className="mt-4 flex items-center justify-between border-t border-[var(--color-border)] pt-3.5">
         {alreadyPassed ? (
           <span className="font-mono text-xs text-[var(--color-good)]">✓ Already law</span>
@@ -177,6 +196,7 @@ export function LawCard({
           </div>
         )}
       </div>
+      )}
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { EVENTS } from '@/lib/game-engine'
+import { ALL_EVENTS } from '@/lib/game-engine'
 import { resolveRoster } from '@/lib/cabinet'
 import { resolvePersonnelChoice } from '@/lib/cabinet-narrative'
 import { dbToGame, gameToDbUpdate, toJson, safeErrorMessage } from '@/lib/db-helpers'
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest, { params }: Params) {
   if (row.userId !== session.user.id) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   if (row.status !== 'ACTIVE') return NextResponse.json({ error: 'Game is not active' }, { status: 400 })
 
-  const event = EVENTS.find(e => e.id === eventId)
+  const event = ALL_EVENTS.find(e => e.id === eventId)
   if (!event || event.category !== 'personnel') {
     return NextResponse.json({ error: 'Unknown personnel scene' }, { status: 400 })
   }

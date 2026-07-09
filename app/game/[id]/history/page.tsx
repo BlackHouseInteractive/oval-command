@@ -2,7 +2,7 @@ import { redirect, notFound } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { dbToGame, dbToGameLog, getGameRow } from '@/lib/db-helpers'
-import { EVENTS, LAWS } from '@/lib/game-engine'
+import { ALL_EVENTS, ALL_LAWS } from '@/lib/game-engine'
 import { cn, formatDelta, isDeltaGood, getStatLabel, monthToDate } from '@/lib/utils'
 import { PendingEventBanner } from '@/components/game/PendingEventBanner'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
@@ -44,7 +44,7 @@ export default async function HistoryPage({ params }: PageProps) {
   const logRows = await prisma.gameLog.findMany({ where: { gameId: id }, orderBy: { month: 'asc' } })
   const logs = logRows.map(dbToGameLog)
 
-  const pendingEvent = row.currentEventId ? EVENTS.find(e => e.id === row.currentEventId) : undefined
+  const pendingEvent = row.currentEventId ? ALL_EVENTS.find(e => e.id === row.currentEventId) : undefined
   const showBanner = game.status === 'ACTIVE' && pendingEvent && MATCHING_CATEGORIES.includes(pendingEvent.category)
   const pendingBriefingTitle = game.status === 'ACTIVE' ? pendingEvent?.title ?? null : null
 
@@ -100,8 +100,8 @@ export default async function HistoryPage({ params }: PageProps) {
 
       <div className="mt-4 space-y-0 border-l border-[var(--color-border)] pl-5">
         {logs.map((log) => {
-          const event = log.eventId ? EVENTS.find(e => e.id === log.eventId) : undefined
-          const law = log.lawId ? LAWS.find(l => l.id === log.lawId) : undefined
+          const event = log.eventId ? ALL_EVENTS.find(e => e.id === log.eventId) : undefined
+          const law = log.lawId ? ALL_LAWS.find(l => l.id === log.lawId) : undefined
           const title = event?.title ?? law?.title ?? ACTION_LABEL[log.actionType] ?? log.actionType
           const deltas = Object.entries(log.statDeltas).filter(([, v]) => v !== 0) as [keyof GameStats, number][]
 

@@ -2,8 +2,9 @@ import { redirect, notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import { auth } from '@/lib/auth'
 import { dbToGame, getGameRow } from '@/lib/db-helpers'
-import { LAWS, EVENTS, computePassProbability } from '@/lib/game-engine'
+import { ALL_LAWS, ALL_EVENTS, computePassProbability } from '@/lib/game-engine'
 import { canUseNpcAbility } from '@/lib/law-engine'
+import { getOwnedContent } from '@/lib/entitlements'
 import { CongressClient } from '@/components/game/CongressClient'
 
 interface PageProps {
@@ -20,20 +21,25 @@ export default async function CongressPage({ params }: PageProps) {
   if (row.userId !== session.user.id) redirect('/dashboard')
 
   const game = dbToGame(row)
+  const ownedContent = await getOwnedContent(session.user.id)
 
-  const lawsWithOdds = LAWS.map(law => ({
+  // ALL_LAWS, not the free-only LAWS alias — locked Story Pack laws are
+  // shown (dimmed, with an Unlock CTA) rather than hidden, same "the point
+  // of comparison IS the point of sale" precedent as CabinetSlotPicker.
+  const lawsWithOdds = ALL_LAWS.map(law => ({
     law,
     probability: computePassProbability(law, game),
     alreadyPassed: game.passedLaws.includes(law.id),
     blocked: law.blocks_laws.some(id => game.passedLaws.includes(id)),
     locked: law.requires_flags.some(f => !game.flags[f]),
+    contentLocked: law.contentId !== undefined && !ownedContent.has(law.contentId),
   }))
 
   const senateAbility = canUseNpcAbility(game, 'senate_leader')
   const speakerAbility = canUseNpcAbility(game, 'speaker')
 
   const pendingBriefingTitle = game.status === 'ACTIVE' && row.currentEventId
-    ? EVENTS.find(e => e.id === row.currentEventId)?.title ?? null
+    ? ALL_EVENTS.find(e => e.id === row.currentEventId)?.title ?? null
     : null
 
   return (

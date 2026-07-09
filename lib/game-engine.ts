@@ -21,23 +21,36 @@ import {
   type NpcTraits,
 } from '@/types/game'
 
-import eventsRaw from '@/data/events.json'
 import { resolveNpcTriggerKeys, deriveTurnActionLabels } from '@/lib/npc-triggers'
 import { updateActiveConflicts } from '@/lib/conflict-engine'
 import { generateCrisisHeadline, maybeApprovalTrendHeadline } from '@/lib/headlines'
 import { checkAndEnqueueChains, resolveDueConsequences } from '@/lib/cascade-engine'
 import { checkNpcMilestones } from '@/lib/npc-milestones'
-import personnelEventsRaw from '@/data/personnel-events.json'
-import lawsRaw   from '@/data/laws.json'
+import { getEligibleEvents, getEligibleLaws } from '@/lib/content-sources'
+import { FREE_CONTENT_IDS } from '@/lib/content-catalog'
 
-// Cast once at the boundary — all internal code uses proper types.
 // NPCS is deliberately NOT exported here — data/npcs.json's 5 selectable
 // slots resolve to a different Npc depending on the game (see
 // lib/cabinet.ts's resolveRoster/FIXED_NPCS). Every function below that
 // used to read a module-level NPCS constant now takes a `roster: Npc[]`
 // parameter from the caller instead.
-export const EVENTS = [...eventsRaw, ...personnelEventsRaw] as unknown as CrisisEvent[]
-export const LAWS   = lawsRaw   as unknown as Law[]
+//
+// EVENTS/LAWS are back-compat aliases over lib/content-sources.ts's
+// registry, scoped to the free Modern era with no extra entitlements —
+// i.e. exactly today's base content. Code that needs to respect a
+// specific game's owned content/era (turn processing, law listings) calls
+// getEligibleEvents/getEligibleLaws directly instead of reading these.
+export const EVENTS = getEligibleEvents(new Set(FREE_CONTENT_IDS), 'modern')
+export const LAWS   = getEligibleLaws(new Set(FREE_CONTENT_IDS), 'modern')
+
+// Full catalog, ownership ignored — for resolving something ALREADY
+// persisted on a Game row (a pending currentEventId, a passedLaws entry, a
+// GameLog's eventId/lawId) rather than deciding what's newly eligible. Same
+// content-id lifecycle/save-compatibility principle as lib/cabinet.ts's
+// ALL_NPC_ENTRIES: once a Story Pack event/law is legitimately picked or
+// passed, resolving it later must never re-check ownership.
+export const ALL_EVENTS = getEligibleEvents('all', 'modern')
+export const ALL_LAWS   = getEligibleLaws('all', 'modern')
 
 // ============================================================
 // STAT HELPERS
@@ -278,9 +291,11 @@ export function computePassiveDrift(game: Game, scandalMitigation = 0): StatDelt
     add('approval', -(baseDrain * expectationMultiplier * (1 - scandalMitigation)))
   }
 
-  // Passive effects from passed laws
+  // Passive effects from passed laws — ALL_LAWS, not the free-only LAWS
+  // alias, since passedLaws is already-persisted state and may include a
+  // Story Pack law (see the content-id lifecycle principle above).
   for (const lawId of passedLaws) {
-    const law = LAWS.find(l => l.id === lawId)
+    const law = ALL_LAWS.find(l => l.id === lawId)
     if (!law?.effects.passive) continue
     for (const [k, v] of Object.entries(law.effects.passive)) {
       add(k as keyof StatDelta, v as number)
@@ -303,7 +318,11 @@ export function computePassiveDrift(game: Game, scandalMitigation = 0): StatDelt
  * including rare ones (assassination_attempt, weight 3) or narrowly-
  * windowed ones (midterm_results, months 24-26 only) on any turn.
  */
-export function isEventEligible(event: CrisisEvent, game: Game, opts: { ignoreRecentBlock?: boolean } = {}): boolean {
+export function isEventEligible(
+  event: CrisisEvent,
+  game: Game,
+  opts: { ignoreRecentBlock?: boolean; poolSize?: number } = {},
+): boolean {
   const { stats, flags, usedEvents, currentMonth } = game
 
   // Historical events are one-time narrative moments — firing the Cuban Missile
@@ -312,7 +331,12 @@ export function isEventEligible(event: CrisisEvent, game: Game, opts: { ignoreRe
   if (event.isHistorical && usedEvents.includes(event.id)) return false
 
   if (!opts.ignoreRecentBlock) {
-    const recentBlock = usedEvents.length >= EVENTS.length * 0.8 ? 4 : 8
+    // poolSize defaults to the free-only EVENTS count when the caller
+    // doesn't pass its own (e.g. pickEvent passes the actual ownedContent-
+    // filtered pool size, so the 80% threshold scales correctly once
+    // Story Packs make a player's real pool bigger than the free default).
+    const poolSize = opts.poolSize ?? EVENTS.length
+    const recentBlock = usedEvents.length >= poolSize * 0.8 ? 4 : 8
     if (usedEvents.slice(-recentBlock).includes(event.id)) return false
   }
 
@@ -371,13 +395,21 @@ export function getEventCallback(event: CrisisEvent, flags: Record<string, boole
   return match?.text ?? null
 }
 
-export function pickEvent(game: Game): CrisisEvent | null {
+/**
+ * ownedContent defaults to the free roster so any caller not yet migrated
+ * to pass it keeps today's exact behavior. Real call sites (every route
+ * that mutates a game) fetch the requesting user's actual entitlements via
+ * lib/entitlements.ts's getOwnedContent and pass it through, so Story Pack
+ * events only ever surface for an owner.
+ */
+export function pickEvent(game: Game, ownedContent: Set<string> = new Set(FREE_CONTENT_IDS)): CrisisEvent | null {
   // 'personnel' category events are never part of the ordinary crisis-
   // briefing pool — they're only ever surfaced explicitly, either by the
   // player (Cabinet Room "Discuss") or by the NPC Initiative Engine (see
   // lib/cabinet-narrative.ts), never picked at random for the Oval Office.
-  const nonPersonnel = EVENTS.filter(e => e.category !== 'personnel')
-  const eligible = nonPersonnel.filter(event => isEventEligible(event, game))
+  const pool = getEligibleEvents(ownedContent, 'modern')
+  const nonPersonnel = pool.filter(e => e.category !== 'personnel')
+  const eligible = nonPersonnel.filter(event => isEventEligible(event, game, { poolSize: nonPersonnel.length }))
 
   if (eligible.length === 0) {
     // Fallback: any always_available event not used in last 4 turns
@@ -722,7 +754,11 @@ export function processEventTurn(
   /** SecDef's Military Option synthetic choice — only spliced in when choiceIndex points one past the event's real choices (see lib/military-option.ts). */
   militaryOptionChoice?: EventChoice,
 ): TurnResult {
-  const baseEvent = EVENTS.find(e => e.id === eventId)
+  // ALL_EVENTS, not the free-only EVENTS alias — by this point the caller
+  // (turn/route.ts) has already validated eventId against the requesting
+  // user's actual ownedContent, so this is a trusted read-back lookup, not
+  // a new-selection gate (see the content-id lifecycle principle above).
+  const baseEvent = ALL_EVENTS.find(e => e.id === eventId)
   if (!baseEvent) throw new Error(`Event not found: ${eventId}`)
   const event = militaryOptionChoice && choiceIndex === baseEvent.choices.length
     ? { ...baseEvent, choices: [...baseEvent.choices, militaryOptionChoice] }

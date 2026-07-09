@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { dbToGame, gameToDbUpdate, toJson, safeErrorMessage } from '@/lib/db-helpers'
 import { getLawById, resolveLawPassage, applyLawPassage, canUseNpcAbility, resolveLawNpcReactions } from '@/lib/law-engine'
 import { applyDelta, pickEvent, advanceMonth, computeLegacyScore } from '@/lib/game-engine'
+import { getOwnedContent } from '@/lib/entitlements'
 import { resolveRoster } from '@/lib/cabinet'
 import { driftTraits } from '@/lib/cabinet-traits'
 import { applyCabinetNarrative, pickAmbientHeadline } from '@/lib/cabinet-narrative'
@@ -43,7 +44,12 @@ export async function POST(req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: 'Invalid useNpcAbility value' }, { status: 400 })
   }
 
-  const law = getLawById(lawId)
+  // Real ownedContent, not the 'all' default — this is the new-proposal
+  // entitlement gate, same "never trust client ids" posture as everywhere
+  // else (a crafted request for a Story Pack lawId this user doesn't own
+  // simply isn't in the pool, same as a lawId that never existed).
+  const ownedContent = await getOwnedContent(session.user.id)
+  const law = getLawById(lawId, ownedContent)
   if (!law) {
     return NextResponse.json({ error: 'Unknown law' }, { status: 404 })
   }
@@ -111,7 +117,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: message }, { status: 400 })
   }
 
-  const nextEvent = suggestedEvent ?? (updatedGame.status === 'ACTIVE' ? pickEvent(updatedGame) : null)
+  const nextEvent = suggestedEvent ?? (updatedGame.status === 'ACTIVE' ? pickEvent(updatedGame, ownedContent) : null)
 
   const [updateResult] = await prisma.$transaction([
     prisma.game.updateMany({

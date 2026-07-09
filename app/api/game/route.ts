@@ -7,6 +7,7 @@ import { ALL_PERKS } from '@/lib/achievements'
 import { resolveCampaignChoices } from '@/lib/campaign'
 import { validateCabinetSelections, sumStartingBonuses, seedRosterState } from '@/lib/cabinet'
 import { validatePriorities } from '@/lib/priorities'
+import { getOwnedContent } from '@/lib/entitlements'
 import { dbToGame, toJson, toUnlockedAchievements } from '@/lib/db-helpers'
 import type { CreateGameRequest, StatDelta } from '@/types/game'
 
@@ -66,8 +67,9 @@ export async function POST(req: NextRequest) {
   // delta from the client — see lib/campaign.ts.
   const campaignBonus = Array.isArray(campaignChoiceIds) ? resolveCampaignChoices(campaignChoiceIds) : {}
   // Same "never trust client ids" posture — falls back to each slot's
-  // first candidate for anything missing/invalid, see lib/cabinet.ts.
-  const resolvedCabinetSelections = validateCabinetSelections(cabinetSelections)
+  // first candidate for anything missing/invalid/unowned, see lib/cabinet.ts.
+  const ownedContent = await getOwnedContent(session.user.id)
+  const resolvedCabinetSelections = validateCabinetSelections(cabinetSelections, ownedContent)
   const cabinetBonus = sumStartingBonuses(resolvedCabinetSelections)
   const resolvedPriorities = validatePriorities(priorities)
 
@@ -133,7 +135,7 @@ export async function POST(req: NextRequest) {
   }
 
   const game = dbToGame(dbGame)
-  const currentEvent = pickEvent(game)
+  const currentEvent = pickEvent(game, ownedContent)
 
   return NextResponse.json({ game, currentEvent }, { status: 201 })
 }

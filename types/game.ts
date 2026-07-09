@@ -206,6 +206,8 @@ export interface CrisisEvent {
     /** Coarse content type, used for pacing/priority ordering. */
     tier?: 'ambient' | 'request' | 'conflict' | 'resignation' | 'neglect' | 'room' | 'storyline' | 'discuss' | 'interview'
   }
+  /** Set only for Story Pack events (stamped on by lib/content-sources.ts). Undefined = free/base content. */
+  contentId?: string
 }
 
 // ============================================================
@@ -276,6 +278,8 @@ export interface Law {
   prereqLabel?:  string
   blocks_laws:   string[]
   npc_reactions: Record<string, NpcReaction>
+  /** Set only for Story Pack laws (stamped on by lib/content-sources.ts). Undefined = free/base content. */
+  contentId?: string
 }
 
 // ============================================================
@@ -417,6 +421,8 @@ export interface CabinetCandidate {
   breakingPointTag: string
   /** Small starting-stat bonus applied once, at hire time — same clamped pipeline as perks/campaign bonuses. */
   startingBonus?: StatDelta
+  /** Set only for DLC candidates (stamped on by lib/content-sources.ts's extraCandidates merge) — the content id the player must own to select this candidate. Undefined = free/base roster. */
+  contentId?: string
 }
 
 /** A selectable Cabinet position — 3-4 CabinetCandidates, one of which is active per game (see Game.cabinetSelections). */

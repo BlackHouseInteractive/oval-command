@@ -16,7 +16,8 @@
  * warnings, etc.) remain data-only for now — see project notes.
  */
 
-import { LAWS, computePassProbability, rollLawPassage } from '@/lib/game-engine'
+import { LAWS, ALL_LAWS, computePassProbability, rollLawPassage } from '@/lib/game-engine'
+import { getEligibleLaws, type OwnedContent } from '@/lib/content-sources'
 import { FIXED_NPCS, resolveRoster } from '@/lib/cabinet'
 import type { Game, Law, NpcReactionResult } from '@/types/game'
 
@@ -125,9 +126,16 @@ export function applyLawPassage(
   }
 }
 
-/** Convenience: look up a law by id from the canonical LAWS list */
-export function getLawById(lawId: string): Law | undefined {
-  return LAWS.find(l => l.id === lawId)
+/**
+ * Look up a law by id. Defaults to 'all' (full catalog, ownership ignored)
+ * for read-back call sites like AdvisorConversationPanel, which are only
+ * ever describing a law already surfaced through some other eligible path.
+ * app/api/game/[id]/law/route.ts passes the requesting user's real
+ * ownedContent Set instead — the actual new-proposal entitlement gate.
+ */
+export function getLawById(lawId: string, ownedContent: OwnedContent = 'all'): Law | undefined {
+  const pool = ownedContent === 'all' ? ALL_LAWS : getEligibleLaws(ownedContent, 'modern')
+  return pool.find(l => l.id === lawId)
 }
 
 /**
