@@ -6,7 +6,9 @@ import { dbToGame, dbToGameLog } from '@/lib/db-helpers'
 import { checkGameOver, computeLegacyScore } from '@/lib/game-engine'
 import { computePresidentialArchetype } from '@/lib/archetype-engine'
 import { SiteNav } from '@/components/SiteNav'
-import { PresidencyCard } from '@/components/PresidencyCard'
+import { PresidencyListClient } from '@/components/PresidencyListClient'
+import { getOwnedContent } from '@/lib/entitlements'
+import { getProductForContentId } from '@/lib/content-catalog'
 import type { GameLog } from '@/types/game'
 
 export default async function PresidenciesPage() {
@@ -57,6 +59,10 @@ export default async function PresidenciesPage() {
     })
   )
 
+  const ownedContent = await getOwnedContent(session.user.id)
+  const chroniclesLocked = !ownedContent.has('feature.chronicles')
+  const chroniclesProduct = getProductForContentId('feature.chronicles')
+
   return (
     <>
       <SiteNav userName={session.user.name} userImage={session.user.image} />
@@ -88,19 +94,12 @@ export default async function PresidenciesPage() {
             </div>
           </div>
         ) : (
-          <div className="space-y-3">
-            {ranked.map((p, i) => (
-              <PresidencyCard
-                key={p.game.id}
-                rank={i + 1}
-                game={p.game}
-                legacy={p.legacy}
-                reason={p.reason}
-                archetype={p.archetype}
-                topPercent={topPercents[i]}
-              />
-            ))}
-          </div>
+          <PresidencyListClient
+            entries={ranked}
+            topPercents={topPercents}
+            chroniclesLocked={chroniclesLocked}
+            chroniclesProduct={chroniclesProduct}
+          />
         )}
       </main>
     </>

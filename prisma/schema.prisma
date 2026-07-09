@@ -87,6 +87,13 @@ model Game {
   priorities      Json       @default("[]")
   legacyScore     Int?
   currentEventId  String?
+  // Chronicles public sharing (feature.chronicles) — deliberately NOT the
+  // existing `id`, since id is already used in every authenticated URL and
+  // reusing it publicly would conflate "addressable" with "intentionally
+  // public." Generated lazily only on first "Make Public"; isPublic toggles
+  // independently so revoking access doesn't lose/regenerate the link.
+  shareSlug       String?    @unique
+  isPublic        Boolean    @default(false)
   createdAt       DateTime   @default(now()) @db.Timestamp(3)
   // Capped at millisecond precision because turn/law routes use this column
   // for optimistic locking (WHERE updatedAt: <value read via Prisma>) — Postgres's

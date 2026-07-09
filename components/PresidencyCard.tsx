@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { cn, monthToDate } from '@/lib/utils'
 import { PartyIcon } from '@/components/game/PartyIcon'
@@ -13,6 +15,10 @@ interface PresidencyCardProps {
   reason: GameOverReason
   archetype: PresidentialArchetype
   topPercent?: number
+  /** When set, the card renders a compare checkbox and clicking the body toggles selection instead of navigating to the archive page — see the Chronicles "Compare Presidencies" entry point on /presidencies. */
+  compareMode?: boolean
+  compareSelected?: boolean
+  onToggleCompare?: () => void
 }
 
 function scoreTone(score: number) {
@@ -44,12 +50,24 @@ function StarRating({ score }: { score: number }) {
   )
 }
 
-export function PresidencyCard({ rank, game, legacy, reason, archetype, topPercent }: PresidencyCardProps) {
+export function PresidencyCard({ rank, game, legacy, reason, archetype, topPercent, compareMode, compareSelected, onToggleCompare }: PresidencyCardProps) {
   const shareText = `I was ${archetype.icon} ${archetype.title} as President ${game.presidentName} — Legacy Score ${legacy.total}/100. ${archetype.subtitle}`
 
-  return (
-    <div className="rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-4 backdrop-blur-sm transition-colors hover:border-[var(--color-border-strong)]">
-      <Link href={`/archive/${game.id}`} className="block">
+  const body = (
+    <>
+      {compareMode && (
+        <div className="mb-3 flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={Boolean(compareSelected)}
+            readOnly
+            className="h-3.5 w-3.5 accent-[var(--color-brass)]"
+          />
+          <span className="font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-paper-faint)]">
+            Select to compare
+          </span>
+        </div>
+      )}
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
@@ -104,7 +122,27 @@ export function PresidencyCard({ rank, game, legacy, reason, archetype, topPerce
             </span>
           </div>
         )}
-      </Link>
+    </>
+  )
+
+  return (
+    <div
+      className={cn(
+        'rounded-sm border bg-[var(--color-surface)] px-5 py-4 backdrop-blur-sm transition-colors',
+        compareMode && compareSelected
+          ? 'border-[var(--color-brass)]'
+          : 'border-[var(--color-border)] hover:border-[var(--color-border-strong)]'
+      )}
+    >
+      {compareMode ? (
+        <button type="button" onClick={onToggleCompare} className="block w-full text-left">
+          {body}
+        </button>
+      ) : (
+        <Link href={`/archive/${game.id}`} className="block">
+          {body}
+        </Link>
+      )}
 
       <div className="mt-3 flex justify-end">
         <ShareButton text={shareText} />

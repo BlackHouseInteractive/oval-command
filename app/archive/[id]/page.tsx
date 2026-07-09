@@ -15,8 +15,12 @@ import { Seal } from '@/components/Seal'
 import { SiteNav } from '@/components/SiteNav'
 import { SecretFileCard } from '@/components/SecretFileCard'
 import { MagazineCover } from '@/components/MagazineCover'
+import { ChroniclesPanel } from '@/components/ChroniclesPanel'
+import { ChroniclesAnalytics } from '@/components/ChroniclesAnalytics'
 import { monthToDate } from '@/lib/utils'
 import { toUnlockedAchievements } from '@/lib/db-helpers'
+import { getOwnedContent } from '@/lib/entitlements'
+import { getProductForContentId } from '@/lib/content-catalog'
 import type { GameLog } from '@/types/game'
 
 // Fixed ceilings for the Collection Completion breakdown — the max a
@@ -45,6 +49,10 @@ export default async function ArchivePage({ params }: PageProps) {
 
   const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { unlockedAchievements: true } })
   const unlockedAchievements = toUnlockedAchievements(user?.unlockedAchievements)
+
+  const ownedContent = await getOwnedContent(session.user.id)
+  const chroniclesLocked = !ownedContent.has('feature.chronicles')
+  const chroniclesProduct = getProductForContentId('feature.chronicles')
 
   const legacy = computeLegacyScore(game)
   const archetype = computePresidentialArchetype(game, logs)
@@ -196,6 +204,25 @@ export default async function ArchivePage({ params }: PageProps) {
             <StatBox label="Achievements" value={`${unlockedAchievements.length}/${ACHIEVEMENTS.length}`} />
           </div>
         </div>
+
+        <div className="mt-8">
+          <ChroniclesPanel
+            gameId={game.id}
+            initialIsPublic={row.isPublic}
+            initialShareSlug={row.shareSlug}
+            locked={chroniclesLocked}
+            product={chroniclesProduct}
+          />
+        </div>
+
+        {!chroniclesLocked && (
+          <div className="mt-8">
+            <ChroniclesAnalytics
+              approvalHistory={game.approvalHistory}
+              sectorBreakdown={sectorBreakdown.map(s => ({ label: s.meta.label, passed: s.passed, total: s.total, color: s.meta.color }))}
+            />
+          </div>
+        )}
 
         <div className="mt-8 text-center">
           <p className="mx-auto max-w-md text-[15px] italic leading-relaxed text-[var(--color-paper-dim)]">

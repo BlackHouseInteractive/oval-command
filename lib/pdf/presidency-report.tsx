@@ -1,0 +1,110 @@
+/**
+ * Chronicles' PDF export — pure-JS via @react-pdf/renderer, not Puppeteer.
+ * Puppeteer needs a headless-Chromium binary, a known pain point on
+ * serverless (cold starts, function-size limits); @react-pdf/renderer is a
+ * React-component-shaped renderer that returns a Buffer directly. Trade-off
+ * accepted: less pixel-perfect than a browser renderer, fine for a data
+ * report. Consumes the same compute functions as the archive/Chronicles
+ * pages (computeLegacyScore, computePresidentialArchetype,
+ * computeSectorBreakdown) so the PDF never drifts from what's shown on-screen.
+ */
+import { Document, Page, View, Text, StyleSheet } from '@react-pdf/renderer'
+import type { LegacyScore, GameOverReason } from '@/types/game'
+import type { PresidentialArchetype } from '@/lib/archetype-engine'
+import type { SectorBreakdownEntry } from '@/lib/law-sectors'
+
+const styles = StyleSheet.create({
+  page: { padding: 48, fontSize: 11, fontFamily: 'Helvetica', color: '#1a1a1a' },
+  eyebrow: { fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', color: '#8a6d3b', marginBottom: 6 },
+  title: { fontSize: 22, fontFamily: 'Helvetica-Bold', marginBottom: 4 },
+  subtitle: { fontSize: 12, color: '#555555', marginBottom: 24 },
+  sectionTitle: { fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', color: '#8a6d3b', marginTop: 20, marginBottom: 8 },
+  statGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+  statBox: { width: '30%', border: '1pt solid #dddddd', padding: 8, marginBottom: 8 },
+  statValue: { fontSize: 16, fontFamily: 'Helvetica-Bold' },
+  statLabel: { fontSize: 8, color: '#777777', textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 2 },
+  sectorRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 3, borderBottom: '0.5pt solid #eeeeee' },
+  sectorLabel: { color: '#333333' },
+  sectorValue: { color: '#777777' },
+  quote: { fontSize: 12, fontStyle: 'italic', marginTop: 24, color: '#444444', lineHeight: 1.5 },
+  signature: { fontSize: 14, marginTop: 12, color: '#8a6d3b' },
+  footer: { position: 'absolute', bottom: 32, left: 48, right: 48, fontSize: 8, color: '#999999', textAlign: 'center' },
+})
+
+export interface PresidencyReportProps {
+  presidentName: string
+  yearRange:     string
+  party:         string
+  campaignEra:   string
+  archetype:     PresidentialArchetype
+  legacy:        LegacyScore
+  endedReason:   GameOverReason | null
+  approvalPeak:  number
+  approvalLow:   number
+  lawsPassed:    number
+  crisesResolved: number
+  sectorBreakdown: SectorBreakdownEntry[]
+  quote:         string
+}
+
+const PARTY_LABEL: Record<string, string> = {
+  DEMOCRAT: 'Democratic', REPUBLICAN: 'Republican', INDEPENDENT: 'Independent',
+}
+
+const ERA_LABEL: Record<string, string> = {
+  modern: 'The Modern Presidency', cold_war: 'Cold War',
+}
+
+export function PresidencyReport(props: PresidencyReportProps) {
+  const {
+    presidentName, yearRange, party, campaignEra, archetype, legacy, endedReason,
+    approvalPeak, approvalLow, lawsPassed, crisesResolved, sectorBreakdown, quote,
+  } = props
+
+  const stats: { label: string; value: string }[] = [
+    { label: 'Legacy Score', value: String(legacy.total) },
+    { label: 'Approval Peak', value: `${approvalPeak}%` },
+    { label: 'Approval Low', value: `${approvalLow}%` },
+    { label: 'Laws Passed', value: String(lawsPassed) },
+    { label: 'Crises Resolved', value: String(crisesResolved) },
+    { label: 'Party', value: PARTY_LABEL[party] ?? party },
+  ]
+
+  return (
+    <Document title={`${presidentName} — Presidency Report`}>
+      <Page size="A4" style={styles.page}>
+        <Text style={styles.eyebrow}>Oval Command · Chronicles · Executive Record</Text>
+        <Text style={styles.title}>{archetype.title}</Text>
+        <Text style={styles.subtitle}>
+          President {presidentName} · {yearRange} · {ERA_LABEL[campaignEra] ?? campaignEra}
+          {endedReason && endedReason !== 'TERM_COMPLETE' ? ` · ${endedReason.replace(/_/g, ' ')}` : ''}
+        </Text>
+
+        <Text style={styles.sectionTitle}>Presidential Statistics</Text>
+        <View style={styles.statGrid}>
+          {stats.map(s => (
+            <View key={s.label} style={styles.statBox}>
+              <Text style={styles.statValue}>{s.value}</Text>
+              <Text style={styles.statLabel}>{s.label}</Text>
+            </View>
+          ))}
+        </View>
+
+        <Text style={styles.sectionTitle}>Legislative Record</Text>
+        <View>
+          {sectorBreakdown.filter(s => s.total > 0).map(s => (
+            <View key={s.sector} style={styles.sectorRow}>
+              <Text style={styles.sectorLabel}>{s.meta.label}</Text>
+              <Text style={styles.sectorValue}>{s.passed} / {s.total}</Text>
+            </View>
+          ))}
+        </View>
+
+        <Text style={styles.quote}>&ldquo;{quote}&rdquo;</Text>
+        <Text style={styles.signature}>Respectfully, President {presidentName}</Text>
+
+        <Text style={styles.footer}>Generated by Oval Command · ovalcommand — this report reflects in-game data only.</Text>
+      </Page>
+    </Document>
+  )
+}
