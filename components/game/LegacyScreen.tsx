@@ -293,6 +293,10 @@ export function LegacyScreen({ legacy, reason, presidentName, archetype, passedL
           >
             Begin a New Term
           </button>
+
+          <p className="mt-6 text-center font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--color-paper-faint)]">
+            Oval Command · A Black House Interactive Game
+          </p>
         </div>
       </div>
     </div>

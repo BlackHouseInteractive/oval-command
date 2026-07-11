@@ -121,6 +121,10 @@ export default async function LoginPage() {
           </Link>
         </p>
       </div>
+
+      <p className="relative mt-10 text-center font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--color-paper-faint)]">
+        A Black House Interactive Game
+      </p>
     </main>
   )
 }
