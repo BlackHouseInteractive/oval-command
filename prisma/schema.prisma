@@ -184,3 +184,15 @@ enum ActionType {
   TURN_END
   PERSONNEL
 }
+
+// Fixed-window rate limiting for unauthenticated/low-friction endpoints
+// (guest sign-in, checkout session creation) — see lib/rate-limit.ts. A DB
+// table rather than in-memory counters because Vercel serverless functions
+// don't share memory across instances/cold starts, and rather than
+// Upstash/KV because Postgres is already the app's only piece of shared
+// state infrastructure.
+model RateLimitBucket {
+  key         String   @id
+  windowStart DateTime
+  count       Int      @default(1)
+}

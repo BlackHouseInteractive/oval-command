@@ -4,6 +4,7 @@ import { getStripeClient } from '@/lib/stripe'
 import { getProduct, getStripePriceId } from '@/lib/content-catalog'
 import { getOwnedContent } from '@/lib/entitlements'
 import { safeErrorMessage } from '@/lib/db-helpers'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 interface CheckoutRequest {
   productId: string
@@ -12,6 +13,13 @@ interface CheckoutRequest {
 }
 
 const DEFAULT_RETURN_TO = '/dashboard'
+
+// Keyed by user id, not IP — this route already requires a signed-in,
+// non-guest session, so the account itself is the more precise identity to
+// throttle. Generous enough for legitimate retries after a declined card,
+// tight enough to stop a scripted loop of Checkout Session creation.
+const CHECKOUT_LIMIT = 10
+const CHECKOUT_WINDOW_SECONDS = 60 * 60
 
 /** Only allow returning to a same-app relative path — blocks an open redirect via a crafted returnTo. */
 function sanitizeReturnTo(returnTo: string | undefined): string {
@@ -34,6 +42,11 @@ export async function POST(req: NextRequest) {
       { error: 'Save your progress to a real account before purchasing — guest accounts expire.' },
       { status: 403 }
     )
+  }
+
+  const allowed = await checkRateLimit(`checkout:${session.user.id}`, CHECKOUT_LIMIT, CHECKOUT_WINDOW_SECONDS)
+  if (!allowed) {
+    return NextResponse.json({ error: 'Too many checkout attempts. Please wait a moment and try again.' }, { status: 429 })
   }
 
   let body: CheckoutRequest

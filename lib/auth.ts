@@ -5,6 +5,13 @@ import GitHub from 'next-auth/providers/github'
 import Credentials from 'next-auth/providers/credentials'
 import { prisma } from '@/lib/prisma'
 import { expireStaleGuests } from '@/lib/guest-cleanup'
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
+
+// Guest accounts have zero signup friction by design (no email/OAuth), so
+// without this, nothing stops a script from looping this endpoint to
+// mass-create User rows.
+const GUEST_SIGNUP_LIMIT = 8
+const GUEST_SIGNUP_WINDOW_SECONDS = 15 * 60
 
 const providers = []
 
@@ -26,8 +33,12 @@ providers.push(Credentials({
   id: 'guest',
   name: 'Guest',
   credentials: {},
-  async authorize() {
+  async authorize(_credentials, request) {
     try {
+      const ip = getClientIp(request)
+      const allowed = await checkRateLimit(`guest-signup:${ip}`, GUEST_SIGNUP_LIMIT, GUEST_SIGNUP_WINDOW_SECONDS)
+      if (!allowed) return null
+
       // Opportunistic cleanup on top of the daily cron sweep (see
       // app/api/cron/expire-guests/route.ts) — catches expired accounts
       // immediately whenever anyone signs in as a new guest, rather than
