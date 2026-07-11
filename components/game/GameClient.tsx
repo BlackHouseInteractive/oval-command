@@ -171,6 +171,26 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
     setView({ phase: 'briefing' })
   }
 
+  // Personnel scenes are turn-free and don't return a "next event" the way
+  // /turn does (see app/api/game/[id]/personnel/route.ts's comment: it
+  // clears currentEventId and expects "the player's next room visit" to
+  // re-pick an ordinary crisis briefing). This component never navigates
+  // away and back, so without this, returning to 'briefing' after a
+  // personnel scene left `event` at null indefinitely — the briefing card
+  // would read "No briefing this month" even when one was actually pending.
+  async function loadFreshEvent() {
+    try {
+      const res = await fetch(`/api/game/${game.id}`)
+      if (!res.ok) return
+      const data: { game: Game; currentEvent: CrisisEvent | null } = await res.json()
+      setGame(data.game)
+      setEvent(data.currentEvent)
+    } catch {
+      // Best-effort — worst case the player still sees "No briefing this
+      // month" until a manual refresh, same as before this fix.
+    }
+  }
+
   async function handlePickReplacement(candidateId: string) {
     if (view.phase !== 'replace-cabinet' || submitting) return
     setSubmitting(true)
@@ -198,8 +218,9 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
     }
   }
 
-  function handleFinishReplacement() {
+  async function handleFinishReplacement() {
     setReplacementResult(null)
+    await loadFreshEvent()
     setView({ phase: 'briefing' })
   }
 
@@ -256,7 +277,10 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
           <NpcReactionList reactions={view.npcReactions} />
           <button
             type="button"
-            onClick={() => setView({ phase: 'briefing' })}
+            onClick={async () => {
+              await loadFreshEvent()
+              setView({ phase: 'briefing' })
+            }}
             className="mt-6 w-full rounded-sm border border-[var(--color-brass-dim)] bg-[var(--color-brass)] py-3 text-sm font-medium text-[var(--color-ink)] transition-opacity hover:opacity-90"
           >
             Continue
@@ -440,6 +464,7 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
           {event && (
             <div className="mt-3">
               <CrisisCard
+                key={event.id}
                 event={event}
                 month={game.currentMonth}
                 gameId={game.id}
