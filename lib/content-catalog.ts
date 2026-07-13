@@ -123,7 +123,11 @@ export const PRODUCT_CATALOG: ProductDefinition[] = [
     productId: 'product.bundle.complete_collection',
     displayName: 'Complete Collection',
     description: 'Every expansion released so far',
-    priceCents: 4999,
+    // Was 4999 — priced *above* the $25.96 sum of its 4 parts (499 + 299 +
+    // 1299 + 499), which meant no rational buyer would ever choose the
+    // bundle over buying items individually. Repriced to a genuine ~15%
+    // discount off that sum.
+    priceCents: 2199,
     stripePriceEnvVar: 'STRIPE_PRICE_BUNDLE_COMPLETE_COLLECTION',
     grantsContentIds: [
       'campaign.cold_war',

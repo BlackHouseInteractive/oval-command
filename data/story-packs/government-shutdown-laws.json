@@ -112,5 +112,62 @@
         "quote": "The Senate Leader warns the price tag 'sets a precedent we'll be paying for every future shutdown, real or threatened.'"
       }
     }
+  },
+  {
+    "id": "shutdown_efficiency_commission_act",
+    "title": "Federal Spending Efficiency Commission Act",
+    "shortTitle": "Efficiency Commission Act",
+    "category": "bipartisan",
+    "sector": "economy_finance",
+    "description": "Establishes a permanent, empowered commission to review federal spending and flag waste before it becomes leverage in the next funding fight.",
+    "flavor": "Everyone agrees waste is bad. Getting anyone to agree on what counts as waste is the actual fight.",
+    "cost": "low",
+    "debtImpact": -0.1,
+    "annualCostBn": 5,
+    "passage": {
+      "congressMin": 48,
+      "partyUnityMin": 45,
+      "approvalBonus": {
+        "threshold": 55,
+        "bonus": 4
+      },
+      "approvalPenalty": {
+        "threshold": 30,
+        "penalty": 6
+      },
+      "lobbyOpposition": [
+        {
+          "name": "Federal Employee Union Coalition",
+          "penalty": 5
+        }
+      ],
+      "basePassProbability": 42
+    },
+    "effects": {
+      "onPass": {
+        "congressSupport": 5,
+        "approval": 3,
+        "debt": -0.1
+      },
+      "passive": {
+        "debt": -0.02
+      },
+      "description": "Passive: -0.02T debt/mo for remainder of term"
+    },
+    "sets_flags": [
+      "shutdown_efficiency_commission_passed"
+    ],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "speaker": {
+        "relationship": 5,
+        "quote": "The Speaker calls it 'the kind of oversight that should've existed a decade ago.'"
+      },
+      "opposition_leader": {
+        "relationship": -3,
+        "quote": "The opposition leader calls it 'a commission with a badge, looking for someone to blame.'"
+      }
+    }
   }
 ]

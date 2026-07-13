@@ -109,7 +109,8 @@
           "debt": 0.2
         },
         "sets_flags": [
-          "shutdown_process_reformed"
+          "shutdown_process_reformed",
+          "shutdown_crisis_resolved"
         ],
         "outcome": "The reform passes with an odd-couple coalition. Budget wonks call it the most consequential process change in a generation. Voters barely notice."
       },
@@ -122,7 +123,8 @@
           "debt": 0.3
         },
         "sets_flags": [
-          "shutdown_workers_protected"
+          "shutdown_workers_protected",
+          "shutdown_crisis_resolved"
         ],
         "outcome": "Federal employee unions publicly thank the administration. The bill for it lands quietly in next year's deficit projections."
       },
@@ -135,7 +137,8 @@
           "debt": 0.4
         },
         "sets_flags": [
-          "shutdown_long_term_funding"
+          "shutdown_long_term_funding",
+          "shutdown_crisis_resolved"
         ],
         "outcome": "Markets like the certainty. Fiscal hawks in Congress do not, and say so, loudly, for weeks."
       },
@@ -147,9 +150,164 @@
           "baseSupport": 3
         },
         "sets_flags": [
-          "shutdown_unaddressed"
+          "shutdown_unaddressed",
+          "shutdown_crisis_resolved"
         ],
         "outcome": "Nothing changes structurally. The base appreciates that you didn't 'cave' to anyone. Agency backlogs quietly pile up."
+      }
+    ]
+  },
+  {
+    "id": "shutdown_credit_warning",
+    "title": "Ratings Agency Threatens a Credit Downgrade",
+    "category": "economy",
+    "description": "A major ratings agency puts the country on downgrade watch, citing the funding standoff as evidence of 'recurring fiscal brinkmanship.' Markets are calm for now — a formal downgrade would change that.",
+    "triggers": {
+      "always_available": true,
+      "shutdown_credit_addressed": false
+    },
+    "sets_flags": [],
+    "requires_flags": [
+      "shutdown_crisis_resolved"
+    ],
+    "weight": 5,
+    "callbacks": [
+      {
+        "flag": "shutdown_occurred",
+        "text": "The agency's report cites last month's actual shutdown by name, twice."
+      }
+    ],
+    "choices": [
+      {
+        "index": 0,
+        "text": "Announce a credible multi-year deficit reduction plan",
+        "effects": {
+          "congressSupport": 4,
+          "approval": -2,
+          "debt": -0.1
+        },
+        "sets_flags": [
+          "shutdown_credit_addressed",
+          "deficit_plan_announced"
+        ],
+        "outcome": "The plan is real enough that the agency notices. It's also unpopular enough that your own caucus notices too."
+      },
+      {
+        "index": 1,
+        "text": "Publicly dismiss the ratings agency as politically motivated",
+        "effects": {
+          "baseSupport": 5,
+          "globalReputation": -4,
+          "approval": 1
+        },
+        "sets_flags": [
+          "shutdown_credit_addressed",
+          "credit_warning_dismissed"
+        ],
+        "outcome": "The base cheers. Foreign bondholders, who don't vote in your elections, are less impressed."
+      },
+      {
+        "index": 2,
+        "text": "Quietly send Treasury to brief the agency's leadership off the record",
+        "effects": {
+          "globalReputation": 2,
+          "congressSupport": 2
+        },
+        "sets_flags": [
+          "shutdown_credit_addressed",
+          "credit_warning_lobbied"
+        ],
+        "outcome": "No headlines, no promises kept on the record — just a quiet briefing and a watch status that doesn't worsen. For now."
+      },
+      {
+        "index": 3,
+        "text": "Let the warning pass without a formal response",
+        "effects": {
+          "economy": -2,
+          "approval": -1
+        },
+        "sets_flags": [
+          "shutdown_credit_addressed"
+        ],
+        "outcome": "Silence reads as confidence to some, complacency to others. The agency doesn't say which one it believes.",
+        "delayed_effects": [
+          {
+            "delay_months": 3,
+            "effects": {
+              "economy": -4,
+              "globalReputation": -3
+            },
+            "headline": "The credit downgrade the warning promised has arrived, right on schedule"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "shutdown_efficiency_commission",
+    "title": "A Bipartisan Push to Stand Up a Spending Efficiency Commission",
+    "category": "congress",
+    "description": "In the shutdown's wake, a bipartisan group in Congress wants a permanent commission reviewing federal spending — so the next funding fight has fewer places to hide waste on either side.",
+    "triggers": {
+      "always_available": true,
+      "shutdown_efficiency_established": false
+    },
+    "sets_flags": [],
+    "requires_flags": [
+      "shutdown_crisis_resolved"
+    ],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Champion the commission and give it real subpoena power",
+        "effects": {
+          "congressSupport": 3,
+          "unrest": -2,
+          "debt": -0.1
+        },
+        "sets_flags": [
+          "shutdown_efficiency_established",
+          "efficiency_commission_strong"
+        ],
+        "outcome": "It has teeth, which is exactly why half of Congress fought to make sure it wouldn't."
+      },
+      {
+        "index": 1,
+        "text": "Support a symbolic, advisory-only commission",
+        "effects": {
+          "approval": 2,
+          "congressSupport": 1
+        },
+        "sets_flags": [
+          "shutdown_efficiency_established",
+          "efficiency_commission_symbolic"
+        ],
+        "outcome": "Everyone gets to say they did something. Nobody has to worry about what it finds."
+      },
+      {
+        "index": 2,
+        "text": "Oppose it as an unnecessary new layer of bureaucracy",
+        "effects": {
+          "baseSupport": 4,
+          "congressSupport": -3
+        },
+        "sets_flags": [
+          "shutdown_efficiency_established",
+          "efficiency_commission_opposed"
+        ],
+        "outcome": "The base likes a president who says no to Washington adding another committee. Washington disagrees, loudly."
+      },
+      {
+        "index": 3,
+        "text": "Let Congress sort it out without weighing in",
+        "effects": {
+          "congressSupport": -1
+        },
+        "sets_flags": [
+          "shutdown_efficiency_established"
+        ],
+        "outcome": "It passes in a watered-down form nobody remembers authoring. That's often how these things survive."
       }
     ]
   }

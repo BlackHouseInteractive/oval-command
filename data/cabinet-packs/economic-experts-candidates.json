@@ -36,6 +36,41 @@
         "breakingPoint": "Will not defend a budget that guts federal R&D funding for a short-term political win.",
         "breakingPointTag": "rd_funding_cuts",
         "startingBonus": { "economy": 2, "unemployment": -0.1 }
+      },
+      {
+        "candidateId": "kaine",
+        "name": "Treasury Secretary Robert Kaine",
+        "shortName": "SecTreas Kaine",
+        "avatar": "RK",
+        "avatarColor": "purple",
+        "personality": {
+          "archetype": "The Reshoring Strategist",
+          "description": "Former manufacturing-state trade negotiator who's spent two decades watching factories close and supply chains move overseas. He treats tariffs and trade deals as leverage to bring production home — not as ideology, and not as something to apologize for.",
+          "traits": ["distrusts globalized supply chains", "treats tariffs as leverage, not ideology", "obsessed with reshoring manufacturing", "unbothered by short-term consumer price pain"]
+        },
+        "relationship": { "start": 58, "min": 10, "max": 100 },
+        "triggers": {
+          "onLowRelationship": { "threshold": 35, "event": "SecTreas Kaine warns the administration is 'trading away leverage for headlines'", "economyDelta": -3, "approvalDelta": -2 },
+          "onVeryLowRelationship": { "threshold": 22, "event": "SecTreas Kaine resigns, saying the administration 'gave up on rebuilding what we lost overseas'", "approvalDelta": -6, "economyDelta": -3 },
+          "onHighRelationship": { "threshold": 80, "benefit": "Kaine's reshoring push lands three major plants stateside, and it shows in the numbers", "approvalBonus": 3 }
+        },
+        "relationshipDeltas": {
+          "infrastructure_passed": 6, "recession_handled_well": 5, "tax_cuts_passed": 3,
+          "corporate_tax_raised": -5, "debt_above_50t": -4, "stimulus_deployed": 4, "budget_surplus_achieved": 3
+        },
+        "monthlyDialogue": {
+          "high": ["Two more plants broke ground onshore this quarter. That's the number I actually track.", "The trade partners are finally negotiating like they mean it. Leverage works when you're willing to use it."],
+          "medium": ["I'd rather lose a trade photo-op than lose another supply chain overseas.", "The tariff numbers are moving jobs stateside slower than I'd like, but they're moving."],
+          "low": ["We keep talking about efficiency. Efficiency is why half these factories left in the first place.", "I've said this in three meetings — a trade deal that trades away leverage isn't a win, it's a surrender with better branding."],
+          "critical": ["I didn't take this job to preside over the same offshoring everyone before us allowed.", "If this administration won't hold the line on trade, I'm not the right person to keep defending it."]
+        },
+        "specialAbility": { "name": "Reshoring Push", "description": "Once per term, Treasury Secretary can provide an economic intervention that boosts economy +8 and reduces debt by $200B. Requires relationship above 55.", "usesPerTerm": 1, "requiresRelationship": 55, "playerActivated": true },
+        "traits": { "loyalty": 58, "ambition": 45, "integrity": 65, "politicalSkill": 62, "stress": 48, "ideology": 62 },
+        "goal": "Wants trade policy and industrial strategy to prioritize domestic manufacturing over pure free-trade efficiency.",
+        "goalTag": "reshoring_agenda",
+        "breakingPoint": "Will not defend a trade deal that trades away leverage for a short-term political win.",
+        "breakingPointTag": "trade_giveaway",
+        "startingBonus": { "economy": 1, "unemployment": -0.15 }
       }
     ]
   }
