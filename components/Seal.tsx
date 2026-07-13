@@ -5,6 +5,9 @@ interface SealProps {
 
 /**
  * A stylized presidential seal — simplified eagle-in-circle emblem.
+ * Mirrors public/favicon.png's solid-filled eagle silhouette (wings as
+ * filled shapes, not stroked outlines) so the in-game mark and the
+ * browser-tab icon read as the same emblem.
  *
  * Design constraints driven by actual rendered testing: this is used at
  * sizes from 14px (inline nav) up to 56px (legacy screen). The original
@@ -12,8 +15,8 @@ interface SealProps {
  * fine in isolation at 120px but became an illegible smudge at real
  * usage sizes — verified by rendering to PNG at 18px and 56px and
  * visually inspecting the output. This version uses fewer, bolder
- * shapes (single ring, simplified wing/body silhouette with straight
- * angular strokes instead of curves) so the silhouette still reads
+ * shapes (single ring, filled wing/body silhouette with straight
+ * angular edges instead of curves) so the silhouette still reads
  * clearly at 14-18px, while remaining recognizable as an eagle rather
  * than the previous version's bee-like shape.
  */
@@ -34,28 +37,23 @@ export function Seal({ size = 32, className }: SealProps) {
 
       {/* Eagle: wide flat wingspan with angular feather notches, a
           short body, and a distinct head — silhouette-first design so
-          it survives being shrunk to icon size */}
+          it survives being shrunk to icon size. Wings and body are
+          filled shapes (matching the favicon), not stroked outlines. */}
       <path
-        d="
-          M24 16
-          L24 30
-          M24 16
-          L10 22
-          L14 24
-          L11 26
-          L16 27
-          L24 24
-          M24 16
-          L38 22
-          L34 24
-          L37 26
-          L32 27
-          L24 24
-        "
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        d="M22.5 17 L25.5 17 L25.5 30 L22.5 30 Z"
+        fill="currentColor"
+        opacity="0.95"
+      />
+      {/* Left wing */}
+      <path
+        d="M24 19 L8 20 L12 25 L15 22 L18 26 L21 23 L24 23 Z"
+        fill="currentColor"
+        opacity="0.95"
+      />
+      {/* Right wing (mirrored) */}
+      <path
+        d="M24 19 L40 20 L36 25 L33 22 L30 26 L27 23 L24 23 Z"
+        fill="currentColor"
         opacity="0.95"
       />
       {/* Head */}
