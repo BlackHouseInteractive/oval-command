@@ -763,5 +763,409 @@
         "outcome": "The compromise satisfies security concerns while preserving most of the program's diplomatic value."
       }
     ]
+  },
+  {
+    "id": "missile_gap_debate",
+    "title": "Independent Analysts Claim a Dangerous 'Missile Gap'",
+    "category": "security",
+    "description": "A well-connected think tank has published an assessment claiming the rival superpower has quietly built a decisive lead in deployed missiles. The Pentagon's own numbers tell a murkier story, but the claim has already reached the evening broadcasts.",
+    "isHistorical": true,
+    "historicalContext": "Inspired by the real 'missile gap' controversy, later shown to have significantly overstated the rival's actual missile deployment.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Launch a crash program to close the alleged gap",
+        "effects": { "security": 5, "debt": 0.6, "militaryReadiness": 4, "globalReputation": -2 },
+        "sets_flags": ["missile_gap_crash_program"],
+        "outcome": "The buildup proceeds at speed. Years later, the gap the program was built to close turns out to have been mostly a paper tiger."
+      },
+      {
+        "index": 1,
+        "text": "Commission an independent classified assessment before acting",
+        "effects": { "congressSupport": 2, "security": 1 },
+        "sets_flags": ["missile_gap_assessed"],
+        "outcome": "The assessment takes months and finds the numbers murkier than either side's public claims. It quietly ends the panic."
+      },
+      {
+        "index": 2,
+        "text": "Publicly downplay the claim as politically motivated",
+        "effects": { "approval": -2, "baseSupport": -2, "congressSupport": -3 },
+        "sets_flags": ["missile_gap_downplayed"],
+        "outcome": "Critics accuse you of complacency in the face of a real threat. The accusation sticks longer than the denial does."
+      },
+      {
+        "index": 3,
+        "text": "Redirect the alarm toward conventional force readiness instead",
+        "effects": { "militaryReadiness": 5, "security": 2, "debt": 0.2 },
+        "sets_flags": ["missile_gap_redirected"],
+        "outcome": "The pivot satisfies hawks without committing to the most expensive version of the buildup — a rare bit of budget discipline."
+      }
+    ]
+  },
+  {
+    "id": "defector_disinformation",
+    "title": "Intelligence Split on Whether a Star Defector Is Real",
+    "category": "security",
+    "description": "Months after a celebrated defection, a faction within the intelligence community now argues the defector was a deliberate plant, sent to feed false leads and burn real assets. Others insist the intelligence gathered so far has been too valuable to be disinformation.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 4,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Continue acting on the intelligence as genuine",
+        "effects": { "security": 4, "globalReputation": 1 },
+        "sets_flags": ["defector_intel_trusted"],
+        "outcome": "Operations built on the intelligence proceed. If it's disinformation, the damage won't be visible for years."
+      },
+      {
+        "index": 1,
+        "text": "Quietly freeze all operations based on the intelligence pending review",
+        "effects": { "security": -3, "congressSupport": 2 },
+        "sets_flags": ["defector_intel_frozen"],
+        "outcome": "The freeze is the cautious call. Field officers grumble about real opportunities going stale while analysts argue."
+      },
+      {
+        "index": 2,
+        "text": "Publicly expose the defector as a suspected plant",
+        "effects": { "globalReputation": -4, "security": 2, "mediaScore": -0.2 },
+        "sets_flags": ["defector_intel_exposed"],
+        "outcome": "The public reversal is humiliating either way — either you exposed a real asset, or you handed the rival a propaganda win."
+      },
+      {
+        "index": 3,
+        "text": "Use the ambiguity itself as diplomatic leverage",
+        "effects": { "globalReputation": 3, "security": 2, "congressSupport": -2 },
+        "sets_flags": ["defector_intel_leveraged"],
+        "outcome": "Letting the rival wonder what you actually know proves more useful than resolving the question ever would have."
+      }
+    ]
+  },
+  {
+    "id": "war_powers_pushback",
+    "title": "Congress Moves to Rein In Unilateral Troop Deployments",
+    "category": "congress",
+    "description": "A bipartisan group in Congress, alarmed by the growing pace of overseas troop commitments made without a vote, is pushing legislation requiring advance notification and time-limited authorization for future deployments.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Accept the notification requirement as a reasonable check",
+        "effects": { "congressSupport": 6, "approval": 2, "security": -1 },
+        "sets_flags": ["war_powers_accepted"],
+        "outcome": "The gesture earns real goodwill in Congress, at some cost to how quickly you can move in a fast-moving crisis."
+      },
+      {
+        "index": 1,
+        "text": "Threaten a veto and defend executive deployment authority",
+        "effects": { "congressSupport": -7, "security": 3, "baseSupport": 3 },
+        "sets_flags": ["war_powers_vetoed"],
+        "outcome": "The veto threat holds. Congress backs down for now, but the relationship damage doesn't heal quickly."
+      },
+      {
+        "index": 2,
+        "text": "Negotiate a narrower compromise notification window",
+        "effects": { "congressSupport": 4, "security": 1 },
+        "sets_flags": ["war_powers_compromise"],
+        "outcome": "The compromise satisfies neither side's purists but actually becomes workable law — a rarer outcome than it should be."
+      },
+      {
+        "index": 3,
+        "text": "Publicly assert an even broader reading of existing executive authority",
+        "effects": { "congressSupport": -9, "security": 4, "globalReputation": -2 },
+        "sets_flags": ["war_powers_expanded_claim"],
+        "outcome": "The assertion is bold and legally aggressive. Congressional leadership calls it a fight they didn't ask for and now intend to win."
+      }
+    ]
+  },
+  {
+    "id": "defense_budget_standoff",
+    "title": "Budget Hawks and Hardliners Collide Over Defense Spending",
+    "category": "congress",
+    "description": "The annual defense appropriations fight has turned unusually bitter: fiscal conservatives want the topline capped, defense hardliners in the same party call any cap reckless given the rival's buildup, and neither faction is budging.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 6,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Side with the budget hawks and hold the line on spending",
+        "effects": { "debt": -0.3, "congressSupport": -3, "militaryReadiness": -2 },
+        "sets_flags": ["defense_budget_capped"],
+        "outcome": "The cap holds. Hardliners in your own party are furious, and the Pentagon quietly revises its readiness projections downward."
+      },
+      {
+        "index": 1,
+        "text": "Side with the hardliners and approve the full request",
+        "effects": { "debt": 0.5, "militaryReadiness": 5, "congressSupport": 2 },
+        "sets_flags": ["defense_budget_expanded"],
+        "outcome": "The Pentagon gets what it asked for. Fiscal hawks warn, not for the first time, that the bill always comes due eventually."
+      },
+      {
+        "index": 2,
+        "text": "Broker a middle-ground topline both factions can live with",
+        "effects": { "congressSupport": 5, "debt": 0.1, "militaryReadiness": 1 },
+        "sets_flags": ["defense_budget_compromise"],
+        "outcome": "Nobody loves the number, which is usually the sign of a workable compromise in this town."
+      },
+      {
+        "index": 3,
+        "text": "Let the factions fight it out and stay above the fray publicly",
+        "effects": { "congressSupport": -4, "approval": -1 },
+        "sets_flags": ["defense_budget_unresolved"],
+        "outcome": "The standoff drags into a continuing resolution. Both factions privately blame you for not stepping in sooner."
+      }
+    ]
+  },
+  {
+    "id": "double_agent_exposed",
+    "title": "Senior Official Revealed as a Long-Term Double Agent",
+    "category": "scandal",
+    "description": "A years-long counterintelligence investigation has confirmed the worst: a senior official with access to sensitive defense planning has been passing information to the rival superpower for the better part of a decade.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 3,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Announce the arrest and order a full public accounting",
+        "effects": { "security": 3, "globalReputation": -3, "mediaScore": -0.3, "unrest": 3 },
+        "sets_flags": ["double_agent_public"],
+        "outcome": "The transparency is politically costly but restores some public confidence that the problem is being taken seriously."
+      },
+      {
+        "index": 1,
+        "text": "Handle it quietly through classified channels",
+        "effects": { "security": 4, "congressSupport": -3 },
+        "sets_flags": ["double_agent_quiet"],
+        "outcome": "The quiet handling limits the immediate damage. When a handful of legislators eventually learn the scope, they're furious at being kept out."
+      },
+      {
+        "index": 2,
+        "text": "Publicly attribute the failure to the previous administration's vetting",
+        "effects": { "approval": 3, "congressSupport": -5, "baseSupport": 2 },
+        "sets_flags": ["double_agent_blamed"],
+        "outcome": "The deflection plays well with the base. It also draws sharp, credible pushback from officials who know the timeline doesn't fully support it."
+      },
+      {
+        "index": 3,
+        "text": "Use the scandal to push through expanded counterintelligence funding",
+        "effects": { "security": 6, "congressSupport": 3, "debt": 0.2 },
+        "sets_flags": ["double_agent_funding"],
+        "outcome": "The funding sails through amid the scare. Civil liberties advocates warn the expanded authority will outlive the crisis that justified it."
+      }
+    ]
+  },
+  {
+    "id": "book_banning_controversy",
+    "title": "School Boards Nationwide Debate Banning 'Subversive' Books",
+    "category": "social",
+    "description": "A wave of local school board votes to remove books deemed sympathetic to the rival ideology has sparked a national free-speech controversy. Parents' groups are split, and the fight is spreading from libraries to state legislatures.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Speak out publicly in defense of free expression",
+        "effects": { "globalReputation": 4, "baseSupport": -4, "unrest": -1 },
+        "sets_flags": ["book_banning_opposed"],
+        "outcome": "Civil libertarians praise the stand. Parents' groups pushing the bans accuse you of siding against local communities."
+      },
+      {
+        "index": 1,
+        "text": "Stay out of what is fundamentally a local school board matter",
+        "effects": { "unrest": 1, "congressSupport": 1 },
+        "sets_flags": ["book_banning_neutral"],
+        "outcome": "The neutrality avoids a national fight, though it satisfies no one directly involved in the local ones."
+      },
+      {
+        "index": 2,
+        "text": "Voice support for the removals, citing the security climate",
+        "effects": { "baseSupport": 5, "globalReputation": -5, "unrest": 3 },
+        "sets_flags": ["book_banning_supported"],
+        "outcome": "The base approves. Historians and civil libertarians alike warn this is exactly the kind of moment they'll be asked about later."
+      },
+      {
+        "index": 3,
+        "text": "Propose voluntary national curriculum guidelines to defuse the fight",
+        "effects": { "congressSupport": 2, "unrest": -2 },
+        "sets_flags": ["book_banning_guidelines"],
+        "outcome": "The guidelines are voluntary and toothless by design, which is exactly what lets both sides claim a partial win."
+      }
+    ]
+  },
+  {
+    "id": "draft_amnesty_debate",
+    "title": "Advocates Push for Amnesty on Draft Evasion Charges",
+    "category": "social",
+    "description": "With troop commitments cooling in one theater, advocacy groups are pushing for amnesty for those who evaded the draft or deserted rather than serve. Veterans' organizations are deeply divided on whether that would honor or insult their own service.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Grant a broad, unconditional amnesty",
+        "effects": { "unrest": -6, "baseSupport": -5, "approval": 2 },
+        "sets_flags": ["draft_amnesty_broad"],
+        "outcome": "Families who spent years afraid of prosecution finally exhale. Veterans' groups split loudly and publicly over the decision."
+      },
+      {
+        "index": 1,
+        "text": "Offer conditional amnesty tied to a period of public service",
+        "effects": { "unrest": -3, "congressSupport": 3, "baseSupport": -1 },
+        "sets_flags": ["draft_amnesty_conditional"],
+        "outcome": "The compromise draws less fury than a blanket pardon, and even some veterans' groups call it a fair middle path."
+      },
+      {
+        "index": 2,
+        "text": "Reject amnesty and maintain existing prosecutions",
+        "effects": { "baseSupport": 4, "unrest": 4, "globalReputation": -2 },
+        "sets_flags": ["draft_amnesty_rejected"],
+        "outcome": "Veterans' groups who opposed amnesty are relieved. Families still living under the threat of prosecution are not."
+      },
+      {
+        "index": 3,
+        "text": "Convene a veterans' advisory panel before deciding anything",
+        "effects": { "congressSupport": 2, "unrest": -1 },
+        "sets_flags": ["draft_amnesty_panel"],
+        "outcome": "The panel buys time and political cover, though it leaves thousands of cases in limbo while it deliberates."
+      }
+    ]
+  },
+  {
+    "id": "hotline_proposal",
+    "title": "Advisors Propose a Direct Emergency Line Between Capitals",
+    "category": "diplomacy",
+    "description": "After a string of close calls where slow, garbled communication nearly turned a misunderstanding into a crisis, your national security team is pushing a direct, dedicated emergency communication line between the two capitals.",
+    "isHistorical": true,
+    "historicalContext": "Inspired by the real establishment of a direct emergency communications link between rival Cold War capitals following a crisis that revealed dangerously slow diplomatic communication.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Formally propose the hotline and push hard for it",
+        "effects": { "globalReputation": 6, "security": 3 },
+        "sets_flags": ["hotline_proposed"],
+        "outcome": "The proposal is well received. Even skeptics on both sides concede that faster communication reduces the odds of an accidental war."
+      },
+      {
+        "index": 1,
+        "text": "Signal openness but wait for the rival to propose it first",
+        "effects": { "globalReputation": 1, "congressSupport": 1 },
+        "sets_flags": ["hotline_waited"],
+        "outcome": "The rival eventually raises it independently. The delay costs little, though your own team wonders why you didn't move first."
+      },
+      {
+        "index": 2,
+        "text": "Reject the idea as needless proximity to an adversary",
+        "effects": { "globalReputation": -4, "security": 1, "baseSupport": 2 },
+        "sets_flags": ["hotline_rejected"],
+        "outcome": "Hardliners approve of the caution. Your own national security advisors privately call it a missed chance to reduce real risk."
+      },
+      {
+        "index": 3,
+        "text": "Propose a multilateral version that includes key allies",
+        "effects": { "globalReputation": 4, "congressSupport": -1, "security": 2 },
+        "sets_flags": ["hotline_multilateral"],
+        "outcome": "Allies appreciate the inclusion. The rival government calls the added parties an unnecessary complication and slows negotiations."
+      }
+    ]
+  },
+  {
+    "id": "submarine_incident",
+    "title": "Naval Incident in Contested Waters Raises Alarm",
+    "category": "military",
+    "description": "A rival submarine and an allied naval vessel came dangerously close to collision in contested waters overnight. Both sides are trading accusations, and naval commanders on the scene are requesting guidance before the next patrol.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 6,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Demand a formal apology and compensation",
+        "effects": { "globalReputation": -2, "congressSupport": 2, "baseSupport": 2 },
+        "sets_flags": ["submarine_incident_demand"],
+        "outcome": "The demand plays well domestically. The rival government calls it an overreaction to a routine navigational hazard."
+      },
+      {
+        "index": 1,
+        "text": "Open quiet naval-to-naval channels to establish incident protocols",
+        "effects": { "globalReputation": 4, "security": 2 },
+        "sets_flags": ["submarine_incident_protocol"],
+        "outcome": "The quiet talks produce a real, lasting protocol for avoiding the next near-miss — unglamorous, genuinely useful diplomacy."
+      },
+      {
+        "index": 2,
+        "text": "Increase naval posture in the area in response",
+        "effects": { "security": 4, "globalReputation": -5, "unrest": 2 },
+        "sets_flags": ["submarine_incident_posture"],
+        "outcome": "The show of force is unmistakable. Naval planners on both sides now consider those waters measurably more dangerous."
+      },
+      {
+        "index": 3,
+        "text": "Downplay the incident publicly to avoid escalation",
+        "effects": { "mediaScore": -0.1, "security": -1 },
+        "sets_flags": ["submarine_incident_downplayed"],
+        "outcome": "The low-key response avoids a spiral. It also draws quiet criticism from commanders who felt the risk deserved a real response."
+      }
+    ]
+  },
+  {
+    "id": "brain_drain_concerns",
+    "title": "Scientists and Engineers Are Leaving for Better Offers Abroad",
+    "category": "economy",
+    "description": "A quiet but real exodus of scientists and engineers — some to the private sector, a smaller but politically alarming number to the rival bloc itself — has advisors warning that pay and morale in government research have fallen dangerously behind.",
+    "triggers": { "always_available": true },
+    "sets_flags": [],
+    "requires_flags": [],
+    "weight": 5,
+    "choices": [
+      {
+        "index": 0,
+        "text": "Raise pay and benefits for government scientists and engineers",
+        "effects": { "economy": 3, "debt": 0.3, "approval": 2 },
+        "sets_flags": ["brain_drain_pay_raised"],
+        "outcome": "Retention improves within a year. Budget hawks note that competing with the private sector on salary is an expensive habit to start."
+      },
+      {
+        "index": 1,
+        "text": "Launch a patriotic recruitment and retention campaign",
+        "effects": { "approval": 1, "baseSupport": 2 },
+        "sets_flags": ["brain_drain_campaign"],
+        "outcome": "The campaign helps at the margins. It doesn't move the underlying pay gap that's actually driving people to leave."
+      },
+      {
+        "index": 2,
+        "text": "Tighten travel and export restrictions on defense-linked scientists",
+        "effects": { "security": 3, "economy": -2, "globalReputation": -2 },
+        "sets_flags": ["brain_drain_restricted"],
+        "outcome": "The restrictions slow the most alarming departures. Scientists broadly resent being treated as flight risks rather than professionals."
+      },
+      {
+        "index": 3,
+        "text": "Treat it as a private-sector personnel issue, not a government one",
+        "effects": { "economy": -1, "security": -1 },
+        "sets_flags": ["brain_drain_ignored"],
+        "outcome": "Nothing changes. The exodus continues at the same quiet pace, and next year's briefing will note it again."
+      }
+    ]
   }
 ]

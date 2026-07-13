@@ -391,5 +391,197 @@
       "protest_leader": { "relationship": 8, "quote": "Director Marsh calls it 'overdue recognition for workers this country asked a lot of.'" },
       "sec_defense": { "relationship": 5, "quote": "The Secretary of Defense notes 'morale in the defense workforce genuinely depends on this kind of security.'" }
     }
+  },
+  {
+    "id": "continental_air_defense_act",
+    "title": "Continental Early Warning and Air Defense Act",
+    "shortTitle": "Air Defense Act",
+    "category": "conservative",
+    "sector": "defense_security",
+    "description": "Funds a continent-spanning network of early-warning radar stations and interceptor bases, designed to give a decisive head start on detecting and responding to a bomber or missile attack.",
+    "flavor": "A warning system is only as good as the minutes it buys you. This one is built to buy as many as physics allows.",
+    "cost": "high",
+    "debtImpact": 3.0,
+    "annualCostBn": 950,
+    "passage": {
+      "congressMin": 52,
+      "partyUnityMin": 45,
+      "approvalBonus": { "threshold": 55, "bonus": 7 },
+      "approvalPenalty": { "threshold": 30, "penalty": 9 },
+      "lobbyOpposition": [{ "name": "Fiscal Hawk Coalition", "penalty": 9 }],
+      "basePassProbability": 44
+    },
+    "effects": {
+      "onPass": { "security": 10, "militaryReadiness": 6, "approval": 4 },
+      "passive": { "security": 1 },
+      "description": "Passive: +1 security/mo for remainder of term"
+    },
+    "sets_flags": ["air_defense_network_built"],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "sec_defense": { "relationship": 10, "quote": "The Secretary of Defense calls it 'the minutes of warning that make every other defense plan possible.'" },
+      "treasury_secretary": { "relationship": -3, "quote": "The Treasury Secretary notes 'this is a permanent budget line, not a one-time cost.'" }
+    }
+  },
+  {
+    "id": "loyalty_oath_reform_act",
+    "title": "Federal Employment Loyalty Review Reform Act",
+    "shortTitle": "Loyalty Oath Reform Act",
+    "category": "progressive",
+    "sector": "justice_civil_rights",
+    "description": "Replaces sweeping, vaguely worded loyalty oath requirements for federal employment with narrower, evidence-based review procedures — aimed at protecting national security without ending careers on rumor and guilt by association.",
+    "flavor": "Security and due process were never actually supposed to be opposites.",
+    "cost": "low",
+    "debtImpact": 0.1,
+    "annualCostBn": 20,
+    "passage": {
+      "congressMin": 54,
+      "partyUnityMin": 48,
+      "approvalBonus": { "threshold": 55, "bonus": 6 },
+      "approvalPenalty": { "threshold": 30, "penalty": 10 },
+      "lobbyOpposition": [{ "name": "Congressional Loyalty Committee Allies", "penalty": 10 }],
+      "basePassProbability": 36
+    },
+    "effects": {
+      "onPass": { "approval": 5, "globalReputation": 5, "unrest": -3, "congressSupport": -3 },
+      "passive": { "unrest": -1 },
+      "description": "Passive: -1 unrest/mo for remainder of term"
+    },
+    "sets_flags": ["loyalty_oaths_reformed"],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "attorney_general": { "relationship": 10, "quote": "The Attorney General calls it 'due process this department should have insisted on years ago.'" },
+      "opposition_leader": { "relationship": -6, "quote": "The opposition leader warns it 'ties the hands of the people trying to keep this government secure.'" }
+    }
+  },
+  {
+    "id": "strategic_minerals_stockpile_act",
+    "title": "Strategic Minerals Stockpile Act",
+    "shortTitle": "Minerals Stockpile Act",
+    "category": "bipartisan",
+    "sector": "economy_finance",
+    "description": "Establishes a federal stockpile of minerals and materials critical to defense manufacturing — titanium, cobalt, and rare industrial alloys — insulating war production from a supply cutoff by a hostile or unstable source.",
+    "flavor": "You can't build a deterrent out of a supply chain someone else controls.",
+    "cost": "medium",
+    "debtImpact": 0.8,
+    "annualCostBn": 180,
+    "passage": {
+      "congressMin": 48,
+      "partyUnityMin": 40,
+      "approvalBonus": { "threshold": 55, "bonus": 4 },
+      "approvalPenalty": { "threshold": 30, "penalty": 5 },
+      "lobbyOpposition": [],
+      "basePassProbability": 54
+    },
+    "effects": {
+      "onPass": { "security": 4, "economy": 2, "debt": 0.1 },
+      "passive": { "security": 1 },
+      "description": "Passive: +1 security/mo for remainder of term"
+    },
+    "sets_flags": ["minerals_stockpiled"],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "treasury_secretary": { "relationship": 4, "quote": "The Treasury Secretary calls it 'cheap insurance against a supply shock we can't afford to be surprised by.'" },
+      "sec_defense": { "relationship": 6, "quote": "The Secretary of Defense notes 'production doesn't stop for a war if the materials never stop flowing.'" }
+    }
+  },
+  {
+    "id": "radiation_health_monitoring_act",
+    "title": "National Radiation Health Monitoring Act",
+    "shortTitle": "Radiation Monitoring Act",
+    "category": "bipartisan",
+    "sector": "healthcare",
+    "description": "Establishes federal monitoring of radiation exposure near weapons testing and production sites, along with a public health registry for affected communities and workers.",
+    "flavor": "The people living downwind didn't get a vote on the testing schedule. They should at least get a doctor who knows why they're sick.",
+    "cost": "medium",
+    "debtImpact": 0.7,
+    "annualCostBn": 150,
+    "passage": {
+      "congressMin": 50,
+      "partyUnityMin": 42,
+      "approvalBonus": { "threshold": 55, "bonus": 7 },
+      "approvalPenalty": { "threshold": 30, "penalty": 8 },
+      "lobbyOpposition": [{ "name": "Defense Industry Coalition", "penalty": 7 }],
+      "basePassProbability": 46
+    },
+    "effects": {
+      "onPass": { "approval": 6, "unrest": -3, "baseSupport": 3 },
+      "passive": { "approval": 1 },
+      "description": "Passive: +1 approval/mo for remainder of term"
+    },
+    "sets_flags": ["radiation_monitoring_established"],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "protest_leader": { "relationship": 10, "quote": "Director Marsh calls it 'the first time this government has admitted downwind communities were owed anything at all.'" },
+      "sec_defense": { "relationship": -3, "quote": "The Secretary of Defense worries the registry 'creates a paper trail for questions this department would rather not answer.'" }
+    }
+  },
+  {
+    "id": "veterans_readjustment_act",
+    "title": "Cold War Veterans Readjustment Act",
+    "shortTitle": "Veterans Readjustment Act",
+    "category": "progressive",
+    "sector": "social_services",
+    "description": "Expands education, housing, and mental health benefits for servicemembers returning from extended overseas deployments — many from conflicts the public barely acknowledges as wars at all.",
+    "flavor": "They served in a war nobody at home wanted to call a war. The benefits shouldn't be quiet about it either.",
+    "cost": "medium",
+    "debtImpact": 1.1,
+    "annualCostBn": 300,
+    "passage": {
+      "congressMin": 50,
+      "partyUnityMin": 42,
+      "approvalBonus": { "threshold": 55, "bonus": 8 },
+      "approvalPenalty": { "threshold": 30, "penalty": 8 },
+      "lobbyOpposition": [],
+      "basePassProbability": 50
+    },
+    "effects": {
+      "onPass": { "approval": 7, "unrest": -4, "baseSupport": 5 },
+      "passive": { "unrest": -1 },
+      "description": "Passive: -1 unrest/mo for remainder of term"
+    },
+    "sets_flags": ["veterans_readjustment_passed"],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "protest_leader": { "relationship": 9, "quote": "Director Marsh calls it 'the least this country can do for what it asked of them.'" },
+      "sec_defense": { "relationship": 7, "quote": "The Secretary of Defense says 'every servicemember I talk to already knows someone this would help.'" }
+    }
+  },
+  {
+    "id": "computing_research_initiative_act",
+    "title": "Advanced Computing Research Initiative Act",
+    "shortTitle": "Computing Research Act",
+    "category": "conservative",
+    "sector": "technology",
+    "description": "Funds a dedicated federal research program in advanced computing and cryptography, aimed at maintaining a decisive technical edge in code-breaking, simulation, and command-and-control systems.",
+    "flavor": "The next advantage won't be measured in warheads. It'll be measured in how fast you can compute.",
+    "cost": "medium",
+    "debtImpact": 0.9,
+    "annualCostBn": 240,
+    "passage": {
+      "congressMin": 50,
+      "partyUnityMin": 42,
+      "approvalBonus": { "threshold": 55, "bonus": 5 },
+      "approvalPenalty": { "threshold": 30, "penalty": 6 },
+      "lobbyOpposition": [],
+      "basePassProbability": 52
+    },
+    "effects": {
+      "onPass": { "security": 5, "economy": 3, "militaryReadiness": 2 },
+      "passive": { "economy": 1 },
+      "description": "Passive: +1 economy/mo for remainder of term"
+    },
+    "sets_flags": ["computing_research_funded"],
+    "requires_flags": [],
+    "blocks_laws": [],
+    "npc_reactions": {
+      "sec_defense": { "relationship": 7, "quote": "The Secretary of Defense calls it 'the codebreaking and simulation edge this department will need for the next generation of threats.'" },
+      "treasury_secretary": { "relationship": 4, "quote": "The Treasury Secretary notes 'basic research like this has a way of paying for itself decades later.'" }
+    }
   }
 ]
