@@ -17,6 +17,9 @@ model User {
   // Founder Edition purchase flag — a standing account-level grant of every
   // content id, current and future, rather than a per-content Purchase row.
   founderAllFuture Boolean @default(false)
+  // scrypt hash, format "salt:hash" (see lib/password.ts) — null for
+  // accounts that only ever signed in via Guest/GitHub/Google.
+  hashedPassword String?
   accounts      Account[]
   sessions      Session[]
   games         Game[]

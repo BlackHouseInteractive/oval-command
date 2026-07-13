@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { auth, signIn } from '@/lib/auth'
 import { getEnabledOAuthProviders } from '@/lib/oauth-providers'
 import { Seal } from '@/components/Seal'
+import { EmailPasswordAuth } from '@/components/EmailPasswordAuth'
 
 export default async function LoginPage() {
   const session = await auth()
@@ -107,6 +108,14 @@ export default async function LoginPage() {
               )}
             </>
           )}
+
+          <div className="relative flex items-center gap-3 py-1">
+            <div className="flex-1 border-t border-[var(--color-border)]" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--color-paper-faint)]">or use email</span>
+            <div className="flex-1 border-t border-[var(--color-border)]" />
+          </div>
+
+          <EmailPasswordAuth />
         </div>
 
         <p className="mt-8 text-center font-mono text-[10px] text-[var(--color-paper-faint)]">

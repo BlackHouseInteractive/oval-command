@@ -30,8 +30,14 @@ export async function checkRateLimit(key: string, limit: number, windowSeconds: 
   return count <= limit
 }
 
-/** Best-effort client IP from Vercel's forwarded-for header — falls back to a shared bucket if absent (e.g. local dev), which is intentionally conservative rather than unlimited. */
-export function getClientIp(req: Request): string {
-  const forwardedFor = req.headers.get('x-forwarded-for')
+/**
+ * Best-effort client IP from Vercel's forwarded-for header — falls back to
+ * a shared bucket if absent (e.g. local dev), which is intentionally
+ * conservative rather than unlimited. Takes a headers-like object rather
+ * than a full Request so both route handlers (`req.headers`) and Server
+ * Actions (`await headers()` from next/headers) can call this the same way.
+ */
+export function getClientIp(headers: { get(name: string): string | null }): string {
+  const forwardedFor = headers.get('x-forwarded-for')
   return forwardedFor?.split(',')[0]?.trim() ?? 'unknown'
 }
