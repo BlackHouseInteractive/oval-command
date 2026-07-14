@@ -8,6 +8,7 @@
         "shortName": "SecTreas Anand",
         "avatar": "PA",
         "avatarColor": "blue",
+        "image": "/npcs/treasury_secretary_anand.png",
         "personality": {
           "archetype": "The Productivity Economist",
           "description": "Former Fed research director who spent two decades studying why growth compounds in some economies and stalls in others. She isn't a deficit hawk and she isn't a stimulus dove — she just wants every dollar spent on something that pays off in a decade, not a news cycle.",
@@ -43,6 +44,7 @@
         "shortName": "SecTreas Kaine",
         "avatar": "RK",
         "avatarColor": "purple",
+        "image": "/npcs/treasury_secretary_kaine.png",
         "personality": {
           "archetype": "The Reshoring Strategist",
           "description": "Former manufacturing-state trade negotiator who's spent two decades watching factories close and supply chains move overseas. He treats tariffs and trade deals as leverage to bring production home — not as ideology, and not as something to apologize for.",
