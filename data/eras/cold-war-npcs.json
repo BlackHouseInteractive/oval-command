@@ -14,28 +14,85 @@
         "personality": {
           "archetype": "The Cold Warrior",
           "description": "A decorated Air Force general before politics, Harrow believes weakness invites disaster. He wants a visible, unapologetic posture of strength — bigger arsenals, faster ships, no hesitation. Popular with veterans, terrifying to arms-control advocates.",
-          "traits": ["believes strength deters war", "impatient with negotiation", "beloved by the military", "distrusts diplomats"]
+          "traits": [
+            "believes strength deters war",
+            "impatient with negotiation",
+            "beloved by the military",
+            "distrusts diplomats"
+          ]
         },
-        "relationship": { "start": 65, "min": 10, "max": 100 },
+        "relationship": {
+          "start": 65,
+          "min": 10,
+          "max": 100
+        },
         "triggers": {
-          "onLowRelationship": { "threshold": 30, "event": "VP Harrow tells reporters the administration is 'negotiating from its knees'", "approvalDelta": -3, "securityDelta": -4 },
-          "onVeryLowRelationship": { "threshold": 18, "event": "VP Harrow resigns, citing 'a fundamental disagreement over the defense of this nation'", "approvalDelta": -8, "securityDelta": -6 },
-          "onHighRelationship": { "threshold": 80, "benefit": "Harrow's credibility with the Pentagon smooths a tense standoff", "securityBonus": 5 }
+          "onLowRelationship": {
+            "threshold": 30,
+            "event": "VP Harrow tells reporters the administration is 'negotiating from its knees'",
+            "approvalDelta": -3,
+            "securityDelta": -4
+          },
+          "onVeryLowRelationship": {
+            "threshold": 18,
+            "event": "VP Harrow resigns, citing 'a fundamental disagreement over the defense of this nation'",
+            "approvalDelta": -8,
+            "securityDelta": -6
+          },
+          "onHighRelationship": {
+            "threshold": 80,
+            "benefit": "Harrow's credibility with the Pentagon smooths a tense standoff",
+            "securityBonus": 5
+          }
         },
-        "relationshipDeltas": { "military_buildup": 6, "arms_treaty_signed": -8, "war_declared": 5, "diplomatic_breakthrough": -5 },
+        "relationshipDeltas": {
+          "military_buildup": 6,
+          "arms_treaty_signed": -8,
+          "war_declared": 5,
+          "diplomatic_breakthrough": -5
+        },
         "monthlyDialogue": {
-          "high": ["The Joint Chiefs trust you. That's not nothing in this town.", "We showed strength this month. The world noticed."],
-          "medium": ["I'd move the fleet before I moved the talking points.", "The generals are watching how this plays out. So is Moscow."],
-          "low": ["Every concession we make gets read as weakness overseas.", "I didn't sign up to manage a retreat."],
-          "critical": ["I've said my piece in three meetings now. Nobody's listening.", "History won't be kind to hesitation. I hope you understand that."]
+          "high": [
+            "The Joint Chiefs trust you. That's not nothing in this town.",
+            "We showed strength this month. The world noticed."
+          ],
+          "medium": [
+            "I'd move the fleet before I moved the talking points.",
+            "The generals are watching how this plays out. So is Moscow."
+          ],
+          "low": [
+            "Every concession we make gets read as weakness overseas.",
+            "I didn't sign up to manage a retreat."
+          ],
+          "critical": [
+            "I've said my piece in three meetings now. Nobody's listening.",
+            "History won't be kind to hesitation. I hope you understand that."
+          ]
         },
-        "specialAbility": { "name": "Show of Force", "description": "Once per term, VP Harrow can order a visible military demonstration that boosts security +6 and deters an active conflict from escalating. Requires relationship above 60.", "usesPerTerm": 1, "requiresRelationship": 60, "playerActivated": true },
-        "traits": { "loyalty": 60, "ambition": 55, "integrity": 70, "politicalSkill": 55, "stress": 50, "ideology": 80 },
+        "specialAbility": {
+          "name": "Show of Force",
+          "description": "Once per term, VP Harrow can order a visible military demonstration that boosts security +6 and deters an active conflict from escalating. Requires relationship above 60.",
+          "usesPerTerm": 1,
+          "requiresRelationship": 60,
+          "playerActivated": true
+        },
+        "traits": {
+          "loyalty": 60,
+          "ambition": 55,
+          "integrity": 70,
+          "politicalSkill": 55,
+          "stress": 50,
+          "ideology": 80
+        },
         "goal": "Wants a visible, unapologetic posture of military strength — no unilateral concessions to the other side.",
         "goalTag": "military_strength",
         "breakingPoint": "Will not defend a treaty he believes leaves the country exposed.",
         "breakingPointTag": "arms_concession",
-        "startingBonus": { "security": 3, "militaryReadiness": 2 }
+        "startingBonus": {
+          "security": 3,
+          "militaryReadiness": 2
+        },
+        "image": "/npcs/vice_president_harrow.png"
       },
       {
         "candidateId": "voss",
@@ -46,28 +103,85 @@
         "personality": {
           "archetype": "The Career Diplomat",
           "description": "Two decades in the foreign service before the ticket. Voss believes the arms race is a trap both sides can walk back from, given patience and back-channels. She's fluent in three languages and allergic to saber-rattling.",
-          "traits": ["believes in negotiated stability", "deeply networked abroad", "distrusts military solutions", "unpopular with hawks"]
+          "traits": [
+            "believes in negotiated stability",
+            "deeply networked abroad",
+            "distrusts military solutions",
+            "unpopular with hawks"
+          ]
         },
-        "relationship": { "start": 65, "min": 10, "max": 100 },
+        "relationship": {
+          "start": 65,
+          "min": 10,
+          "max": 100
+        },
         "triggers": {
-          "onLowRelationship": { "threshold": 30, "event": "VP Voss privately warns allies the administration is 'drifting toward confrontation'", "globalReputationDelta": -4, "approvalDelta": -2 },
-          "onVeryLowRelationship": { "threshold": 18, "event": "VP Voss resigns rather than defend an escalation she opposed", "approvalDelta": -6, "globalReputationDelta": -8 },
-          "onHighRelationship": { "threshold": 80, "benefit": "Voss's back-channel contacts defuse a crisis before it goes public", "globalReputationBonus": 6 }
+          "onLowRelationship": {
+            "threshold": 30,
+            "event": "VP Voss privately warns allies the administration is 'drifting toward confrontation'",
+            "globalReputationDelta": -4,
+            "approvalDelta": -2
+          },
+          "onVeryLowRelationship": {
+            "threshold": 18,
+            "event": "VP Voss resigns rather than defend an escalation she opposed",
+            "approvalDelta": -6,
+            "globalReputationDelta": -8
+          },
+          "onHighRelationship": {
+            "threshold": 80,
+            "benefit": "Voss's back-channel contacts defuse a crisis before it goes public",
+            "globalReputationBonus": 6
+          }
         },
-        "relationshipDeltas": { "arms_treaty_signed": 8, "military_buildup": -5, "diplomatic_breakthrough": 8, "war_declared": -10 },
+        "relationshipDeltas": {
+          "arms_treaty_signed": 8,
+          "military_buildup": -5,
+          "diplomatic_breakthrough": 8,
+          "war_declared": -10
+        },
         "monthlyDialogue": {
-          "high": ["My counterpart in the foreign ministry says the door is still open.", "We can get more from a quiet phone call than a fleet movement."],
-          "medium": ["I need more room to talk before the generals talk for us.", "The back channel is fragile. One more provocation and it closes."],
-          "low": ["We're spending political capital on threats instead of openings.", "I've watched this exact escalation before. It doesn't end well."],
-          "critical": ["I can't in good conscience keep defending this posture.", "We are one miscalculation away from something we can't take back."]
+          "high": [
+            "My counterpart in the foreign ministry says the door is still open.",
+            "We can get more from a quiet phone call than a fleet movement."
+          ],
+          "medium": [
+            "I need more room to talk before the generals talk for us.",
+            "The back channel is fragile. One more provocation and it closes."
+          ],
+          "low": [
+            "We're spending political capital on threats instead of openings.",
+            "I've watched this exact escalation before. It doesn't end well."
+          ],
+          "critical": [
+            "I can't in good conscience keep defending this posture.",
+            "We are one miscalculation away from something we can't take back."
+          ]
         },
-        "specialAbility": { "name": "Back Channel", "description": "Once per term, VP Voss can open a quiet diplomatic channel that resolves an active international tension, boosting globalReputation +6. Requires relationship above 60.", "usesPerTerm": 1, "requiresRelationship": 60, "playerActivated": true },
-        "traits": { "loyalty": 60, "ambition": 45, "integrity": 80, "politicalSkill": 70, "stress": 45, "ideology": 25 },
+        "specialAbility": {
+          "name": "Back Channel",
+          "description": "Once per term, VP Voss can open a quiet diplomatic channel that resolves an active international tension, boosting globalReputation +6. Requires relationship above 60.",
+          "usesPerTerm": 1,
+          "requiresRelationship": 60,
+          "playerActivated": true
+        },
+        "traits": {
+          "loyalty": 60,
+          "ambition": 45,
+          "integrity": 80,
+          "politicalSkill": 70,
+          "stress": 45,
+          "ideology": 25
+        },
         "goal": "Wants sustained diplomatic engagement over military posturing — believes the arms race can be walked back.",
         "goalTag": "diplomatic_engagement",
         "breakingPoint": "Will not defend a decision that she believes brings the world closer to war.",
         "breakingPointTag": "war_escalation",
-        "startingBonus": { "globalReputation": 3, "congressSupport": 1 }
+        "startingBonus": {
+          "globalReputation": 3,
+          "congressSupport": 1
+        },
+        "image": "/npcs/vice_president_voss.png"
       },
       {
         "candidateId": "kowalski",
@@ -78,28 +192,85 @@
         "personality": {
           "archetype": "The Homefront Populist",
           "description": "A former steel-state governor, Kowalski thinks Washington talks too much about missiles and not enough about factories, wages, and the kitchen table. He wants the Cold War fought with production lines and paychecks, not just warheads.",
-          "traits": ["obsessed with domestic strength", "plainspoken with workers", "skeptical of foreign entanglements", "wants results at home first"]
+          "traits": [
+            "obsessed with domestic strength",
+            "plainspoken with workers",
+            "skeptical of foreign entanglements",
+            "wants results at home first"
+          ]
         },
-        "relationship": { "start": 65, "min": 10, "max": 100 },
+        "relationship": {
+          "start": 65,
+          "min": 10,
+          "max": 100
+        },
         "triggers": {
-          "onLowRelationship": { "threshold": 30, "event": "VP Kowalski tells union halls the administration has 'forgotten who elected it'", "baseSupportDelta": -6, "approvalDelta": -2 },
-          "onVeryLowRelationship": { "threshold": 18, "event": "VP Kowalski breaks publicly with the administration over domestic spending priorities", "baseSupportDelta": -10, "approvalDelta": -5 },
-          "onHighRelationship": { "threshold": 80, "benefit": "Kowalski's shop-floor credibility delivers a wave of union goodwill", "baseSupportBonus": 6 }
+          "onLowRelationship": {
+            "threshold": 30,
+            "event": "VP Kowalski tells union halls the administration has 'forgotten who elected it'",
+            "baseSupportDelta": -6,
+            "approvalDelta": -2
+          },
+          "onVeryLowRelationship": {
+            "threshold": 18,
+            "event": "VP Kowalski breaks publicly with the administration over domestic spending priorities",
+            "baseSupportDelta": -10,
+            "approvalDelta": -5
+          },
+          "onHighRelationship": {
+            "threshold": 80,
+            "benefit": "Kowalski's shop-floor credibility delivers a wave of union goodwill",
+            "baseSupportBonus": 6
+          }
         },
-        "relationshipDeltas": { "infrastructure_passed": 6, "military_buildup": -3, "recession_handled_well": 5, "debt_above_50t": -4 },
+        "relationshipDeltas": {
+          "infrastructure_passed": 6,
+          "military_buildup": -3,
+          "recession_handled_well": 5,
+          "debt_above_50t": -4
+        },
         "monthlyDialogue": {
-          "high": ["The plants are running double shifts. That's how you win a cold war.", "I told the union hall you'd deliver. Don't make a liar out of me."],
-          "medium": ["Every dollar on a warhead is a dollar not on a paycheck. Balance it.", "The base wants to see this fight at home, not just overseas."],
-          "low": ["We're losing the argument with working families and I feel it.", "I keep hearing 'national security' and less about the mortgage."],
-          "critical": ["I can't keep selling a strategy that forgets the people who elected us.", "The base is done waiting. I don't know how much longer I can hold them."]
+          "high": [
+            "The plants are running double shifts. That's how you win a cold war.",
+            "I told the union hall you'd deliver. Don't make a liar out of me."
+          ],
+          "medium": [
+            "Every dollar on a warhead is a dollar not on a paycheck. Balance it.",
+            "The base wants to see this fight at home, not just overseas."
+          ],
+          "low": [
+            "We're losing the argument with working families and I feel it.",
+            "I keep hearing 'national security' and less about the mortgage."
+          ],
+          "critical": [
+            "I can't keep selling a strategy that forgets the people who elected us.",
+            "The base is done waiting. I don't know how much longer I can hold them."
+          ]
         },
-        "specialAbility": { "name": "Shop Floor Tour", "description": "Once per term, VP Kowalski can headline a national tour of industrial states, boosting baseSupport +8. Requires relationship above 60.", "usesPerTerm": 1, "requiresRelationship": 60, "playerActivated": true },
-        "traits": { "loyalty": 65, "ambition": 50, "integrity": 70, "politicalSkill": 60, "stress": 40, "ideology": 45 },
+        "specialAbility": {
+          "name": "Shop Floor Tour",
+          "description": "Once per term, VP Kowalski can headline a national tour of industrial states, boosting baseSupport +8. Requires relationship above 60.",
+          "usesPerTerm": 1,
+          "requiresRelationship": 60,
+          "playerActivated": true
+        },
+        "traits": {
+          "loyalty": 65,
+          "ambition": 50,
+          "integrity": 70,
+          "politicalSkill": 60,
+          "stress": 40,
+          "ideology": 45
+        },
         "goal": "Wants domestic production and wages prioritized over further military buildup.",
         "goalTag": "domestic_strength",
         "breakingPoint": "Will not defend a budget that guts domestic investment to fund the arms race.",
         "breakingPointTag": "domestic_neglect",
-        "startingBonus": { "baseSupport": 3, "economy": 1 }
+        "startingBonus": {
+          "baseSupport": 3,
+          "economy": 1
+        },
+        "image": "/npcs/vice_president_kowalski.png"
       }
     ]
   },
@@ -118,28 +289,84 @@
         "personality": {
           "archetype": "The Fixer",
           "description": "Reyes ran three campaigns before this job and treats the West Wing like one long campaign that never ends. She counts votes before anyone asks her to, and she's already three moves ahead of the press corps.",
-          "traits": ["ruthlessly effective", "counts votes instinctively", "no patience for idealism that doesn't ship", "protects the president first"]
+          "traits": [
+            "ruthlessly effective",
+            "counts votes instinctively",
+            "no patience for idealism that doesn't ship",
+            "protects the president first"
+          ]
         },
-        "relationship": { "start": 60, "min": 10, "max": 100 },
+        "relationship": {
+          "start": 60,
+          "min": 10,
+          "max": 100
+        },
         "triggers": {
-          "onLowRelationship": { "threshold": 35, "event": "CoS Reyes starts freelancing message discipline without checking in first", "congressSupportDelta": -4 },
-          "onVeryLowRelationship": { "threshold": 22, "event": "CoS Reyes resigns, telling reporters she 'can't fix what she can't control'", "approvalDelta": -6, "congressSupportDelta": -5 },
-          "onHighRelationship": { "threshold": 80, "benefit": "Reyes's operation runs so clean the press has nothing to leak", "mediaScoreBonus": 0.3 }
+          "onLowRelationship": {
+            "threshold": 35,
+            "event": "CoS Reyes starts freelancing message discipline without checking in first",
+            "congressSupportDelta": -4
+          },
+          "onVeryLowRelationship": {
+            "threshold": 22,
+            "event": "CoS Reyes resigns, telling reporters she 'can't fix what she can't control'",
+            "approvalDelta": -6,
+            "congressSupportDelta": -5
+          },
+          "onHighRelationship": {
+            "threshold": 80,
+            "benefit": "Reyes's operation runs so clean the press has nothing to leak",
+            "mediaScoreBonus": 0.3
+          }
         },
-        "relationshipDeltas": { "bipartisan_bill_passed": 5, "active_scandal": -4, "scandal_resolved": 5, "executive_overreach": -3 },
+        "relationshipDeltas": {
+          "bipartisan_bill_passed": 5,
+          "active_scandal": -4,
+          "scandal_resolved": 5,
+          "executive_overreach": -3
+        },
         "monthlyDialogue": {
-          "high": ["I've got the votes counted before the whip does. We're fine.", "Nobody in this building moves without me knowing first. Good."],
-          "medium": ["I need forty-eight hours to get the caucus in line on this.", "The building is nervous. I can manage it if you give me room."],
-          "low": ["I'm hearing things about this White House I shouldn't have to hear secondhand.", "This operation runs on discipline. We're losing some."],
-          "critical": ["I can't run a White House I don't have control of.", "Something is going to break if we don't get ahead of this."]
+          "high": [
+            "I've got the votes counted before the whip does. We're fine.",
+            "Nobody in this building moves without me knowing first. Good."
+          ],
+          "medium": [
+            "I need forty-eight hours to get the caucus in line on this.",
+            "The building is nervous. I can manage it if you give me room."
+          ],
+          "low": [
+            "I'm hearing things about this White House I shouldn't have to hear secondhand.",
+            "This operation runs on discipline. We're losing some."
+          ],
+          "critical": [
+            "I can't run a White House I don't have control of.",
+            "Something is going to break if we don't get ahead of this."
+          ]
         },
-        "specialAbility": { "name": "Political Capital Ledger", "description": "Once per term, CoS Reyes can call in every outstanding favor to guarantee a bill's passage. Requires relationship above 65.", "usesPerTerm": 1, "requiresRelationship": 65, "playerActivated": true },
-        "traits": { "loyalty": 70, "ambition": 60, "integrity": 55, "politicalSkill": 90, "stress": 55, "ideology": 50 },
+        "specialAbility": {
+          "name": "Political Capital Ledger",
+          "description": "Once per term, CoS Reyes can call in every outstanding favor to guarantee a bill's passage. Requires relationship above 65.",
+          "usesPerTerm": 1,
+          "requiresRelationship": 65,
+          "playerActivated": true
+        },
+        "traits": {
+          "loyalty": 70,
+          "ambition": 60,
+          "integrity": 55,
+          "politicalSkill": 90,
+          "stress": 55,
+          "ideology": 50
+        },
         "goal": "Wants total control of message discipline and legislative sequencing.",
         "goalTag": "operational_control",
         "breakingPoint": "Will not stay if she's cut out of major decisions that blow up in the press later.",
         "breakingPointTag": "sidelined_decisions",
-        "startingBonus": { "congressSupport": 2, "mediaScore": 0.1 }
+        "startingBonus": {
+          "congressSupport": 2,
+          "mediaScore": 0.1
+        },
+        "image": "/npcs/chief_of_staff_reyes_cos.png"
       },
       {
         "candidateId": "abernathy_cos",
@@ -150,28 +377,84 @@
         "personality": {
           "archetype": "The True Believer",
           "description": "Abernathy joined this administration to change the country, not manage it. He pushes for bold, ideologically consistent moves even when the polling says wait. Staff either love him or find him exhausting — sometimes both.",
-          "traits": ["ideologically driven", "impatient with incrementalism", "inspiring to true believers", "clashes with pragmatists"]
+          "traits": [
+            "ideologically driven",
+            "impatient with incrementalism",
+            "inspiring to true believers",
+            "clashes with pragmatists"
+          ]
         },
-        "relationship": { "start": 60, "min": 10, "max": 100 },
+        "relationship": {
+          "start": 60,
+          "min": 10,
+          "max": 100
+        },
         "triggers": {
-          "onLowRelationship": { "threshold": 35, "event": "CoS Abernathy tells allies the administration has 'lost its nerve'", "baseSupportDelta": -4 },
-          "onVeryLowRelationship": { "threshold": 22, "event": "CoS Abernathy resigns publicly, calling the administration 'compromise without a cause'", "baseSupportDelta": -8, "approvalDelta": -4 },
-          "onHighRelationship": { "threshold": 80, "benefit": "Abernathy's conviction rallies the base behind a hard call", "baseSupportBonus": 6 }
+          "onLowRelationship": {
+            "threshold": 35,
+            "event": "CoS Abernathy tells allies the administration has 'lost its nerve'",
+            "baseSupportDelta": -4
+          },
+          "onVeryLowRelationship": {
+            "threshold": 22,
+            "event": "CoS Abernathy resigns publicly, calling the administration 'compromise without a cause'",
+            "baseSupportDelta": -8,
+            "approvalDelta": -4
+          },
+          "onHighRelationship": {
+            "threshold": 80,
+            "benefit": "Abernathy's conviction rallies the base behind a hard call",
+            "baseSupportBonus": 6
+          }
         },
-        "relationshipDeltas": { "progressive_bill_passed": 5, "conservative_bill_passed": -5, "bipartisan_bill_passed": -2, "arms_treaty_signed": 4 },
+        "relationshipDeltas": {
+          "progressive_bill_passed": 5,
+          "conservative_bill_passed": -5,
+          "bipartisan_bill_passed": -2,
+          "arms_treaty_signed": 4
+        },
         "monthlyDialogue": {
-          "high": ["This is why we ran. Don't let anyone talk you out of it.", "History is going to remember the bold calls, not the safe ones."],
-          "medium": ["I'd rather lose fighting for something than win doing nothing.", "The base needs to see conviction, not another poll-tested half-step."],
-          "low": ["We keep trimming the sails on everything that mattered to us.", "I didn't take this job to manage a status quo administration."],
-          "critical": ["I don't recognize the agenda we ran on anymore.", "At some point silence from me starts looking like agreement. It isn't."]
+          "high": [
+            "This is why we ran. Don't let anyone talk you out of it.",
+            "History is going to remember the bold calls, not the safe ones."
+          ],
+          "medium": [
+            "I'd rather lose fighting for something than win doing nothing.",
+            "The base needs to see conviction, not another poll-tested half-step."
+          ],
+          "low": [
+            "We keep trimming the sails on everything that mattered to us.",
+            "I didn't take this job to manage a status quo administration."
+          ],
+          "critical": [
+            "I don't recognize the agenda we ran on anymore.",
+            "At some point silence from me starts looking like agreement. It isn't."
+          ]
         },
-        "specialAbility": { "name": "Rally the True Believers", "description": "Once per term, CoS Abernathy can mobilize the ideological base behind a contested decision, boosting baseSupport +8. Requires relationship above 65.", "usesPerTerm": 1, "requiresRelationship": 65, "playerActivated": true },
-        "traits": { "loyalty": 55, "ambition": 45, "integrity": 85, "politicalSkill": 55, "stress": 60, "ideology": 20 },
+        "specialAbility": {
+          "name": "Rally the True Believers",
+          "description": "Once per term, CoS Abernathy can mobilize the ideological base behind a contested decision, boosting baseSupport +8. Requires relationship above 65.",
+          "usesPerTerm": 1,
+          "requiresRelationship": 65,
+          "playerActivated": true
+        },
+        "traits": {
+          "loyalty": 55,
+          "ambition": 45,
+          "integrity": 85,
+          "politicalSkill": 55,
+          "stress": 60,
+          "ideology": 20
+        },
         "goal": "Wants bold, ideologically consistent action even at political cost.",
         "goalTag": "ideological_conviction",
         "breakingPoint": "Will not spin a decision he believes betrays what the administration ran on.",
         "breakingPointTag": "betrayed_agenda",
-        "startingBonus": { "baseSupport": 2, "approval": 1 }
+        "startingBonus": {
+          "baseSupport": 2,
+          "approval": 1
+        },
+        "image": "/npcs/chief_of_staff_abernathy_cos.png"
       },
       {
         "candidateId": "chen_cos",
@@ -182,28 +465,83 @@
         "personality": {
           "archetype": "The Technocrat",
           "description": "Chen ran a federal agency before this job and treats the White House like a systems problem: inputs, processes, outputs. He's unflappable in a crisis and mildly baffled by anyone who makes decisions on gut feeling alone.",
-          "traits": ["process-obsessed", "unflappable under pressure", "data over instinct", "sometimes reads as cold"]
+          "traits": [
+            "process-obsessed",
+            "unflappable under pressure",
+            "data over instinct",
+            "sometimes reads as cold"
+          ]
         },
-        "relationship": { "start": 60, "min": 10, "max": 100 },
+        "relationship": {
+          "start": 60,
+          "min": 10,
+          "max": 100
+        },
         "triggers": {
-          "onLowRelationship": { "threshold": 35, "event": "CoS Chen quietly documents disagreements 'for the record'", "congressSupportDelta": -3 },
-          "onVeryLowRelationship": { "threshold": 22, "event": "CoS Chen resigns with a memo outlining 'process failures at the highest level'", "approvalDelta": -5 },
-          "onHighRelationship": { "threshold": 80, "benefit": "Chen's systems run so smoothly a looming crisis gets caught early", "securityBonus": 4 }
+          "onLowRelationship": {
+            "threshold": 35,
+            "event": "CoS Chen quietly documents disagreements 'for the record'",
+            "congressSupportDelta": -3
+          },
+          "onVeryLowRelationship": {
+            "threshold": 22,
+            "event": "CoS Chen resigns with a memo outlining 'process failures at the highest level'",
+            "approvalDelta": -5
+          },
+          "onHighRelationship": {
+            "threshold": 80,
+            "benefit": "Chen's systems run so smoothly a looming crisis gets caught early",
+            "securityBonus": 4
+          }
         },
-        "relationshipDeltas": { "recession_handled_well": 5, "bipartisan_bill_passed": 3, "executive_overreach": -4, "war_declared": -3 },
+        "relationshipDeltas": {
+          "recession_handled_well": 5,
+          "bipartisan_bill_passed": 3,
+          "executive_overreach": -4,
+          "war_declared": -3
+        },
         "monthlyDialogue": {
-          "high": ["The numbers support the decision. I ran them twice.", "Every agency reported on time this month. That's not luck."],
-          "medium": ["I'd like forty-eight hours to model this before we commit.", "The process worked, barely. We should tighten it."],
-          "low": ["We're making decisions faster than we can verify them.", "I keep flagging risks that get overruled without a counter-model."],
-          "critical": ["I can't certify a process I don't believe in anymore.", "At some point the data stops mattering if nobody reads it."]
+          "high": [
+            "The numbers support the decision. I ran them twice.",
+            "Every agency reported on time this month. That's not luck."
+          ],
+          "medium": [
+            "I'd like forty-eight hours to model this before we commit.",
+            "The process worked, barely. We should tighten it."
+          ],
+          "low": [
+            "We're making decisions faster than we can verify them.",
+            "I keep flagging risks that get overruled without a counter-model."
+          ],
+          "critical": [
+            "I can't certify a process I don't believe in anymore.",
+            "At some point the data stops mattering if nobody reads it."
+          ]
         },
-        "specialAbility": { "name": "Contingency Protocol", "description": "Once per term, CoS Chen can activate a pre-modeled crisis response, reducing an active conflict's escalation risk and boosting security +5. Requires relationship above 65.", "usesPerTerm": 1, "requiresRelationship": 65, "playerActivated": true },
-        "traits": { "loyalty": 60, "ambition": 40, "integrity": 80, "politicalSkill": 50, "stress": 35, "ideology": 50 },
+        "specialAbility": {
+          "name": "Contingency Protocol",
+          "description": "Once per term, CoS Chen can activate a pre-modeled crisis response, reducing an active conflict's escalation risk and boosting security +5. Requires relationship above 65.",
+          "usesPerTerm": 1,
+          "requiresRelationship": 65,
+          "playerActivated": true
+        },
+        "traits": {
+          "loyalty": 60,
+          "ambition": 40,
+          "integrity": 80,
+          "politicalSkill": 50,
+          "stress": 35,
+          "ideology": 50
+        },
         "goal": "Wants every major decision run through data and process before it's made.",
         "goalTag": "process_discipline",
         "breakingPoint": "Will not stay silent when a decision ignores the data he's presented.",
         "breakingPointTag": "ignored_data",
-        "startingBonus": { "security": 2, "economy": 1 }
+        "startingBonus": {
+          "security": 2,
+          "economy": 1
+        },
+        "image": "/npcs/chief_of_staff_chen_cos.png"
       }
     ]
   },
@@ -222,28 +560,84 @@
         "personality": {
           "archetype": "The Hawk",
           "description": "Four-star general turned Cabinet secretary. Briggs believes the other side only respects overwhelming force and reads any hesitation as an invitation. He wants bigger budgets, forward deployments, and no apologies.",
-          "traits": ["believes in overwhelming force", "distrusts arms control", "beloved by hardliners", "impatient with restraint"]
+          "traits": [
+            "believes in overwhelming force",
+            "distrusts arms control",
+            "beloved by hardliners",
+            "impatient with restraint"
+          ]
         },
-        "relationship": { "start": 60, "min": 10, "max": 100 },
+        "relationship": {
+          "start": 60,
+          "min": 10,
+          "max": 100
+        },
         "triggers": {
-          "onLowRelationship": { "threshold": 30, "event": "SecDef Briggs testifies to Congress that the White House is 'tying the Pentagon's hands'", "securityDelta": -5 },
-          "onVeryLowRelationship": { "threshold": 18, "event": "SecDef Briggs resigns in protest of what he calls 'strategic timidity'", "securityDelta": -8, "approvalDelta": -4 },
-          "onHighRelationship": { "threshold": 80, "benefit": "Briggs's forward posture deters a probing adversary move before it starts", "securityBonus": 6 }
+          "onLowRelationship": {
+            "threshold": 30,
+            "event": "SecDef Briggs testifies to Congress that the White House is 'tying the Pentagon's hands'",
+            "securityDelta": -5
+          },
+          "onVeryLowRelationship": {
+            "threshold": 18,
+            "event": "SecDef Briggs resigns in protest of what he calls 'strategic timidity'",
+            "securityDelta": -8,
+            "approvalDelta": -4
+          },
+          "onHighRelationship": {
+            "threshold": 80,
+            "benefit": "Briggs's forward posture deters a probing adversary move before it starts",
+            "securityBonus": 6
+          }
         },
-        "relationshipDeltas": { "military_buildup": 8, "arms_treaty_signed": -6, "war_declared": 6, "diplomatic_breakthrough": -4 },
+        "relationshipDeltas": {
+          "military_buildup": 8,
+          "arms_treaty_signed": -6,
+          "war_declared": 6,
+          "diplomatic_breakthrough": -4
+        },
         "monthlyDialogue": {
-          "high": ["The fleet is where it needs to be. They know it too.", "Give me the budget and I'll give you deterrence that actually deters."],
-          "medium": ["I need more than a strongly worded statement backing this up.", "The Joint Chiefs are patient. That patience isn't infinite."],
-          "low": ["We are broadcasting weakness and calling it diplomacy.", "I've watched three administrations make this exact mistake."],
-          "critical": ["I will not sign off on a posture I believe gets people killed.", "There is a difference between restraint and retreat. We've crossed it."]
+          "high": [
+            "The fleet is where it needs to be. They know it too.",
+            "Give me the budget and I'll give you deterrence that actually deters."
+          ],
+          "medium": [
+            "I need more than a strongly worded statement backing this up.",
+            "The Joint Chiefs are patient. That patience isn't infinite."
+          ],
+          "low": [
+            "We are broadcasting weakness and calling it diplomacy.",
+            "I've watched three administrations make this exact mistake."
+          ],
+          "critical": [
+            "I will not sign off on a posture I believe gets people killed.",
+            "There is a difference between restraint and retreat. We've crossed it."
+          ]
         },
-        "specialAbility": { "name": "Forward Deployment", "description": "Once per term, SecDef Briggs can order a forward military posture that boosts security +7 and deters an active conflict. Requires relationship above 60.", "usesPerTerm": 1, "requiresRelationship": 60, "playerActivated": true },
-        "traits": { "loyalty": 60, "ambition": 55, "integrity": 75, "politicalSkill": 45, "stress": 50, "ideology": 85 },
+        "specialAbility": {
+          "name": "Forward Deployment",
+          "description": "Once per term, SecDef Briggs can order a forward military posture that boosts security +7 and deters an active conflict. Requires relationship above 60.",
+          "usesPerTerm": 1,
+          "requiresRelationship": 60,
+          "playerActivated": true
+        },
+        "traits": {
+          "loyalty": 60,
+          "ambition": 55,
+          "integrity": 75,
+          "politicalSkill": 45,
+          "stress": 50,
+          "ideology": 85
+        },
         "goal": "Wants sustained military buildup and a forward, unapologetic defense posture.",
         "goalTag": "military_buildup",
         "breakingPoint": "Will not defend a posture he believes leaves the country militarily exposed.",
         "breakingPointTag": "military_weakness",
-        "startingBonus": { "militaryReadiness": 4, "security": 2 }
+        "startingBonus": {
+          "militaryReadiness": 4,
+          "security": 2
+        },
+        "image": "/npcs/sec_defense_briggs_sd.png"
       },
       {
         "candidateId": "okonkwo_sd",
@@ -254,28 +648,84 @@
         "personality": {
           "archetype": "The Strategist",
           "description": "A RAND-trained analyst before the Pentagon, Okonkwo thinks in deterrence math, not gut instinct. She believes a credible, verifiable balance of power is more stable than an arms race nobody can win outright.",
-          "traits": ["thinks in deterrence equations", "favors verifiable arms control", "distrusts impulsive escalation", "respected by both hawks and doves"]
+          "traits": [
+            "thinks in deterrence equations",
+            "favors verifiable arms control",
+            "distrusts impulsive escalation",
+            "respected by both hawks and doves"
+          ]
         },
-        "relationship": { "start": 60, "min": 10, "max": 100 },
+        "relationship": {
+          "start": 60,
+          "min": 10,
+          "max": 100
+        },
         "triggers": {
-          "onLowRelationship": { "threshold": 30, "event": "SecDef Okonkwo warns privately that current posture is 'strategically incoherent'", "securityDelta": -4 },
-          "onVeryLowRelationship": { "threshold": 18, "event": "SecDef Okonkwo resigns, citing 'a strategy with no theory behind it'", "securityDelta": -6, "globalReputationDelta": -4 },
-          "onHighRelationship": { "threshold": 80, "benefit": "Okonkwo's calibrated posture stabilizes a tense standoff without escalation", "securityBonus": 5 }
+          "onLowRelationship": {
+            "threshold": 30,
+            "event": "SecDef Okonkwo warns privately that current posture is 'strategically incoherent'",
+            "securityDelta": -4
+          },
+          "onVeryLowRelationship": {
+            "threshold": 18,
+            "event": "SecDef Okonkwo resigns, citing 'a strategy with no theory behind it'",
+            "securityDelta": -6,
+            "globalReputationDelta": -4
+          },
+          "onHighRelationship": {
+            "threshold": 80,
+            "benefit": "Okonkwo's calibrated posture stabilizes a tense standoff without escalation",
+            "securityBonus": 5
+          }
         },
-        "relationshipDeltas": { "arms_treaty_signed": 7, "military_buildup": 3, "war_declared": -6, "diplomatic_breakthrough": 5 },
+        "relationshipDeltas": {
+          "arms_treaty_signed": 7,
+          "military_buildup": 3,
+          "war_declared": -6,
+          "diplomatic_breakthrough": 5
+        },
         "monthlyDialogue": {
-          "high": ["The models support this posture. It's stable and it's credible.", "We don't need to be the loudest. We need to be the most predictable."],
-          "medium": ["I'd like to run this through the models before we commit.", "There's a calibrated middle path here if we're patient."],
-          "low": ["We're making moves the models say increase miscalculation risk.", "Deterrence isn't about noise. I keep saying this."],
-          "critical": ["I cannot certify a posture I believe increases the odds of war.", "The math doesn't support this. I've shown you the math."]
+          "high": [
+            "The models support this posture. It's stable and it's credible.",
+            "We don't need to be the loudest. We need to be the most predictable."
+          ],
+          "medium": [
+            "I'd like to run this through the models before we commit.",
+            "There's a calibrated middle path here if we're patient."
+          ],
+          "low": [
+            "We're making moves the models say increase miscalculation risk.",
+            "Deterrence isn't about noise. I keep saying this."
+          ],
+          "critical": [
+            "I cannot certify a posture I believe increases the odds of war.",
+            "The math doesn't support this. I've shown you the math."
+          ]
         },
-        "specialAbility": { "name": "Calibrated Deterrence", "description": "Once per term, SecDef Okonkwo can stabilize an escalating conflict through precisely calibrated posture, boosting security +5 and globalReputation +3. Requires relationship above 60.", "usesPerTerm": 1, "requiresRelationship": 60, "playerActivated": true },
-        "traits": { "loyalty": 60, "ambition": 50, "integrity": 85, "politicalSkill": 60, "stress": 45, "ideology": 45 },
+        "specialAbility": {
+          "name": "Calibrated Deterrence",
+          "description": "Once per term, SecDef Okonkwo can stabilize an escalating conflict through precisely calibrated posture, boosting security +5 and globalReputation +3. Requires relationship above 60.",
+          "usesPerTerm": 1,
+          "requiresRelationship": 60,
+          "playerActivated": true
+        },
+        "traits": {
+          "loyalty": 60,
+          "ambition": 50,
+          "integrity": 85,
+          "politicalSkill": 60,
+          "stress": 45,
+          "ideology": 45
+        },
         "goal": "Wants a calibrated, verifiable balance of power over unrestrained buildup.",
         "goalTag": "strategic_stability",
         "breakingPoint": "Will not certify a posture her models say meaningfully increases the risk of war.",
         "breakingPointTag": "reckless_escalation",
-        "startingBonus": { "security": 2, "globalReputation": 2 }
+        "startingBonus": {
+          "security": 2,
+          "globalReputation": 2
+        },
+        "image": "/npcs/sec_defense_okonkwo_sd.png"
       },
       {
         "candidateId": "delgado_sd",
@@ -286,28 +736,83 @@
         "personality": {
           "archetype": "The Modernizer",
           "description": "Delgado came up through aerospace procurement and thinks the next war is won with better technology, not more of the same. He wants the Pentagon's budget spent on satellites, rockets, and computing — not another division of infantry.",
-          "traits": ["obsessed with technological edge", "impatient with legacy programs", "space-race minded", "clashes with old-guard brass"]
+          "traits": [
+            "obsessed with technological edge",
+            "impatient with legacy programs",
+            "space-race minded",
+            "clashes with old-guard brass"
+          ]
         },
-        "relationship": { "start": 60, "min": 10, "max": 100 },
+        "relationship": {
+          "start": 60,
+          "min": 10,
+          "max": 100
+        },
         "triggers": {
-          "onLowRelationship": { "threshold": 30, "event": "SecDef Delgado warns the country is 'falling behind in the technologies that will decide the next war'", "securityDelta": -4 },
-          "onVeryLowRelationship": { "threshold": 18, "event": "SecDef Delgado resigns, calling current spending 'a monument to the last war, not the next one'", "securityDelta": -6 },
-          "onHighRelationship": { "threshold": 80, "benefit": "Delgado's modernization push delivers a genuine technological edge", "securityBonus": 5 }
+          "onLowRelationship": {
+            "threshold": 30,
+            "event": "SecDef Delgado warns the country is 'falling behind in the technologies that will decide the next war'",
+            "securityDelta": -4
+          },
+          "onVeryLowRelationship": {
+            "threshold": 18,
+            "event": "SecDef Delgado resigns, calling current spending 'a monument to the last war, not the next one'",
+            "securityDelta": -6
+          },
+          "onHighRelationship": {
+            "threshold": 80,
+            "benefit": "Delgado's modernization push delivers a genuine technological edge",
+            "securityBonus": 5
+          }
         },
-        "relationshipDeltas": { "military_buildup": 4, "infrastructure_passed": 5, "arms_treaty_signed": 2, "debt_above_50t": -3 },
+        "relationshipDeltas": {
+          "military_buildup": 4,
+          "infrastructure_passed": 5,
+          "arms_treaty_signed": 2,
+          "debt_above_50t": -3
+        },
         "monthlyDialogue": {
-          "high": ["The new systems are ahead of schedule. That's the edge we need.", "We're not just bigger anymore. We're better. That matters more."],
-          "medium": ["I need the procurement budget protected if we want to stay ahead.", "Every dollar on legacy hardware is a dollar not on tomorrow's edge."],
-          "low": ["We are funding yesterday's military and hoping it's enough.", "The old guard is fighting me on every modernization line item."],
-          "critical": ["I will not keep defending a budget stuck in the last decade.", "We are going to lose the technology race while arguing about tanks."]
+          "high": [
+            "The new systems are ahead of schedule. That's the edge we need.",
+            "We're not just bigger anymore. We're better. That matters more."
+          ],
+          "medium": [
+            "I need the procurement budget protected if we want to stay ahead.",
+            "Every dollar on legacy hardware is a dollar not on tomorrow's edge."
+          ],
+          "low": [
+            "We are funding yesterday's military and hoping it's enough.",
+            "The old guard is fighting me on every modernization line item."
+          ],
+          "critical": [
+            "I will not keep defending a budget stuck in the last decade.",
+            "We are going to lose the technology race while arguing about tanks."
+          ]
         },
-        "specialAbility": { "name": "Technological Edge", "description": "Once per term, SecDef Delgado can fast-track a modernization program, boosting security +5 and economy +2 through defense-sector investment. Requires relationship above 60.", "usesPerTerm": 1, "requiresRelationship": 60, "playerActivated": true },
-        "traits": { "loyalty": 55, "ambition": 65, "integrity": 65, "politicalSkill": 50, "stress": 45, "ideology": 55 },
+        "specialAbility": {
+          "name": "Technological Edge",
+          "description": "Once per term, SecDef Delgado can fast-track a modernization program, boosting security +5 and economy +2 through defense-sector investment. Requires relationship above 60.",
+          "usesPerTerm": 1,
+          "requiresRelationship": 60,
+          "playerActivated": true
+        },
+        "traits": {
+          "loyalty": 55,
+          "ambition": 65,
+          "integrity": 65,
+          "politicalSkill": 50,
+          "stress": 45,
+          "ideology": 55
+        },
         "goal": "Wants defense spending redirected toward technology and modernization over legacy forces.",
         "goalTag": "military_modernization",
         "breakingPoint": "Will not defend a budget that starves modernization to protect legacy programs.",
         "breakingPointTag": "legacy_spending",
-        "startingBonus": { "security": 2, "economy": 1 }
+        "startingBonus": {
+          "security": 2,
+          "economy": 1
+        },
+        "image": "/npcs/sec_defense_delgado_sd.png"
       }
     ]
   },
@@ -326,28 +831,84 @@
         "personality": {
           "archetype": "The Cold Warrior Economist",
           "description": "Whitfield believes the arms race is also an economic race, and that defense spending is the engine that keeps American industry ahead. He sees every dollar spent on the military as a dollar that also builds factories and jobs at home.",
-          "traits": ["believes defense spending drives growth", "close with defense contractors", "skeptical of domestic-only spending", "combative with fiscal hawks"]
+          "traits": [
+            "believes defense spending drives growth",
+            "close with defense contractors",
+            "skeptical of domestic-only spending",
+            "combative with fiscal hawks"
+          ]
         },
-        "relationship": { "start": 60, "min": 10, "max": 100 },
+        "relationship": {
+          "start": 60,
+          "min": 10,
+          "max": 100
+        },
         "triggers": {
-          "onLowRelationship": { "threshold": 35, "event": "SecTreas Whitfield warns industry leaders the administration is 'starving the arsenal of democracy'", "economyDelta": -3 },
-          "onVeryLowRelationship": { "threshold": 22, "event": "SecTreas Whitfield resigns, saying the administration 'doesn't understand what wins wars'", "economyDelta": -4, "approvalDelta": -3 },
-          "onHighRelationship": { "threshold": 80, "benefit": "Whitfield's industry ties deliver a wave of defense-sector investment", "economyBonus": 4 }
+          "onLowRelationship": {
+            "threshold": 35,
+            "event": "SecTreas Whitfield warns industry leaders the administration is 'starving the arsenal of democracy'",
+            "economyDelta": -3
+          },
+          "onVeryLowRelationship": {
+            "threshold": 22,
+            "event": "SecTreas Whitfield resigns, saying the administration 'doesn't understand what wins wars'",
+            "economyDelta": -4,
+            "approvalDelta": -3
+          },
+          "onHighRelationship": {
+            "threshold": 80,
+            "benefit": "Whitfield's industry ties deliver a wave of defense-sector investment",
+            "economyBonus": 4
+          }
         },
-        "relationshipDeltas": { "military_buildup": 6, "infrastructure_passed": 3, "corporate_tax_raised": -5, "debt_above_50t": 2 },
+        "relationshipDeltas": {
+          "military_buildup": 6,
+          "infrastructure_passed": 3,
+          "corporate_tax_raised": -5,
+          "debt_above_50t": 2
+        },
         "monthlyDialogue": {
-          "high": ["Every shipyard on the coast is running at capacity. That's growth.", "The arsenal of democracy pays its own way. Watch the numbers."],
-          "medium": ["I'd rather fund the contract than the welfare check. Both employ people.", "Industry is watching the budget fight closely. So am I."],
-          "low": ["We're choking the exact spending that keeps this economy ahead.", "I've said this in three meetings — defense spending IS economic policy."],
-          "critical": ["I didn't take this job to watch us fall behind economically too.", "If we keep cutting the arsenal budget, we lose more than security."]
+          "high": [
+            "Every shipyard on the coast is running at capacity. That's growth.",
+            "The arsenal of democracy pays its own way. Watch the numbers."
+          ],
+          "medium": [
+            "I'd rather fund the contract than the welfare check. Both employ people.",
+            "Industry is watching the budget fight closely. So am I."
+          ],
+          "low": [
+            "We're choking the exact spending that keeps this economy ahead.",
+            "I've said this in three meetings — defense spending IS economic policy."
+          ],
+          "critical": [
+            "I didn't take this job to watch us fall behind economically too.",
+            "If we keep cutting the arsenal budget, we lose more than security."
+          ]
         },
-        "specialAbility": { "name": "Arsenal Economy", "description": "Once per term, SecTreas Whitfield can direct a surge of defense-sector investment, boosting economy +6 and security +2. Requires relationship above 60.", "usesPerTerm": 1, "requiresRelationship": 60, "playerActivated": true },
-        "traits": { "loyalty": 55, "ambition": 60, "integrity": 60, "politicalSkill": 55, "stress": 45, "ideology": 70 },
+        "specialAbility": {
+          "name": "Arsenal Economy",
+          "description": "Once per term, SecTreas Whitfield can direct a surge of defense-sector investment, boosting economy +6 and security +2. Requires relationship above 60.",
+          "usesPerTerm": 1,
+          "requiresRelationship": 60,
+          "playerActivated": true
+        },
+        "traits": {
+          "loyalty": 55,
+          "ambition": 60,
+          "integrity": 60,
+          "politicalSkill": 55,
+          "stress": 45,
+          "ideology": 70
+        },
         "goal": "Wants sustained defense spending as the engine of economic growth.",
         "goalTag": "defense_economy",
         "breakingPoint": "Will not defend a budget that cuts defense spending in favor of domestic programs.",
         "breakingPointTag": "defense_cuts",
-        "startingBonus": { "economy": 2, "militaryReadiness": 1 }
+        "startingBonus": {
+          "economy": 2,
+          "militaryReadiness": 1
+        },
+        "image": "/npcs/treasury_secretary_whitfield_ts.png"
       },
       {
         "candidateId": "park_ts",
@@ -358,28 +919,83 @@
         "personality": {
           "archetype": "The New Frontier Economist",
           "description": "Park believes the real Cold War contest is won with highways, laboratories, and universities — public investment that out-builds and out-innovates the other side. She's skeptical that missiles alone can carry an economy.",
-          "traits": ["believes in public investment", "science and infrastructure focused", "optimistic about growth through innovation", "clashes with military-first thinking"]
+          "traits": [
+            "believes in public investment",
+            "science and infrastructure focused",
+            "optimistic about growth through innovation",
+            "clashes with military-first thinking"
+          ]
         },
-        "relationship": { "start": 60, "min": 10, "max": 100 },
+        "relationship": {
+          "start": 60,
+          "min": 10,
+          "max": 100
+        },
         "triggers": {
-          "onLowRelationship": { "threshold": 35, "event": "SecTreas Park warns the administration is 'mortgaging the next generation's competitiveness'", "economyDelta": -3 },
-          "onVeryLowRelationship": { "threshold": 22, "event": "SecTreas Park resigns, saying the administration has 'no plan for the economy of the future'", "economyDelta": -4 },
-          "onHighRelationship": { "threshold": 80, "benefit": "Park's investment agenda starts paying visible economic dividends", "economyBonus": 4 }
+          "onLowRelationship": {
+            "threshold": 35,
+            "event": "SecTreas Park warns the administration is 'mortgaging the next generation's competitiveness'",
+            "economyDelta": -3
+          },
+          "onVeryLowRelationship": {
+            "threshold": 22,
+            "event": "SecTreas Park resigns, saying the administration has 'no plan for the economy of the future'",
+            "economyDelta": -4
+          },
+          "onHighRelationship": {
+            "threshold": 80,
+            "benefit": "Park's investment agenda starts paying visible economic dividends",
+            "economyBonus": 4
+          }
         },
-        "relationshipDeltas": { "infrastructure_passed": 7, "military_buildup": -2, "corporate_tax_raised": 1, "recession_handled_well": 5 },
+        "relationshipDeltas": {
+          "infrastructure_passed": 7,
+          "military_buildup": -2,
+          "corporate_tax_raised": 1,
+          "recession_handled_well": 5
+        },
         "monthlyDialogue": {
-          "high": ["The research labs are producing results ahead of schedule. This is how we win long-term.", "Highways, universities, laboratories — that's the real arms race."],
-          "medium": ["I'd rather fund the lab than the launch pad, if we have to choose.", "Give me room to invest and I'll give you an economy built to last."],
-          "low": ["We're spending like the only thing that matters is this quarter's missile count.", "I keep saying this — we can't out-build them if we don't out-invest them."],
-          "critical": ["I didn't take this job to watch us starve the future to fund the present.", "If we don't invest now, we lose the decade that decides everything."]
+          "high": [
+            "The research labs are producing results ahead of schedule. This is how we win long-term.",
+            "Highways, universities, laboratories — that's the real arms race."
+          ],
+          "medium": [
+            "I'd rather fund the lab than the launch pad, if we have to choose.",
+            "Give me room to invest and I'll give you an economy built to last."
+          ],
+          "low": [
+            "We're spending like the only thing that matters is this quarter's missile count.",
+            "I keep saying this — we can't out-build them if we don't out-invest them."
+          ],
+          "critical": [
+            "I didn't take this job to watch us starve the future to fund the present.",
+            "If we don't invest now, we lose the decade that decides everything."
+          ]
         },
-        "specialAbility": { "name": "New Frontier Investment", "description": "Once per term, SecTreas Park can direct a major public investment surge, boosting economy +6 and reducing debt by $150B. Requires relationship above 60.", "usesPerTerm": 1, "requiresRelationship": 60, "playerActivated": true },
-        "traits": { "loyalty": 55, "ambition": 55, "integrity": 75, "politicalSkill": 55, "stress": 40, "ideology": 30 },
+        "specialAbility": {
+          "name": "New Frontier Investment",
+          "description": "Once per term, SecTreas Park can direct a major public investment surge, boosting economy +6 and reducing debt by $150B. Requires relationship above 60.",
+          "usesPerTerm": 1,
+          "requiresRelationship": 60,
+          "playerActivated": true
+        },
+        "traits": {
+          "loyalty": 55,
+          "ambition": 55,
+          "integrity": 75,
+          "politicalSkill": 55,
+          "stress": 40,
+          "ideology": 30
+        },
         "goal": "Wants sustained public investment in infrastructure, science, and education over military-first spending.",
         "goalTag": "public_investment",
         "breakingPoint": "Will not defend a budget that guts research and infrastructure to fund the arms race.",
         "breakingPointTag": "investment_cuts",
-        "startingBonus": { "economy": 2, "unemployment": -0.1 }
+        "startingBonus": {
+          "economy": 2,
+          "unemployment": -0.1
+        },
+        "image": "/npcs/treasury_secretary_park_ts.png"
       },
       {
         "candidateId": "castellano_ts",
@@ -390,28 +1006,84 @@
         "personality": {
           "archetype": "The Fiscal Hawk",
           "description": "Castellano thinks both the hawks and the New Frontier crowd have the same blind spot: nobody is asking who pays for it. He wants a balanced budget and worries the whole Cold War apparatus is being financed on borrowed time.",
-          "traits": ["obsessed with balanced budgets", "distrusts unlimited spending of any kind", "unpopular with both factions", "the room's designated skeptic"]
+          "traits": [
+            "obsessed with balanced budgets",
+            "distrusts unlimited spending of any kind",
+            "unpopular with both factions",
+            "the room's designated skeptic"
+          ]
         },
-        "relationship": { "start": 60, "min": 10, "max": 100 },
+        "relationship": {
+          "start": 60,
+          "min": 10,
+          "max": 100
+        },
         "triggers": {
-          "onLowRelationship": { "threshold": 35, "event": "SecTreas Castellano warns Congress the debt trajectory is 'unsustainable regardless of the reason'", "approvalDelta": -2 },
-          "onVeryLowRelationship": { "threshold": 22, "event": "SecTreas Castellano resigns, saying he 'won't be the one who signs off on the bill nobody wants to pay'", "economyDelta": -3, "approvalDelta": -3 },
-          "onHighRelationship": { "threshold": 80, "benefit": "Castellano's fiscal discipline reassures markets during a tense standoff", "economyBonus": 4 }
+          "onLowRelationship": {
+            "threshold": 35,
+            "event": "SecTreas Castellano warns Congress the debt trajectory is 'unsustainable regardless of the reason'",
+            "approvalDelta": -2
+          },
+          "onVeryLowRelationship": {
+            "threshold": 22,
+            "event": "SecTreas Castellano resigns, saying he 'won't be the one who signs off on the bill nobody wants to pay'",
+            "economyDelta": -3,
+            "approvalDelta": -3
+          },
+          "onHighRelationship": {
+            "threshold": 80,
+            "benefit": "Castellano's fiscal discipline reassures markets during a tense standoff",
+            "economyBonus": 4
+          }
         },
-        "relationshipDeltas": { "debt_above_50t": -6, "military_buildup": -3, "infrastructure_passed": -2, "corporate_tax_raised": 3 },
+        "relationshipDeltas": {
+          "debt_above_50t": -6,
+          "military_buildup": -3,
+          "infrastructure_passed": -2,
+          "corporate_tax_raised": 3
+        },
         "monthlyDialogue": {
-          "high": ["The books are in order for the first time in years. That buys us options.", "Discipline now means we can afford to fight later if we truly have to."],
-          "medium": ["Every new program needs an offset. I will keep saying this.", "I'm not against strength. I'm against strength we can't pay for."],
-          "low": ["Nobody in this administration wants to talk about the bill coming due.", "We are financing a permanent emergency and calling it normal."],
-          "critical": ["I will not certify a budget I believe is fiscally reckless.", "At some point the debt itself becomes the national security threat."]
+          "high": [
+            "The books are in order for the first time in years. That buys us options.",
+            "Discipline now means we can afford to fight later if we truly have to."
+          ],
+          "medium": [
+            "Every new program needs an offset. I will keep saying this.",
+            "I'm not against strength. I'm against strength we can't pay for."
+          ],
+          "low": [
+            "Nobody in this administration wants to talk about the bill coming due.",
+            "We are financing a permanent emergency and calling it normal."
+          ],
+          "critical": [
+            "I will not certify a budget I believe is fiscally reckless.",
+            "At some point the debt itself becomes the national security threat."
+          ]
         },
-        "specialAbility": { "name": "Fiscal Discipline", "description": "Once per term, SecTreas Castellano can force a debt-reduction package through, cutting $300B in debt at a one-time approval cost. Requires relationship above 60.", "usesPerTerm": 1, "requiresRelationship": 60, "playerActivated": true },
-        "traits": { "loyalty": 50, "ambition": 40, "integrity": 85, "politicalSkill": 45, "stress": 50, "ideology": 60 },
+        "specialAbility": {
+          "name": "Fiscal Discipline",
+          "description": "Once per term, SecTreas Castellano can force a debt-reduction package through, cutting $300B in debt at a one-time approval cost. Requires relationship above 60.",
+          "usesPerTerm": 1,
+          "requiresRelationship": 60,
+          "playerActivated": true
+        },
+        "traits": {
+          "loyalty": 50,
+          "ambition": 40,
+          "integrity": 85,
+          "politicalSkill": 45,
+          "stress": 50,
+          "ideology": 60
+        },
         "goal": "Wants the budget balanced and the debt trajectory brought under control, regardless of the spending's stated purpose.",
         "goalTag": "fiscal_discipline",
         "breakingPoint": "Will not sign off on a budget he considers fiscally reckless, hawk or dove.",
         "breakingPointTag": "reckless_spending",
-        "startingBonus": { "debt": -1, "economy": 1 }
+        "startingBonus": {
+          "debt": -1,
+          "economy": 1
+        },
+        "image": "/npcs/treasury_secretary_castellano_ts.png"
       }
     ]
   },
@@ -430,28 +1102,85 @@
         "personality": {
           "archetype": "The Civil Rights Enforcer",
           "description": "Freeman spent a decade litigating voting-rights cases before this job and sees federal enforcement of civil rights as the unfinished business of the country's founding promises. He is patient with process and immovable on principle.",
-          "traits": ["dedicated to civil rights enforcement", "meticulous litigator", "patient but immovable", "clashes with states'-rights hardliners"]
+          "traits": [
+            "dedicated to civil rights enforcement",
+            "meticulous litigator",
+            "patient but immovable",
+            "clashes with states'-rights hardliners"
+          ]
         },
-        "relationship": { "start": 55, "min": 10, "max": 100 },
+        "relationship": {
+          "start": 55,
+          "min": 10,
+          "max": 100
+        },
         "triggers": {
-          "onLowRelationship": { "threshold": 30, "event": "AG Freeman tells civil rights leaders enforcement has 'stalled at the top'", "unrestDelta": 4, "baseSupportDelta": -3 },
-          "onVeryLowRelationship": { "threshold": 18, "event": "AG Freeman resigns, saying he 'cannot enforce laws this administration won't back'", "approvalDelta": -5, "unrestDelta": 5 },
-          "onHighRelationship": { "threshold": 80, "benefit": "Freeman's enforcement record earns broad institutional trust", "globalReputationBonus": 4 }
+          "onLowRelationship": {
+            "threshold": 30,
+            "event": "AG Freeman tells civil rights leaders enforcement has 'stalled at the top'",
+            "unrestDelta": 4,
+            "baseSupportDelta": -3
+          },
+          "onVeryLowRelationship": {
+            "threshold": 18,
+            "event": "AG Freeman resigns, saying he 'cannot enforce laws this administration won't back'",
+            "approvalDelta": -5,
+            "unrestDelta": 5
+          },
+          "onHighRelationship": {
+            "threshold": 80,
+            "benefit": "Freeman's enforcement record earns broad institutional trust",
+            "globalReputationBonus": 4
+          }
         },
-        "relationshipDeltas": { "progressive_bill_passed": 6, "protest_leader_ally": 6, "conservative_bill_passed": -4, "executive_overreach": -5 },
+        "relationshipDeltas": {
+          "progressive_bill_passed": 6,
+          "protest_leader_ally": 6,
+          "conservative_bill_passed": -4,
+          "executive_overreach": -5
+        },
         "monthlyDialogue": {
-          "high": ["The enforcement numbers are up and the courts are backing us. Good work.", "This is the unfinished business of the country. I take it seriously."],
-          "medium": ["I need the department fully staffed if enforcement is going to hold.", "The states are testing us. We need to hold the line."],
-          "low": ["We are letting enforcement slide in places that matter most.", "I keep filing the cases. I need the administration behind them."],
-          "critical": ["I will not preside over an enforcement retreat.", "History is watching what we do here, and I intend to be on the right side of it."]
+          "high": [
+            "The enforcement numbers are up and the courts are backing us. Good work.",
+            "This is the unfinished business of the country. I take it seriously."
+          ],
+          "medium": [
+            "I need the department fully staffed if enforcement is going to hold.",
+            "The states are testing us. We need to hold the line."
+          ],
+          "low": [
+            "We are letting enforcement slide in places that matter most.",
+            "I keep filing the cases. I need the administration behind them."
+          ],
+          "critical": [
+            "I will not preside over an enforcement retreat.",
+            "History is watching what we do here, and I intend to be on the right side of it."
+          ]
         },
-        "specialAbility": { "name": "Federal Enforcement Surge", "description": "Once per term, AG Freeman can direct a surge of federal civil-rights enforcement, reducing unrest -6 and boosting globalReputation +3. Requires relationship above 55.", "usesPerTerm": 1, "requiresRelationship": 55, "playerActivated": true },
-        "traits": { "loyalty": 60, "ambition": 45, "integrity": 90, "politicalSkill": 55, "stress": 50, "ideology": 20 },
+        "specialAbility": {
+          "name": "Federal Enforcement Surge",
+          "description": "Once per term, AG Freeman can direct a surge of federal civil-rights enforcement, reducing unrest -6 and boosting globalReputation +3. Requires relationship above 55.",
+          "usesPerTerm": 1,
+          "requiresRelationship": 55,
+          "playerActivated": true
+        },
+        "traits": {
+          "loyalty": 60,
+          "ambition": 45,
+          "integrity": 90,
+          "politicalSkill": 55,
+          "stress": 50,
+          "ideology": 20
+        },
         "goal": "Wants sustained, muscular federal enforcement of civil rights, whatever the political cost.",
         "goalTag": "civil_rights_enforcement",
         "breakingPoint": "Will not soften enforcement to placate states resisting federal civil rights law.",
         "breakingPointTag": "enforcement_retreat",
-        "startingBonus": { "globalReputation": 2, "unrest": -1 }
+        "startingBonus": {
+          "globalReputation": 2,
+          "unrest": -1
+        },
+        "image": "/npcs/attorney_general_freeman_ag.png"
       },
       {
         "candidateId": "boyle_ag",
@@ -462,28 +1191,84 @@
         "personality": {
           "archetype": "The Law-and-Order Traditionalist",
           "description": "A former big-city prosecutor, Boyle believes public order is the precondition for everything else the administration wants to do. He worries rising unrest at home is as dangerous, in its way, as anything happening overseas.",
-          "traits": ["prioritizes public order", "tough-on-crime instincts", "wary of unrest spiraling", "clashes with civil-liberties advocates"]
+          "traits": [
+            "prioritizes public order",
+            "tough-on-crime instincts",
+            "wary of unrest spiraling",
+            "clashes with civil-liberties advocates"
+          ]
         },
-        "relationship": { "start": 55, "min": 10, "max": 100 },
+        "relationship": {
+          "start": 55,
+          "min": 10,
+          "max": 100
+        },
         "triggers": {
-          "onLowRelationship": { "threshold": 30, "event": "AG Boyle warns publicly that 'disorder is being tolerated at the highest levels'", "unrestDelta": 3 },
-          "onVeryLowRelationship": { "threshold": 18, "event": "AG Boyle resigns, saying the administration has 'lost control of the streets and the narrative'", "approvalDelta": -4, "unrestDelta": 5 },
-          "onHighRelationship": { "threshold": 80, "benefit": "Boyle's order-first approach calms a period of rising unrest", "unrestBonus": -6 }
+          "onLowRelationship": {
+            "threshold": 30,
+            "event": "AG Boyle warns publicly that 'disorder is being tolerated at the highest levels'",
+            "unrestDelta": 3
+          },
+          "onVeryLowRelationship": {
+            "threshold": 18,
+            "event": "AG Boyle resigns, saying the administration has 'lost control of the streets and the narrative'",
+            "approvalDelta": -4,
+            "unrestDelta": 5
+          },
+          "onHighRelationship": {
+            "threshold": 80,
+            "benefit": "Boyle's order-first approach calms a period of rising unrest",
+            "unrestBonus": -6
+          }
         },
-        "relationshipDeltas": { "conservative_bill_passed": 5, "unrest_above_60": 3, "progressive_bill_passed": -3, "protest_leader_ally": -4 },
+        "relationshipDeltas": {
+          "conservative_bill_passed": 5,
+          "unrest_above_60": 3,
+          "progressive_bill_passed": -3,
+          "protest_leader_ally": -4
+        },
         "monthlyDialogue": {
-          "high": ["Crime is down, the streets are calmer, and Congress notices.", "Order first. Everything else gets easier once you have it."],
-          "medium": ["I need more resources if we want to keep the streets calm.", "The base wants to see order restored. I share the concern."],
-          "low": ["We are letting disorder spread and calling it patience.", "I've raised this concern three times without real action."],
-          "critical": ["I will not preside over a Justice Department that looks powerless.", "At some point restraint starts looking like abdication."]
+          "high": [
+            "Crime is down, the streets are calmer, and Congress notices.",
+            "Order first. Everything else gets easier once you have it."
+          ],
+          "medium": [
+            "I need more resources if we want to keep the streets calm.",
+            "The base wants to see order restored. I share the concern."
+          ],
+          "low": [
+            "We are letting disorder spread and calling it patience.",
+            "I've raised this concern three times without real action."
+          ],
+          "critical": [
+            "I will not preside over a Justice Department that looks powerless.",
+            "At some point restraint starts looking like abdication."
+          ]
         },
-        "specialAbility": { "name": "Order Restored", "description": "Once per term, AG Boyle can direct a major law-enforcement surge, reducing unrest -8 at a cost to globalReputation. Requires relationship above 55.", "usesPerTerm": 1, "requiresRelationship": 55, "playerActivated": true },
-        "traits": { "loyalty": 55, "ambition": 55, "integrity": 65, "politicalSkill": 60, "stress": 50, "ideology": 75 },
+        "specialAbility": {
+          "name": "Order Restored",
+          "description": "Once per term, AG Boyle can direct a major law-enforcement surge, reducing unrest -8 at a cost to globalReputation. Requires relationship above 55.",
+          "usesPerTerm": 1,
+          "requiresRelationship": 55,
+          "playerActivated": true
+        },
+        "traits": {
+          "loyalty": 55,
+          "ambition": 55,
+          "integrity": 65,
+          "politicalSkill": 60,
+          "stress": 50,
+          "ideology": 75
+        },
         "goal": "Wants public order prioritized above all else, including civil-liberties concerns.",
         "goalTag": "public_order",
         "breakingPoint": "Will not stay silent while unrest spirals without a forceful response.",
         "breakingPointTag": "unchecked_unrest",
-        "startingBonus": { "unrest": -1, "security": 1 }
+        "startingBonus": {
+          "unrest": -1,
+          "security": 1
+        },
+        "image": "/npcs/attorney_general_boyle_ag.png"
       },
       {
         "candidateId": "levinson_ag",
@@ -494,28 +1279,84 @@
         "personality": {
           "archetype": "The Constitutional Scholar",
           "description": "A former law professor, Levinson worries less about the other side of the world and more about what a permanent state of emergency does to the country's own institutions. She is the cabinet member most likely to ask 'is this legal' out loud.",
-          "traits": ["worried about executive overreach", "constitutionally rigorous", "unpopular in a crisis room", "principled to a fault"]
+          "traits": [
+            "worried about executive overreach",
+            "constitutionally rigorous",
+            "unpopular in a crisis room",
+            "principled to a fault"
+          ]
         },
-        "relationship": { "start": 55, "min": 10, "max": 100 },
+        "relationship": {
+          "start": 55,
+          "min": 10,
+          "max": 100
+        },
         "triggers": {
-          "onLowRelationship": { "threshold": 30, "event": "AG Levinson warns colleagues the administration is 'normalizing emergency powers'", "globalReputationDelta": -3 },
-          "onVeryLowRelationship": { "threshold": 18, "event": "AG Levinson resigns, citing 'a pattern of executive overreach I cannot certify as lawful'", "approvalDelta": -5, "congressSupportDelta": -4 },
-          "onHighRelationship": { "threshold": 80, "benefit": "Levinson's rigorous legal defense holds up a contested policy in court", "congressSupportBonus": 4 }
+          "onLowRelationship": {
+            "threshold": 30,
+            "event": "AG Levinson warns colleagues the administration is 'normalizing emergency powers'",
+            "globalReputationDelta": -3
+          },
+          "onVeryLowRelationship": {
+            "threshold": 18,
+            "event": "AG Levinson resigns, citing 'a pattern of executive overreach I cannot certify as lawful'",
+            "approvalDelta": -5,
+            "congressSupportDelta": -4
+          },
+          "onHighRelationship": {
+            "threshold": 80,
+            "benefit": "Levinson's rigorous legal defense holds up a contested policy in court",
+            "congressSupportBonus": 4
+          }
         },
-        "relationshipDeltas": { "executive_overreach": -8, "arms_treaty_signed": 3, "bipartisan_bill_passed": 4, "conservative_bill_passed": -2 },
+        "relationshipDeltas": {
+          "executive_overreach": -8,
+          "arms_treaty_signed": 3,
+          "bipartisan_bill_passed": 4,
+          "conservative_bill_passed": -2
+        },
         "monthlyDialogue": {
-          "high": ["The legal foundation here is solid. I checked it myself.", "We did this the right way. That matters more than people think."],
-          "medium": ["I'd like more time to make sure this survives a court challenge.", "I'm not saying no. I'm saying let's do it lawfully."],
-          "low": ["We keep reaching for emergency powers that were meant to be rare.", "I've flagged the legal exposure here more than once."],
-          "critical": ["I cannot certify this as lawful, and I won't pretend otherwise.", "There is a Constitution under all of this, and it still applies."]
+          "high": [
+            "The legal foundation here is solid. I checked it myself.",
+            "We did this the right way. That matters more than people think."
+          ],
+          "medium": [
+            "I'd like more time to make sure this survives a court challenge.",
+            "I'm not saying no. I'm saying let's do it lawfully."
+          ],
+          "low": [
+            "We keep reaching for emergency powers that were meant to be rare.",
+            "I've flagged the legal exposure here more than once."
+          ],
+          "critical": [
+            "I cannot certify this as lawful, and I won't pretend otherwise.",
+            "There is a Constitution under all of this, and it still applies."
+          ]
         },
-        "specialAbility": { "name": "Constitutional Shield", "description": "Once per term, AG Levinson can mount an ironclad legal defense of a contested policy, boosting congressSupport +6 and preventing a scandal escalation. Requires relationship above 55.", "usesPerTerm": 1, "requiresRelationship": 55, "playerActivated": true },
-        "traits": { "loyalty": 55, "ambition": 35, "integrity": 95, "politicalSkill": 50, "stress": 45, "ideology": 35 },
+        "specialAbility": {
+          "name": "Constitutional Shield",
+          "description": "Once per term, AG Levinson can mount an ironclad legal defense of a contested policy, boosting congressSupport +6 and preventing a scandal escalation. Requires relationship above 55.",
+          "usesPerTerm": 1,
+          "requiresRelationship": 55,
+          "playerActivated": true
+        },
+        "traits": {
+          "loyalty": 55,
+          "ambition": 35,
+          "integrity": 95,
+          "politicalSkill": 50,
+          "stress": 45,
+          "ideology": 35
+        },
         "goal": "Wants every use of emergency or executive power grounded in clear legal authority.",
         "goalTag": "constitutional_restraint",
         "breakingPoint": "Will not certify an action she believes exceeds lawful executive authority.",
         "breakingPointTag": "unlawful_overreach",
-        "startingBonus": { "congressSupport": 2, "globalReputation": 1 }
+        "startingBonus": {
+          "congressSupport": 2,
+          "globalReputation": 1
+        },
+        "image": "/npcs/attorney_general_levinson_ag.png"
       }
     ]
   },
@@ -530,22 +1371,71 @@
     "personality": {
       "archetype": "The Transactional Power Player",
       "description": "Ashby has held the gavel through two administrations by never being the true believer in the room. He trades votes like currency and remembers every debt owed to him. Cold War or not, his politics are entirely local.",
-      "traits": ["transactional", "excellent memory for debts", "no fixed ideology", "protects his majority above all"]
+      "traits": [
+        "transactional",
+        "excellent memory for debts",
+        "no fixed ideology",
+        "protects his majority above all"
+      ]
     },
-    "relationship": { "start": 45, "min": 5, "max": 95 },
+    "relationship": {
+      "start": 45,
+      "min": 5,
+      "max": 95
+    },
     "triggers": {
-      "onLowRelationship": { "threshold": 30, "event": "Speaker Ashby schedules competing legislation that undercuts your priority bill", "congressSupportDelta": -8, "billPassPenalty": 15 },
-      "onVeryLowRelationship": { "threshold": 18, "event": "Speaker Ashby announces he will not bring your priority bill to the floor", "congressSupportDelta": -15, "billBlocked": true },
-      "onHighRelationship": { "threshold": 75, "benefit": "Speaker Ashby fast-tracks your priority bill and delivers crossover votes", "billBonus": 20, "crossoverVotes": 5 }
+      "onLowRelationship": {
+        "threshold": 30,
+        "event": "Speaker Ashby schedules competing legislation that undercuts your priority bill",
+        "congressSupportDelta": -8,
+        "billPassPenalty": 15
+      },
+      "onVeryLowRelationship": {
+        "threshold": 18,
+        "event": "Speaker Ashby announces he will not bring your priority bill to the floor",
+        "congressSupportDelta": -15,
+        "billBlocked": true
+      },
+      "onHighRelationship": {
+        "threshold": 75,
+        "benefit": "Speaker Ashby fast-tracks your priority bill and delivers crossover votes",
+        "billBonus": 20,
+        "crossoverVotes": 5
+      }
     },
-    "relationshipDeltas": { "bipartisan_bill_passed": 8, "executive_overreach": -12, "approval_above_58": 5, "military_buildup": 3, "progressive_bill_passed": -6, "conservative_bill_passed": 6 },
+    "relationshipDeltas": {
+      "bipartisan_bill_passed": 8,
+      "executive_overreach": -12,
+      "approval_above_58": 5,
+      "military_buildup": 3,
+      "progressive_bill_passed": -6,
+      "conservative_bill_passed": 6
+    },
     "monthlyDialogue": {
-      "high": ["I've got the votes for your bill if you want to move it this month.", "My members are with you on this one. Don't make me regret saying that."],
-      "medium": ["I can bring it to the floor. Whether it passes is a different question.", "My caucus is nervous. You'll need to make some calls."],
-      "low": ["I'm not in a position to move on this right now.", "You need to understand the reality in the House before you promise anything."],
-      "critical": ["I've told my members I'm not moving this forward. That's final.", "The votes aren't there. They won't be there. We need a different plan."]
+      "high": [
+        "I've got the votes for your bill if you want to move it this month.",
+        "My members are with you on this one. Don't make me regret saying that."
+      ],
+      "medium": [
+        "I can bring it to the floor. Whether it passes is a different question.",
+        "My caucus is nervous. You'll need to make some calls."
+      ],
+      "low": [
+        "I'm not in a position to move on this right now.",
+        "You need to understand the reality in the House before you promise anything."
+      ],
+      "critical": [
+        "I've told my members I'm not moving this forward. That's final.",
+        "The votes aren't there. They won't be there. We need a different plan."
+      ]
     },
-    "specialAbility": { "name": "Legislative Fast Track", "description": "Once per term, Speaker Ashby can push any bill through the House regardless of congress score, if relationship is above 70.", "usesPerTerm": 1, "requiresRelationship": 70 }
+    "specialAbility": {
+      "name": "Legislative Fast Track",
+      "description": "Once per term, Speaker Ashby can push any bill through the House regardless of congress score, if relationship is above 70.",
+      "usesPerTerm": 1,
+      "requiresRelationship": 70
+    },
+    "image": "/npcs/speaker_ashby.png"
   },
   {
     "id": "senate_leader",
@@ -558,22 +1448,68 @@
     "personality": {
       "archetype": "The Institutionalist",
       "description": "Whitmore came up in a Senate that still prized comity, even as the Cold War made everything feel existential. She believes the institution has to outlast any single crisis, and she'll slow-walk anything that treats the Senate as a rubber stamp.",
-      "traits": ["fiercely protective of Senate norms", "patient to a fault", "skeptical of executive urgency", "respected across the aisle"]
+      "traits": [
+        "fiercely protective of Senate norms",
+        "patient to a fault",
+        "skeptical of executive urgency",
+        "respected across the aisle"
+      ]
     },
-    "relationship": { "start": 50, "min": 5, "max": 95 },
+    "relationship": {
+      "start": 50,
+      "min": 5,
+      "max": 95
+    },
     "triggers": {
-      "onLowRelationship": { "threshold": 30, "event": "Sen. Leader Whitmore slows confirmation of key nominees in protest", "congressSupportDelta": -6 },
-      "onVeryLowRelationship": { "threshold": 18, "event": "Sen. Leader Whitmore publicly accuses the White House of 'treating the Senate as an inconvenience'", "congressSupportDelta": -12, "approvalDelta": -3 },
-      "onHighRelationship": { "threshold": 75, "benefit": "Sen. Leader Whitmore whips a difficult vote across party lines", "billBonus": 18, "crossoverVotes": 4 }
+      "onLowRelationship": {
+        "threshold": 30,
+        "event": "Sen. Leader Whitmore slows confirmation of key nominees in protest",
+        "congressSupportDelta": -6
+      },
+      "onVeryLowRelationship": {
+        "threshold": 18,
+        "event": "Sen. Leader Whitmore publicly accuses the White House of 'treating the Senate as an inconvenience'",
+        "congressSupportDelta": -12,
+        "approvalDelta": -3
+      },
+      "onHighRelationship": {
+        "threshold": 75,
+        "benefit": "Sen. Leader Whitmore whips a difficult vote across party lines",
+        "billBonus": 18,
+        "crossoverVotes": 4
+      }
     },
-    "relationshipDeltas": { "bipartisan_bill_passed": 7, "executive_overreach": -10, "arms_treaty_signed": 6, "military_buildup": -2 },
+    "relationshipDeltas": {
+      "bipartisan_bill_passed": 7,
+      "executive_overreach": -10,
+      "arms_treaty_signed": 6,
+      "military_buildup": -2
+    },
     "monthlyDialogue": {
-      "high": ["The chamber is functioning the way it's supposed to. That's rare enough to note.", "I can get this through if you give the process room to work."],
-      "medium": ["The floor schedule is tight. I need advance notice, not an ultimatum.", "Some of my members need convincing. Give me time."],
-      "low": ["The Senate is not a formality to be worked around.", "I'd have appreciated being consulted before this became public."],
-      "critical": ["I will not rush the chamber to ratify a decision it wasn't part of.", "There's a difference between urgency and disrespect for the institution."]
+      "high": [
+        "The chamber is functioning the way it's supposed to. That's rare enough to note.",
+        "I can get this through if you give the process room to work."
+      ],
+      "medium": [
+        "The floor schedule is tight. I need advance notice, not an ultimatum.",
+        "Some of my members need convincing. Give me time."
+      ],
+      "low": [
+        "The Senate is not a formality to be worked around.",
+        "I'd have appreciated being consulted before this became public."
+      ],
+      "critical": [
+        "I will not rush the chamber to ratify a decision it wasn't part of.",
+        "There's a difference between urgency and disrespect for the institution."
+      ]
     },
-    "specialAbility": { "name": "Cross-Aisle Whip", "description": "Once per term, Sen. Leader Whitmore can guarantee a bill passes with bipartisan support, if relationship is above 70.", "usesPerTerm": 1, "requiresRelationship": 70 }
+    "specialAbility": {
+      "name": "Cross-Aisle Whip",
+      "description": "Once per term, Sen. Leader Whitmore can guarantee a bill passes with bipartisan support, if relationship is above 70.",
+      "usesPerTerm": 1,
+      "requiresRelationship": 70
+    },
+    "image": "/npcs/senate_leader_whitmore.png"
   },
   {
     "id": "opposition_leader",
@@ -586,22 +1522,68 @@
     "personality": {
       "archetype": "The Loyal Adversary",
       "description": "Cole opposes almost everything the administration proposes on principle, but he's careful never to look like he's rooting against the country in a crisis. It's a careful, deliberate balancing act, and he's very good at it.",
-      "traits": ["reflexively oppositional", "careful about appearing unpatriotic", "media-savvy", "genuinely popular with his own base"]
+      "traits": [
+        "reflexively oppositional",
+        "careful about appearing unpatriotic",
+        "media-savvy",
+        "genuinely popular with his own base"
+      ]
     },
-    "relationship": { "start": 25, "min": 0, "max": 90 },
+    "relationship": {
+      "start": 25,
+      "min": 0,
+      "max": 90
+    },
     "triggers": {
-      "onLowRelationship": { "threshold": 15, "event": "Opp. Leader Cole calls for hearings into the administration's handling of a crisis", "approvalDelta": -5, "congressSupportDelta": -6 },
-      "onVeryLowRelationship": { "threshold": 8, "event": "Opp. Leader Cole announces a formal censure resolution", "approvalDelta": -8, "congressSupportDelta": -10 },
-      "onHighRelationship": { "threshold": 55, "benefit": "Opp. Leader Cole publicly credits a bipartisan win, softening opposition attacks", "approvalBonus": 4 }
+      "onLowRelationship": {
+        "threshold": 15,
+        "event": "Opp. Leader Cole calls for hearings into the administration's handling of a crisis",
+        "approvalDelta": -5,
+        "congressSupportDelta": -6
+      },
+      "onVeryLowRelationship": {
+        "threshold": 8,
+        "event": "Opp. Leader Cole announces a formal censure resolution",
+        "approvalDelta": -8,
+        "congressSupportDelta": -10
+      },
+      "onHighRelationship": {
+        "threshold": 55,
+        "benefit": "Opp. Leader Cole publicly credits a bipartisan win, softening opposition attacks",
+        "approvalBonus": 4
+      }
     },
-    "relationshipDeltas": { "bipartisan_bill_passed": 5, "executive_overreach": -8, "scandal_resolved": 3, "active_scandal": -6 },
+    "relationshipDeltas": {
+      "bipartisan_bill_passed": 5,
+      "executive_overreach": -8,
+      "scandal_resolved": 3,
+      "active_scandal": -6
+    },
     "monthlyDialogue": {
-      "high": ["I won't pretend that wasn't a good call. Credit where it's due.", "We disagree on plenty, but that one was handled well."],
-      "medium": ["I'll hold my fire this month. Don't mistake that for approval.", "My caucus is watching this closely. So am I."],
-      "low": ["This administration keeps giving us material, and we'll use it.", "I've been patient. That's wearing thin."],
-      "critical": ["This is exactly the kind of decision that ends administrations.", "I intend to make sure the public sees this clearly."]
+      "high": [
+        "I won't pretend that wasn't a good call. Credit where it's due.",
+        "We disagree on plenty, but that one was handled well."
+      ],
+      "medium": [
+        "I'll hold my fire this month. Don't mistake that for approval.",
+        "My caucus is watching this closely. So am I."
+      ],
+      "low": [
+        "This administration keeps giving us material, and we'll use it.",
+        "I've been patient. That's wearing thin."
+      ],
+      "critical": [
+        "This is exactly the kind of decision that ends administrations.",
+        "I intend to make sure the public sees this clearly."
+      ]
     },
-    "specialAbility": { "name": "Stand Down", "description": "Once per term, if relationship is above 55, Opp. Leader Cole can publicly stand down from an attack, softening a scandal's impact.", "usesPerTerm": 1, "requiresRelationship": 55 }
+    "specialAbility": {
+      "name": "Stand Down",
+      "description": "Once per term, if relationship is above 55, Opp. Leader Cole can publicly stand down from an attack, softening a scandal's impact.",
+      "usesPerTerm": 1,
+      "requiresRelationship": 55
+    },
+    "image": "/npcs/opposition_leader_cole.png"
   },
   {
     "id": "media_anchor",
@@ -614,22 +1596,68 @@
     "personality": {
       "archetype": "The Nightly Voice of Record",
       "description": "In an era when most households get their news from exactly one broadcast a night, Sato's tone shapes public mood more than any single policy. She's not partisan, but she is unforgiving of anything that smells like a cover-up.",
-      "traits": ["enormously influential", "allergic to spin", "rewards candor", "punishes secrecy harshly"]
+      "traits": [
+        "enormously influential",
+        "allergic to spin",
+        "rewards candor",
+        "punishes secrecy harshly"
+      ]
     },
-    "relationship": { "start": 50, "min": 5, "max": 95 },
+    "relationship": {
+      "start": 50,
+      "min": 5,
+      "max": 95
+    },
     "triggers": {
-      "onLowRelationship": { "threshold": 30, "event": "Anchor Sato runs a skeptical special segment questioning administration credibility", "mediaScoreDelta": -0.4, "approvalDelta": -3 },
-      "onVeryLowRelationship": { "threshold": 18, "event": "Anchor Sato's nightly commentary turns openly adversarial", "mediaScoreDelta": -0.6, "approvalDelta": -5 },
-      "onHighRelationship": { "threshold": 75, "benefit": "Anchor Sato's coverage turns favorable, amplifying administration messaging", "mediaScoreBonus": 0.5 }
+      "onLowRelationship": {
+        "threshold": 30,
+        "event": "Anchor Sato runs a skeptical special segment questioning administration credibility",
+        "mediaScoreDelta": -0.4,
+        "approvalDelta": -3
+      },
+      "onVeryLowRelationship": {
+        "threshold": 18,
+        "event": "Anchor Sato's nightly commentary turns openly adversarial",
+        "mediaScoreDelta": -0.6,
+        "approvalDelta": -5
+      },
+      "onHighRelationship": {
+        "threshold": 75,
+        "benefit": "Anchor Sato's coverage turns favorable, amplifying administration messaging",
+        "mediaScoreBonus": 0.5
+      }
     },
-    "relationshipDeltas": { "active_scandal": -8, "scandal_resolved": 5, "diplomatic_breakthrough": 5, "executive_overreach": -6 },
+    "relationshipDeltas": {
+      "active_scandal": -8,
+      "scandal_resolved": 5,
+      "diplomatic_breakthrough": 5,
+      "executive_overreach": -6
+    },
     "monthlyDialogue": {
-      "high": ["Tonight's broadcast was fair to you, and I meant every word of it.", "The public trusts what they see plainly explained. Keep doing that."],
-      "medium": ["I'll report it straight. Don't expect a favor beyond that.", "My viewers are asking sharper questions lately. So am I."],
-      "low": ["The administration's answers tonight didn't hold up under scrutiny.", "I don't enjoy running skeptical segments. I run them when they're earned."],
-      "critical": ["Tonight's broadcast will not be comfortable viewing.", "The public deserves better answers than we've been given."]
+      "high": [
+        "Tonight's broadcast was fair to you, and I meant every word of it.",
+        "The public trusts what they see plainly explained. Keep doing that."
+      ],
+      "medium": [
+        "I'll report it straight. Don't expect a favor beyond that.",
+        "My viewers are asking sharper questions lately. So am I."
+      ],
+      "low": [
+        "The administration's answers tonight didn't hold up under scrutiny.",
+        "I don't enjoy running skeptical segments. I run them when they're earned."
+      ],
+      "critical": [
+        "Tonight's broadcast will not be comfortable viewing.",
+        "The public deserves better answers than we've been given."
+      ]
     },
-    "specialAbility": { "name": "Favorable Segment", "description": "Once per term, if relationship is above 70, Anchor Sato can run a sympathetic feature that boosts approval +6.", "usesPerTerm": 1, "requiresRelationship": 70 }
+    "specialAbility": {
+      "name": "Favorable Segment",
+      "description": "Once per term, if relationship is above 70, Anchor Sato can run a sympathetic feature that boosts approval +6.",
+      "usesPerTerm": 1,
+      "requiresRelationship": 70
+    },
+    "image": "/npcs/media_anchor_sato.png"
   },
   {
     "id": "foreign_ally",
@@ -642,22 +1670,67 @@
     "personality": {
       "archetype": "The Steadfast Ally",
       "description": "Faircross leads a nation whose security depends almost entirely on American commitment, and he never lets a summit pass without a reminder of that fact. He's warm in public and blunt in private about what he needs.",
-      "traits": ["deeply dependent on the alliance", "warm publicly, blunt privately", "values consistency over grand gestures", "easily alarmed by wavering commitment"]
+      "traits": [
+        "deeply dependent on the alliance",
+        "warm publicly, blunt privately",
+        "values consistency over grand gestures",
+        "easily alarmed by wavering commitment"
+      ]
     },
-    "relationship": { "start": 55, "min": 5, "max": 95 },
+    "relationship": {
+      "start": 55,
+      "min": 5,
+      "max": 95
+    },
     "triggers": {
-      "onLowRelationship": { "threshold": 30, "event": "PM Faircross publicly questions whether the alliance commitment still holds", "globalReputationDelta": -6 },
-      "onVeryLowRelationship": { "threshold": 18, "event": "PM Faircross begins openly exploring independent defense arrangements", "globalReputationDelta": -10, "securityDelta": -4 },
-      "onHighRelationship": { "threshold": 75, "benefit": "PM Faircross rallies allied support during a tense standoff", "globalReputationBonus": 6 }
+      "onLowRelationship": {
+        "threshold": 30,
+        "event": "PM Faircross publicly questions whether the alliance commitment still holds",
+        "globalReputationDelta": -6
+      },
+      "onVeryLowRelationship": {
+        "threshold": 18,
+        "event": "PM Faircross begins openly exploring independent defense arrangements",
+        "globalReputationDelta": -10,
+        "securityDelta": -4
+      },
+      "onHighRelationship": {
+        "threshold": 75,
+        "benefit": "PM Faircross rallies allied support during a tense standoff",
+        "globalReputationBonus": 6
+      }
     },
-    "relationshipDeltas": { "military_buildup": 4, "arms_treaty_signed": 5, "diplomatic_breakthrough": 6, "war_declared": -3 },
+    "relationshipDeltas": {
+      "military_buildup": 4,
+      "arms_treaty_signed": 5,
+      "diplomatic_breakthrough": 6,
+      "war_declared": -3
+    },
     "monthlyDialogue": {
-      "high": ["The alliance has never felt sturdier. My people notice that.", "Whatever comes next, we intend to face it together."],
-      "medium": ["I need reassurance that the commitment still holds as stated.", "My parliament is asking questions I'd like better answers to."],
-      "low": ["I'm hearing things from your capital that concern my government.", "Consistency matters more to us than grand gestures. We need it."],
-      "critical": ["I cannot keep defending an alliance that seems to be wavering.", "My government is losing patience with the uncertainty."]
+      "high": [
+        "The alliance has never felt sturdier. My people notice that.",
+        "Whatever comes next, we intend to face it together."
+      ],
+      "medium": [
+        "I need reassurance that the commitment still holds as stated.",
+        "My parliament is asking questions I'd like better answers to."
+      ],
+      "low": [
+        "I'm hearing things from your capital that concern my government.",
+        "Consistency matters more to us than grand gestures. We need it."
+      ],
+      "critical": [
+        "I cannot keep defending an alliance that seems to be wavering.",
+        "My government is losing patience with the uncertainty."
+      ]
     },
-    "specialAbility": { "name": "Allied Solidarity", "description": "Once per term, if relationship is above 70, PM Faircross can rally a coalition of allies behind a contested policy, boosting globalReputation +6.", "usesPerTerm": 1, "requiresRelationship": 70 }
+    "specialAbility": {
+      "name": "Allied Solidarity",
+      "description": "Once per term, if relationship is above 70, PM Faircross can rally a coalition of allies behind a contested policy, boosting globalReputation +6.",
+      "usesPerTerm": 1,
+      "requiresRelationship": 70
+    },
+    "image": "/npcs/foreign_ally_faircross.png"
   },
   {
     "id": "foreign_adversary",
@@ -670,22 +1743,69 @@
     "personality": {
       "archetype": "The Calculating Rival",
       "description": "Rostov plays a long, patient game — probing for weakness, never overcommitting, always leaving himself an exit. He respects strength he can measure and is contemptuous of anything he reads as bluff.",
-      "traits": ["patient and calculating", "respects measurable strength", "contemptuous of perceived bluffing", "will exploit any hesitation"]
+      "traits": [
+        "patient and calculating",
+        "respects measurable strength",
+        "contemptuous of perceived bluffing",
+        "will exploit any hesitation"
+      ]
     },
-    "relationship": { "start": 30, "min": 0, "max": 90 },
+    "relationship": {
+      "start": 30,
+      "min": 0,
+      "max": 90
+    },
     "triggers": {
-      "onLowRelationship": { "threshold": 18, "event": "Premier Rostov orders a provocative military exercise near contested territory", "securityDelta": -6, "unrestDelta": 4 },
-      "onVeryLowRelationship": { "threshold": 10, "event": "Premier Rostov issues a public ultimatum, pushing the standoff toward crisis", "securityDelta": -10, "approvalDelta": -4 },
-      "onHighRelationship": { "threshold": 55, "benefit": "Premier Rostov agrees to a quiet de-escalation after backchannel talks", "securityBonus": 5, "globalReputationBonus": 4 }
+      "onLowRelationship": {
+        "threshold": 18,
+        "event": "Premier Rostov orders a provocative military exercise near contested territory",
+        "securityDelta": -6,
+        "unrestDelta": 4
+      },
+      "onVeryLowRelationship": {
+        "threshold": 10,
+        "event": "Premier Rostov issues a public ultimatum, pushing the standoff toward crisis",
+        "securityDelta": -10,
+        "approvalDelta": -4
+      },
+      "onHighRelationship": {
+        "threshold": 55,
+        "benefit": "Premier Rostov agrees to a quiet de-escalation after backchannel talks",
+        "securityBonus": 5,
+        "globalReputationBonus": 4
+      }
     },
-    "relationshipDeltas": { "arms_treaty_signed": 8, "military_buildup": -5, "diplomatic_breakthrough": 7, "war_declared": -10 },
+    "relationshipDeltas": {
+      "arms_treaty_signed": 8,
+      "military_buildup": -5,
+      "diplomatic_breakthrough": 7,
+      "war_declared": -10
+    },
     "monthlyDialogue": {
-      "high": ["Our negotiators report progress. That is not nothing between us.", "There is room for both our nations to step back from the edge."],
-      "medium": ["We are watching your next move closely. As you should watch ours.", "Restraint on both sides would serve us better than escalation."],
-      "low": ["Your recent posture has not gone unnoticed here.", "We will respond in kind to any perceived provocation."],
-      "critical": ["We will not be lectured on restraint by a nation escalating its own arsenal.", "Do not mistake our patience for weakness."]
+      "high": [
+        "Our negotiators report progress. That is not nothing between us.",
+        "There is room for both our nations to step back from the edge."
+      ],
+      "medium": [
+        "We are watching your next move closely. As you should watch ours.",
+        "Restraint on both sides would serve us better than escalation."
+      ],
+      "low": [
+        "Your recent posture has not gone unnoticed here.",
+        "We will respond in kind to any perceived provocation."
+      ],
+      "critical": [
+        "We will not be lectured on restraint by a nation escalating its own arsenal.",
+        "Do not mistake our patience for weakness."
+      ]
     },
-    "specialAbility": { "name": "Quiet De-escalation", "description": "Once per term, if relationship is above 55, Premier Rostov can agree to a backchannel de-escalation, ending an active conflict's growth and boosting globalReputation +5.", "usesPerTerm": 1, "requiresRelationship": 55 }
+    "specialAbility": {
+      "name": "Quiet De-escalation",
+      "description": "Once per term, if relationship is above 55, Premier Rostov can agree to a backchannel de-escalation, ending an active conflict's growth and boosting globalReputation +5.",
+      "usesPerTerm": 1,
+      "requiresRelationship": 55
+    },
+    "image": "/npcs/foreign_adversary_rostov.png"
   },
   {
     "id": "protest_leader",
@@ -698,22 +1818,68 @@
     "personality": {
       "archetype": "The Movement Organizer",
       "description": "Marsh organizes marches that fill the National Mall and campus sit-ins that make the nightly news, fighting a two-front war for civil rights at home and against the arms race abroad. She has no patience for administrations that treat either as a lower priority.",
-      "traits": ["formidable organizer", "fights on civil rights and anti-war fronts alike", "media-savvy", "unforgiving of broken promises"]
+      "traits": [
+        "formidable organizer",
+        "fights on civil rights and anti-war fronts alike",
+        "media-savvy",
+        "unforgiving of broken promises"
+      ]
     },
-    "relationship": { "start": 40, "min": 5, "max": 95 },
+    "relationship": {
+      "start": 40,
+      "min": 5,
+      "max": 95
+    },
     "triggers": {
-      "onLowRelationship": { "threshold": 25, "event": "Director Marsh calls for a national day of protest against administration policy", "unrestDelta": 8, "approvalDelta": -3 },
-      "onVeryLowRelationship": { "threshold": 15, "event": "Director Marsh's coalition organizes sustained mass demonstrations in the capital", "unrestDelta": 14, "approvalDelta": -6 },
-      "onHighRelationship": { "threshold": 70, "benefit": "Director Marsh publicly credits the administration, calming a period of unrest", "unrestBonus": -8 }
+      "onLowRelationship": {
+        "threshold": 25,
+        "event": "Director Marsh calls for a national day of protest against administration policy",
+        "unrestDelta": 8,
+        "approvalDelta": -3
+      },
+      "onVeryLowRelationship": {
+        "threshold": 15,
+        "event": "Director Marsh's coalition organizes sustained mass demonstrations in the capital",
+        "unrestDelta": 14,
+        "approvalDelta": -6
+      },
+      "onHighRelationship": {
+        "threshold": 70,
+        "benefit": "Director Marsh publicly credits the administration, calming a period of unrest",
+        "unrestBonus": -8
+      }
     },
-    "relationshipDeltas": { "progressive_bill_passed": 8, "arms_treaty_signed": 6, "military_buildup": -5, "conservative_bill_passed": -6 },
+    "relationshipDeltas": {
+      "progressive_bill_passed": 8,
+      "arms_treaty_signed": 6,
+      "military_buildup": -5,
+      "conservative_bill_passed": -6
+    },
     "monthlyDialogue": {
-      "high": ["This is the kind of change we marched for. We noticed.", "The coalition is willing to give this administration real credit."],
-      "medium": ["We're watching closely. Words are not the same as action.", "My people want to believe this administration is listening."],
-      "low": ["We are done waiting patiently for promises to become policy.", "The streets are getting louder because Washington isn't listening."],
-      "critical": ["We will not stand down while this administration ignores us.", "History will remember who stood where when it mattered."]
+      "high": [
+        "This is the kind of change we marched for. We noticed.",
+        "The coalition is willing to give this administration real credit."
+      ],
+      "medium": [
+        "We're watching closely. Words are not the same as action.",
+        "My people want to believe this administration is listening."
+      ],
+      "low": [
+        "We are done waiting patiently for promises to become policy.",
+        "The streets are getting louder because Washington isn't listening."
+      ],
+      "critical": [
+        "We will not stand down while this administration ignores us.",
+        "History will remember who stood where when it mattered."
+      ]
     },
-    "specialAbility": { "name": "Coalition Endorsement", "description": "Once per term, if relationship is above 70, Director Marsh can publicly endorse an administration policy, reducing unrest -10.", "usesPerTerm": 1, "requiresRelationship": 70 }
+    "specialAbility": {
+      "name": "Coalition Endorsement",
+      "description": "Once per term, if relationship is above 70, Director Marsh can publicly endorse an administration policy, reducing unrest -10.",
+      "usesPerTerm": 1,
+      "requiresRelationship": 70
+    },
+    "image": "/npcs/protest_leader_marsh.png"
   },
   {
     "id": "press_secretary",
@@ -726,22 +1892,68 @@
     "personality": {
       "archetype": "The Steady Hand at the Podium",
       "description": "Cole has fielded questions from a press corps that grows more skeptical of official statements with every passing year of the Cold War. He believes credibility is the only currency that matters at that podium, and he protects it fiercely.",
-      "traits": ["fiercely protective of credibility", "calm under hostile questioning", "hates being made to look uninformed", "loyal but not blindly so"]
+      "traits": [
+        "fiercely protective of credibility",
+        "calm under hostile questioning",
+        "hates being made to look uninformed",
+        "loyal but not blindly so"
+      ]
     },
-    "relationship": { "start": 55, "min": 5, "max": 95 },
+    "relationship": {
+      "start": 55,
+      "min": 5,
+      "max": 95
+    },
     "triggers": {
-      "onLowRelationship": { "threshold": 30, "event": "Press Sec. Cole gives a visibly uncomfortable, evasive briefing that draws mockery", "mediaScoreDelta": -0.3, "approvalDelta": -2 },
-      "onVeryLowRelationship": { "threshold": 18, "event": "Press Sec. Cole resigns rather than defend statements he believes are false", "approvalDelta": -6, "mediaScoreDelta": -0.4 },
-      "onHighRelationship": { "threshold": 75, "benefit": "Press Sec. Cole's credibility with the press corps smooths a difficult news cycle", "mediaScoreBonus": 0.4 }
+      "onLowRelationship": {
+        "threshold": 30,
+        "event": "Press Sec. Cole gives a visibly uncomfortable, evasive briefing that draws mockery",
+        "mediaScoreDelta": -0.3,
+        "approvalDelta": -2
+      },
+      "onVeryLowRelationship": {
+        "threshold": 18,
+        "event": "Press Sec. Cole resigns rather than defend statements he believes are false",
+        "approvalDelta": -6,
+        "mediaScoreDelta": -0.4
+      },
+      "onHighRelationship": {
+        "threshold": 75,
+        "benefit": "Press Sec. Cole's credibility with the press corps smooths a difficult news cycle",
+        "mediaScoreBonus": 0.4
+      }
     },
-    "relationshipDeltas": { "active_scandal": -6, "scandal_resolved": 5, "diplomatic_breakthrough": 4, "executive_overreach": -4 },
+    "relationshipDeltas": {
+      "active_scandal": -6,
+      "scandal_resolved": 5,
+      "diplomatic_breakthrough": 4,
+      "executive_overreach": -4
+    },
     "monthlyDialogue": {
-      "high": ["Today's briefing went about as well as they can go. The room believed us.", "I can defend this with a straight face, which counts for a lot."],
-      "medium": ["I need the real story before the press corps finds their own version.", "Give me something honest to work with and I'll make it land."],
-      "low": ["I got worked over at the podium today because I didn't have answers.", "I can't keep defending statements that don't hold up to scrutiny."],
-      "critical": ["I will not go out there and repeat something I believe is false.", "My credibility with that room is the only thing keeping this functional."]
+      "high": [
+        "Today's briefing went about as well as they can go. The room believed us.",
+        "I can defend this with a straight face, which counts for a lot."
+      ],
+      "medium": [
+        "I need the real story before the press corps finds their own version.",
+        "Give me something honest to work with and I'll make it land."
+      ],
+      "low": [
+        "I got worked over at the podium today because I didn't have answers.",
+        "I can't keep defending statements that don't hold up to scrutiny."
+      ],
+      "critical": [
+        "I will not go out there and repeat something I believe is false.",
+        "My credibility with that room is the only thing keeping this functional."
+      ]
     },
-    "specialAbility": { "name": "Command the Room", "description": "Once per term, if relationship is above 70, Press Sec. Cole can deliver a masterful briefing that boosts mediaScore +0.5.", "usesPerTerm": 1, "requiresRelationship": 70 }
+    "specialAbility": {
+      "name": "Command the Room",
+      "description": "Once per term, if relationship is above 70, Press Sec. Cole can deliver a masterful briefing that boosts mediaScore +0.5.",
+      "usesPerTerm": 1,
+      "requiresRelationship": 70
+    },
+    "image": "/npcs/press_secretary_cole.png"
   },
   {
     "id": "first_spouse",
@@ -754,21 +1966,66 @@
     "personality": {
       "archetype": "The Quiet Force",
       "description": "Hayes stays out of policy meetings by design but reads every briefing anyway. Her public causes — literacy, veterans' families, civil defense preparedness — are genuinely her own, and genuinely popular, which makes her one of the administration's most effective, least official assets.",
-      "traits": ["publicly apolitical, privately sharp", "genuinely popular causes", "protective of family and staff", "occasionally overruled and resents it"]
+      "traits": [
+        "publicly apolitical, privately sharp",
+        "genuinely popular causes",
+        "protective of family and staff",
+        "occasionally overruled and resents it"
+      ]
     },
-    "relationship": { "start": 60, "min": 10, "max": 100 },
+    "relationship": {
+      "start": 60,
+      "min": 10,
+      "max": 100
+    },
     "triggers": {
-      "onLowRelationship": { "threshold": 35, "event": "First Spouse Hayes visibly steps back from public appearances", "approvalDelta": -3 },
-      "onVeryLowRelationship": { "threshold": 20, "event": "First Spouse Hayes gives a rare interview hinting at private strain", "approvalDelta": -5, "mediaScoreDelta": -0.2 },
-      "onHighRelationship": { "threshold": 80, "benefit": "First Spouse Hayes's public causes generate a wave of positive coverage", "approvalBonus": 5 }
+      "onLowRelationship": {
+        "threshold": 35,
+        "event": "First Spouse Hayes visibly steps back from public appearances",
+        "approvalDelta": -3
+      },
+      "onVeryLowRelationship": {
+        "threshold": 20,
+        "event": "First Spouse Hayes gives a rare interview hinting at private strain",
+        "approvalDelta": -5,
+        "mediaScoreDelta": -0.2
+      },
+      "onHighRelationship": {
+        "threshold": 80,
+        "benefit": "First Spouse Hayes's public causes generate a wave of positive coverage",
+        "approvalBonus": 5
+      }
     },
-    "relationshipDeltas": { "approval_above_55": 4, "active_scandal": -5, "scandal_resolved": 4, "war_declared": -3 },
+    "relationshipDeltas": {
+      "approval_above_55": 4,
+      "active_scandal": -5,
+      "scandal_resolved": 4,
+      "war_declared": -3
+    },
     "monthlyDialogue": {
-      "high": ["The literacy tour drew a real crowd today. People are paying attention.", "I hear things at those events you don't hear in the briefing room."],
-      "medium": ["I'd like more notice before my schedule gets rearranged for politics.", "The families I meet have real concerns. Someone should listen."],
-      "low": ["I'm being asked to smile through things I don't agree with.", "I have my own causes. I'd like them respected, not just tolerated."],
-      "critical": ["I am not a prop for this administration's image.", "There are things happening in this house I won't stay quiet about forever."]
+      "high": [
+        "The literacy tour drew a real crowd today. People are paying attention.",
+        "I hear things at those events you don't hear in the briefing room."
+      ],
+      "medium": [
+        "I'd like more notice before my schedule gets rearranged for politics.",
+        "The families I meet have real concerns. Someone should listen."
+      ],
+      "low": [
+        "I'm being asked to smile through things I don't agree with.",
+        "I have my own causes. I'd like them respected, not just tolerated."
+      ],
+      "critical": [
+        "I am not a prop for this administration's image.",
+        "There are things happening in this house I won't stay quiet about forever."
+      ]
     },
-    "specialAbility": { "name": "Public Goodwill Tour", "description": "Once per term, if relationship is above 70, First Spouse Hayes can headline a national goodwill tour, boosting approval +6.", "usesPerTerm": 1, "requiresRelationship": 70 }
+    "specialAbility": {
+      "name": "Public Goodwill Tour",
+      "description": "Once per term, if relationship is above 70, First Spouse Hayes can headline a national goodwill tour, boosting approval +6.",
+      "usesPerTerm": 1,
+      "requiresRelationship": 70
+    },
+    "image": "/npcs/first_spouse_hayes.png"
   }
 ]
