@@ -96,10 +96,39 @@ const ROOM_TREATMENTS: Record<string, RoomTreatment> = {
   '/media-coverage-bg.webp':        { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#0a0e14' },
   '/international-affairs-bg.webp': { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#0d1218' },
   '/personnel-matter-bg.webp':      { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#1c130c' },
+  // Cold War room art — same composition/framing as their Modern
+  // counterparts above, redressed for the era.
+  '/oval-office-bg-cw.webp':       { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#1c130c' },
+  '/cabinet-room-bg-cw.webp':      { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#1f150d' },
+  '/situation-room-bg-cw.webp':    { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#12141a' },
+  '/diplomatic-office-bg-cw.webp': { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#3d2417' },
+  '/congress-bg-cw.webp':          { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#3d2b18' },
+  '/press-room-bg-cw.webp':        { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#12141a' },
+  '/oval-office-bg-cw-tense.webp':       { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#170f07' },
+  '/cabinet-room-bg-cw-tense.webp':      { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#170f08' },
+  '/situation-room-bg-cw-tense.webp':    { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#150a0a' },
+  '/diplomatic-office-bg-cw-tense.webp': { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#241a10' },
+  '/congress-bg-cw-tense.webp':          { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#1c140c' },
+  '/press-room-bg-cw-tense.webp':        { backgroundPosition: 'center center', foregroundStyle: 'desk', foregroundColor: '#0e0e12' },
 }
 
 export function getRoomTreatment(image: string): RoomTreatment {
   return ROOM_TREATMENTS[image] ?? ROOM_TREATMENTS['/oval-office-bg.webp']
+}
+
+// Cold War-specific room art — same six rooms, redressed for the era (rotary
+// phones, analog wall maps, vintage TV cameras) rather than a generic reuse
+// of the Modern era's photos. Keyed by the Modern base path so callers don't
+// need two different image constants depending on era.
+const ERA_ROOM_OVERRIDES: Record<string, Record<string, string>> = {
+  cold_war: {
+    '/oval-office-bg.webp':       '/oval-office-bg-cw.webp',
+    '/cabinet-room-bg.webp':      '/cabinet-room-bg-cw.webp',
+    '/situation-room-bg.webp':    '/situation-room-bg-cw.webp',
+    '/diplomatic-office-bg.webp': '/diplomatic-office-bg-cw.webp',
+    '/congress-bg.webp':          '/congress-bg-cw.webp',
+    '/press-room-bg.webp':        '/press-room-bg-cw.webp',
+  },
 }
 
 // Calm -> tense counterpart for each room photo. Any base image not listed
@@ -112,6 +141,12 @@ const TENSE_VARIANTS: Record<string, string> = {
   '/diplomatic-office-bg.webp': '/diplomatic-office-bg-tense.webp',
   '/congress-bg.webp':          '/congress-bg-tense.webp',
   '/press-room-bg.webp':        '/press-room-bg-tense.webp',
+  '/oval-office-bg-cw.webp':       '/oval-office-bg-cw-tense.webp',
+  '/cabinet-room-bg-cw.webp':      '/cabinet-room-bg-cw-tense.webp',
+  '/situation-room-bg-cw.webp':    '/situation-room-bg-cw-tense.webp',
+  '/diplomatic-office-bg-cw.webp': '/diplomatic-office-bg-cw-tense.webp',
+  '/congress-bg-cw.webp':          '/congress-bg-cw-tense.webp',
+  '/press-room-bg-cw.webp':        '/press-room-bg-cw-tense.webp',
 }
 
 /**
@@ -131,7 +166,13 @@ export function isTenseMood(game: Game, event?: CrisisEvent | null): boolean {
   )
 }
 
-/** Picks the tense variant of `baseImage` when `tense` is true, else the base image unchanged. */
-export function getRoomImage(baseImage: string, tense: boolean): string {
-  return tense ? (TENSE_VARIANTS[baseImage] ?? baseImage) : baseImage
+/**
+ * Resolves the actual room image to render: swaps in the era-specific art
+ * (currently only Cold War has its own set — other eras/no era fall back to
+ * the Modern photos unchanged), then picks the tense variant of THAT image
+ * when `tense` is true.
+ */
+export function getRoomImage(baseImage: string, tense: boolean, era?: string): string {
+  const eraImage = (era && ERA_ROOM_OVERRIDES[era]?.[baseImage]) || baseImage
+  return tense ? (TENSE_VARIANTS[eraImage] ?? eraImage) : eraImage
 }

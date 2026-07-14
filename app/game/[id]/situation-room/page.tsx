@@ -30,7 +30,7 @@ export default async function SituationRoomPage({ params }: PageProps) {
   const pendingEvent = row.currentEventId ? ALL_EVENTS.find(e => e.id === row.currentEventId) : undefined
   const showBanner = game.status === 'ACTIVE' && pendingEvent && MATCHING_CATEGORIES.includes(pendingEvent.category)
 
-  const roomImage = getRoomImage('/situation-room-bg.webp', isTenseMood(game, pendingEvent))
+  const roomImage = getRoomImage('/situation-room-bg.webp', isTenseMood(game, pendingEvent), game.campaignEra)
   const treatment = getRoomTreatment(roomImage)
 
   return (

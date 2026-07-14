@@ -50,7 +50,7 @@ export default async function HistoryPage({ params }: PageProps) {
 
   const posts = generateSocialFeed(game.id, game.currentMonth, game.stats)
 
-  const roomImage = getRoomImage('/press-room-bg.webp', isTenseMood(game, pendingEvent))
+  const roomImage = getRoomImage('/press-room-bg.webp', isTenseMood(game, pendingEvent), game.campaignEra)
   const treatment = getRoomTreatment(roomImage)
 
   return (

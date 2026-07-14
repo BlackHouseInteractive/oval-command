@@ -54,7 +54,7 @@ export default async function CabinetPage({ params }: PageProps) {
   const pendingEvent = row.currentEventId ? ALL_EVENTS.find(e => e.id === row.currentEventId) : undefined
   const showBanner = isActive && pendingEvent && MATCHING_CATEGORIES.includes(pendingEvent.category)
 
-  const roomImage = getRoomImage('/cabinet-room-bg.webp', isTenseMood(game, pendingEvent))
+  const roomImage = getRoomImage('/cabinet-room-bg.webp', isTenseMood(game, pendingEvent), game.campaignEra)
   const treatment = getRoomTreatment(roomImage)
 
   return (

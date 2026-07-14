@@ -70,7 +70,7 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
   const filtered = filter === 'all' ? lawsWithOdds : lawsWithOdds.filter(l => l.law.sector === filter)
   // No specific pending CrisisEvent object on hand here (just its title) —
   // active conflicts and low approval are still enough to swap the mood.
-  const roomImage = getRoomImage('/congress-bg.webp', isTenseMood(game))
+  const roomImage = getRoomImage('/congress-bg.webp', isTenseMood(game), game.campaignEra)
   const treatment = getRoomTreatment(roomImage)
 
   // Sector momentum — small "N/M passed" badge per tab, purely presentational.

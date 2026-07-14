@@ -228,7 +228,7 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
     const legacy = computeLegacyScore(game)
     const reason = view.phase === 'gameover' ? view.result.gameOver! : view.reason
     const archetype = view.phase === 'gameover' ? view.result.archetype : finishedGameArchetype
-    const gameoverImage = getRoomImage('/oval-office-bg.webp', isTenseMood(game))
+    const gameoverImage = getRoomImage('/oval-office-bg.webp', isTenseMood(game), game.campaignEra)
     const gameoverTreatment = getRoomTreatment(gameoverImage)
     return (
       <main className="mx-auto max-w-3xl px-6 py-12" style={roomAccentStyle('var(--color-brass)')}>
