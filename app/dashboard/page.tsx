@@ -155,7 +155,6 @@ function OvalOfficeEntry() {
       overflow: 'hidden',
       fontFamily: 'Georgia, serif',
     }}>
-      <RoomAmbience src="/audio/ambience/modern/oval-office.mp3" />
       {/* Sign out — the only way off this screen otherwise is /new-game, which
           isn't an escape route if the session itself is the problem (e.g. a
           stale session pointing at a deleted account). */}
@@ -185,11 +184,16 @@ function OvalOfficeEntry() {
         </button>
       </form>
 
-      {/* Background image */}
+      {/* Background image — White House exterior, same asset as /login.
+          Deliberately not an Oval Office interior shot: the tagline is
+          "if you can win it," and the previous image here (a real
+          photograph of an actual inauguration crowd) was also a
+          copyright exposure worth removing regardless of the narrative
+          argument. */}
       <div style={{
         position: 'absolute',
         inset: 0,
-        backgroundImage: 'url(/inauguration-bg.webp)',
+        backgroundImage: 'url(/white-house-exterior-bg.webp)',
         backgroundSize: 'cover',
         backgroundPosition: 'center center',
         backgroundRepeat: 'no-repeat',

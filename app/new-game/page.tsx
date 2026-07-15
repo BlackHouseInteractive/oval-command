@@ -18,6 +18,7 @@ export default async function NewGamePage() {
   const unlockedIds = new Set(toUnlockedAchievements(user?.unlockedAchievements).map(u => u.id))
   const unlockedPerks = ACHIEVEMENTS.filter(a => a.perk && unlockedIds.has(a.id)).map(a => a.perk!)
   const ownedContent = Array.from(await getOwnedContent(session.user.id))
+  const isGuest = session.user.name === 'Guest'
 
-  return <NewGameForm unlockedPerks={unlockedPerks} ownedContent={ownedContent} />
+  return <NewGameForm unlockedPerks={unlockedPerks} ownedContent={ownedContent} isGuest={isGuest} />
 }

@@ -53,6 +53,8 @@ const ERAS: { value: string; label: string; description: string; contentId?: str
 interface NewGameFormProps {
   unlockedPerks: Perk[]
   ownedContent:  string[]
+  /** Guests default toward skipping the campaign — they haven't decided if they like the game yet, and 14 screens before the first real decision is a lot to ask of someone who might bounce. Signed-in players get the opposite framing: they've already committed, so the deeper path is the natural default. */
+  isGuest: boolean
 }
 
 // The campaign choices and election-night reveal are a lead-in before the
@@ -71,7 +73,7 @@ type Phase =
       priorities: string[]
     }
 
-export function NewGameForm({ unlockedPerks, ownedContent }: NewGameFormProps) {
+export function NewGameForm({ unlockedPerks, ownedContent, isGuest }: NewGameFormProps) {
   const router = useRouter()
   const [presidentName, setPresidentName] = useState('')
   const [party, setParty] = useState<Party>('DEMOCRAT')
@@ -698,19 +700,44 @@ export function NewGameForm({ unlockedPerks, ownedContent }: NewGameFormProps) {
             </p>
           )}
 
-          <button
-            type="submit"
-            className="w-full rounded-sm border border-[var(--color-brass-dim)] bg-[var(--color-brass)] py-3 text-sm font-medium text-[var(--color-ink)] transition-opacity hover:opacity-90"
-          >
-            Continue to the Campaign
-          </button>
-          <button
-            type="button"
-            onClick={handleSkipCampaign}
-            className="w-full text-center font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--color-paper-faint)] hover:text-[var(--color-paper)]"
-          >
-            Skip the Campaign →
-          </button>
+          {isGuest ? (
+            <>
+              {/* Guests haven't decided if they like the game yet — the full
+                  campaign-through-cabinet path is 14 screens before the
+                  first real decision, which is a lot to ask of someone who
+                  might bounce. Skipping straight to election night is the
+                  primary action here; building the campaign is the opt-in. */}
+              <button
+                type="button"
+                onClick={handleSkipCampaign}
+                className="w-full rounded-sm border border-[var(--color-brass-dim)] bg-[var(--color-brass)] py-3 text-sm font-medium text-[var(--color-ink)] transition-opacity hover:opacity-90"
+              >
+                Skip to Election Night →
+              </button>
+              <button
+                type="submit"
+                className="w-full text-center font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--color-paper-faint)] hover:text-[var(--color-paper)]"
+              >
+                Or Build Your Campaign First
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="submit"
+                className="w-full rounded-sm border border-[var(--color-brass-dim)] bg-[var(--color-brass)] py-3 text-sm font-medium text-[var(--color-ink)] transition-opacity hover:opacity-90"
+              >
+                Continue to the Campaign
+              </button>
+              <button
+                type="button"
+                onClick={handleSkipCampaign}
+                className="w-full text-center font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--color-paper-faint)] hover:text-[var(--color-paper)]"
+              >
+                Skip the Campaign →
+              </button>
+            </>
+          )}
         </form>
       </div>
     </main>
