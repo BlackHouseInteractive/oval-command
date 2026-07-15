@@ -1,0 +1,20 @@
+Legacy Report flourish — composite mix notes
+==============================================
+Layers:
+
+  0ms      projector-click.mp3   loudnorm I=-18 TP=-2 LRA=11
+  300ms    archive-drawer.mp3    loudnorm I=-20 TP=-2 LRA=11
+  700ms    paper-unfolding.mp3   loudnorm I=-20 TP=-2 LRA=11
+
+Mixed with ffmpeg amix (duration=longest). Total length: ~6.9s.
+Fires 400ms after the triumphant/somber music sting starts, in
+GameClient.tsx's gameover-transition useEffect — layered under the
+music, not instead of it.
+
+Rebuild command:
+  ffmpeg -i projector-click.mp3 -i archive-drawer.mp3 -i paper-unfolding.mp3 \
+    -filter_complex "[0:a]loudnorm=I=-18:TP=-2:LRA=11[a0];\
+                      [1:a]adelay=300|300,loudnorm=I=-20:TP=-2:LRA=11[a1];\
+                      [2:a]adelay=700|700,loudnorm=I=-20:TP=-2:LRA=11[a2];\
+                      [a0][a1][a2]amix=inputs=3:duration=longest:dropout_transition=0[aout]" \
+    -map "[aout]" -q:a 3 legacy-report-master.mp3

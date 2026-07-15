@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { useAudio, pickVariant, CABINET_EVENT_VARIANTS } from '@/components/AudioProvider'
 
 interface ActivateAbilityButtonProps {
   gameId:  string
@@ -15,6 +16,7 @@ interface ActivateAbilityButtonProps {
 /** "Activate [Ability]" — the two player-activated Cabinet abilities (Take the Hit, Economic Briefing). Turn-free: POSTs, then refreshes the server component so the used-this-term/relationship state is current. */
 export function ActivateAbilityButton({ gameId, slotId, eligible, reason, abilityName }: ActivateAbilityButtonProps) {
   const router = useRouter()
+  const { playSfx } = useAudio()
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [used, setUsed] = useState(false)
@@ -23,6 +25,7 @@ export function ActivateAbilityButton({ gameId, slotId, eligible, reason, abilit
     if (!eligible || submitting) return
     setSubmitting(true)
     setError(null)
+    playSfx(pickVariant(CABINET_EVENT_VARIANTS))
 
     try {
       const res = await fetch(`/api/game/${gameId}/ability`, {

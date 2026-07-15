@@ -6,9 +6,12 @@ import { useSearchParams } from 'next/navigation'
 import { LawCard } from '@/components/game/LawCard'
 import { HeadlineTicker } from '@/components/game/HeadlineTicker'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
+import { RoomAmbience } from '@/components/game/RoomAmbience'
 import { AchievementUnlockToast } from '@/components/game/AchievementUnlockToast'
 import { NpcReactionList } from '@/components/game/NpcReactionList'
+import { useAudio } from '@/components/AudioProvider'
 import { getRoomTreatment, getRoomImage, isTenseMood } from '@/lib/event-backgrounds'
+import { getRoomAmbience } from '@/lib/room-audio'
 import { LAW_SECTOR_META, LAW_SECTORS } from '@/lib/law-sectors'
 import { cn } from '@/lib/utils'
 import type { Game, Law, Headline, Achievement, LawSector, NpcReactionResult } from '@/types/game'
@@ -66,6 +69,8 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
   const [result, setResult] = useState<ProposeResult | null>(null)
   const [pendingProposal, setPendingProposal] = useState<{ lawId: string; useNpcAbility?: 'senate_leader' | 'speaker' } | null>(null)
   const highlightRef = useRef<HTMLDivElement>(null)
+  const { playSfx } = useAudio()
+  const roomAmbience = getRoomAmbience('/congress-bg.webp', game.campaignEra)
 
   const filtered = filter === 'all' ? lawsWithOdds : lawsWithOdds.filter(l => l.law.sector === filter)
   // No specific pending CrisisEvent object on hand here (just its title) —
@@ -117,6 +122,7 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
       }
 
       const data = await res.json()
+      playSfx(data.passageResult.passed ? '/audio/stings/law-passed.mp3' : '/audio/composites/law-failed.mp3')
       setResult({
         passed: data.passageResult.passed,
         probability: data.passageResult.probability,
@@ -146,6 +152,7 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
           backgroundPosition={treatment.backgroundPosition}
           foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
         />
+        <RoomAmbience src={roomAmbience} />
         <div className="rounded-sm border border-[var(--color-border-strong)] bg-[var(--color-surface)] backdrop-blur-sm">
           <div className="brief-rule" />
           <div className="p-6 text-center">

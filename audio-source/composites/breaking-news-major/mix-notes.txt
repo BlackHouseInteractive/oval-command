@@ -1,0 +1,32 @@
+Breaking News (major) — composite mix notes
+=============================================
+Layers (all offsets relative to t=0):
+
+  0ms      keyer-tone.mp3       loudnorm I=-18 TP=-1.5 LRA=11
+  100ms    camera-burst.mp3     loudnorm I=-18 TP=-1.5 LRA=11
+  350ms    newsroom-murmur.mp3  pre-shaped with its own envelope before
+                                 this mix: fade-in 200ms, sustain, fade-out
+                                 600ms (~1.4s total) — this is what makes
+                                 it "rise briefly, then fade" rather than
+                                 just another flat layer.
+
+Mixed with ffmpeg amix (duration=longest), no additional fade on the
+overall mix — the murmur's own envelope handles the tail.
+Total length: ~3.4s
+
+newsroom-murmur.mp3 in this folder is already the pre-enveloped clip
+(built from the raw "Crowd Murmuring" track, atrim 1:2.6 + its own
+afade in/out) — NOT the raw crowd-murmur recording. If re-cutting from
+scratch, start from audio-source/raw/foley/newsroom-murmur.mp3 and
+reapply: atrim=1:2.6, afade in 0.2s, afade out 0.6s starting at 0.8s.
+
+Fires ~250ms after the separate Notification (phone buzz) cue in
+CrisisCard.tsx — that sequencing lives in code, not in this file.
+
+Rebuild command:
+  ffmpeg -i keyer-tone.mp3 -i camera-burst.mp3 -i newsroom-murmur.mp3 \
+    -filter_complex "[0:a]loudnorm=I=-18:TP=-1.5:LRA=11[a0];\
+                      [1:a]adelay=100|100,loudnorm=I=-18:TP=-1.5:LRA=11[a1];\
+                      [2:a]adelay=350|350[a2];\
+                      [a0][a1][a2]amix=inputs=3:duration=longest:dropout_transition=0[aout]" \
+    -map "[aout]" -q:a 3 breaking-news-major-master.mp3

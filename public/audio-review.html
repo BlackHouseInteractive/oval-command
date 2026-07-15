@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Oval Command — Audio Review</title>
+<style>
+  body { font-family: -apple-system, sans-serif; max-width: 780px; margin: 40px auto; padding: 0 20px; background: #14181f; color: #e8e6df; }
+  h1 { font-size: 22px; }
+  h2 { margin-top: 40px; border-bottom: 1px solid #333; padding-bottom: 6px; }
+  .room { margin: 24px 0; padding: 14px 18px; background: #1c222c; border-radius: 6px; border: 1px solid #2a3140; }
+  .row { display: flex; align-items: center; gap: 12px; margin: 10px 0; }
+  .label { min-width: 170px; font-size: 13px; color: #b8a887; text-transform: uppercase; letter-spacing: 0.05em; }
+  .note { font-size: 12px; color: #8a92a3; margin-top: 4px; }
+  .path { font-size: 11px; color: #5c6478; font-family: monospace; }
+  audio { flex: 1; height: 32px; }
+</style>
+</head>
+<body>
+<h1>Oval Command — Audio Review</h1>
+<p class="note">Grouped by room, then by function. Cold War loops are now sparse (bursts over near-silent base) rather than continuous.</p>
+
+<h2>Oval Office / Overview / Schedule / Game Over</h2>
+<div class="room">
+  <div class="row"><span class="label">Modern</span><audio controls src="/audio/ambience/modern/oval-office.mp3"></audio></div>
+  <p class="note">Quiet office room tone</p>
+  <div class="row"><span class="label">Cold War</span><audio controls src="/audio/ambience/cold-war/oval-office.mp3"></audio></div>
+  <p class="note">Ticking clock — steady/periodic by nature, left as a continuous loop</p>
+</div>
+
+<h2>Cabinet Room</h2>
+<div class="room">
+  <div class="row"><span class="label">Modern</span><audio controls src="/audio/ambience/modern/cabinet-room.mp3"></audio></div>
+  <p class="note">Distinct quiet office bed from the Oval Office</p>
+  <div class="row"><span class="label">Cold War</span><audio controls src="/audio/ambience/cold-war/cabinet-room.mp3"></audio></div>
+  <p class="note">Rebuilt sparse: quiet office base + 3 short typewriter bursts with long pauses (80s loop)</p>
+</div>
+
+<h2>Situation Room</h2>
+<div class="room">
+  <div class="row"><span class="label">Modern</span><audio controls src="/audio/ambience/modern/situation-room.mp3"></audio></div>
+  <p class="note">Rebuilt: near-silent electronics room tone + 2 very infrequent, muted sonar pings, irregular spacing (80s loop) — no longer continuous sonar</p>
+  <div class="row"><span class="label">Cold War</span><audio controls src="/audio/ambience/cold-war/situation-room.mp3"></audio></div>
+  <p class="note">Rebuilt: same near-silent base + 3 occasional morse transmissions, not constant dits/dahs</p>
+</div>
+
+<h2>Diplomatic Office</h2>
+<div class="room">
+  <div class="row"><span class="label">Modern</span><audio controls src="/audio/ambience/modern/diplomatic-office.mp3"></audio></div>
+  <p class="note">Reception-hall murmur</p>
+  <div class="row"><span class="label">Cold War</span><audio controls src="/audio/ambience/cold-war/diplomatic-office.mp3"></audio></div>
+  <p class="note">Rebuilt sparse: quiet hall base + 12 isolated switchboard clicks, roughly every 5-8s (80s loop)</p>
+</div>
+
+<h2>Congress</h2>
+<div class="room">
+  <div class="row"><span class="label">Modern</span><audio controls src="/audio/ambience/modern/congress.mp3"></audio></div>
+  <p class="note">Widened stereo image + bass-boosted for a larger-hall, lower-frequency crowd bed — differentiated from Press Room</p>
+  <div class="row"><span class="label">Cold War</span><audio controls src="/audio/ambience/cold-war/congress.mp3"></audio></div>
+  <p class="note">Vintage radio tone — texture, not content, left continuous</p>
+</div>
+
+<h2>Press Room (History page)</h2>
+<div class="room">
+  <div class="row"><span class="label">Modern</span><audio controls src="/audio/ambience/modern/press-room.mp3"></audio></div>
+  <p class="note">High-passed (drier, closer) + narrower stereo — smaller group, differentiated from Congress</p>
+  <div class="row"><span class="label">Cold War</span><audio controls src="/audio/ambience/cold-war/press-room.mp3"></audio></div>
+  <p class="note">Rebuilt sparse: quiet press-room base + 2 periodic teletype bursts, as though a bulletin just arrived (55s loop)</p>
+</div>
+
+<h2>Election Night (New Game flow)</h2>
+<div class="room">
+  <div class="row"><span class="label">Broadcast ambience</span><audio controls src="/audio/ambience/election-night.mp3"></audio></div>
+  <p class="note">Muffled newsroom/control-room chatter, loops under the reveal screen</p>
+</div>
+
+<h2>UI — generic interaction feedback</h2>
+<div class="room">
+  <div class="row"><span class="label">Button (click) 1/3</span><audio controls src="/audio/ui/click-01.mp3"></audio></div>
+  <div class="row"><span class="label">Button (click) 2/3</span><audio controls src="/audio/ui/click-02.mp3"></audio></div>
+  <div class="row"><span class="label">Button (click) 3/3</span><audio controls src="/audio/ui/click-03.mp3"></audio></div>
+  <p class="note">Pen click — 3 takes, picked at random on each button press</p>
+  <div class="row"><span class="label">Cancel 1/3</span><audio controls src="/audio/ui/cancel-01.mp3"></audio></div>
+  <div class="row"><span class="label">Cancel 2/3</span><audio controls src="/audio/ui/cancel-02.mp3"></audio></div>
+  <div class="row"><span class="label">Cancel 3/3</span><audio controls src="/audio/ui/cancel-03.mp3"></audio></div>
+  <p class="note">Paper slide, 3 takes — Back buttons, compare-mode cancel, picked at random</p>
+  <div class="row"><span class="label">Month advance</span><audio controls src="/audio/ui/month-advance.mp3"></audio></div>
+  <p class="note">Calendar flip — fires after every crisis-choice turn resolves</p>
+  <div class="row"><span class="label">Notification</span><audio controls src="/audio/ui/notification.mp3"></audio></div>
+  <p class="note">Secure phone buzz — fires immediately on breaking events, ~250ms before Breaking News (major)</p>
+</div>
+
+<h2>Stings — single-shot narrative moments</h2>
+<div class="room">
+  <div class="row"><span class="label">Confirm (decision) 1/3</span><audio controls src="/audio/stings/decision-made-01.mp3"></audio></div>
+  <div class="row"><span class="label">Confirm (decision) 2/3</span><audio controls src="/audio/stings/decision-made-02.mp3"></audio></div>
+  <div class="row"><span class="label">Confirm (decision) 3/3</span><audio controls src="/audio/stings/decision-made-03.mp3"></audio></div>
+  <p class="note">Leather folder/book snapped shut, 3 takes — picked at random on every crisis choice</p>
+  <div class="row"><span class="label">Law passed</span><audio controls src="/audio/stings/law-passed.mp3"></audio></div>
+  <p class="note">Fountain pen signing paper</p>
+  <div class="row"><span class="label">Address the Nation</span><audio controls src="/audio/stings/address-camera.mp3"></audio></div>
+  <p class="note">Camera shutter burst</p>
+  <div class="row"><span class="label">Crisis pulse</span><audio controls src="/audio/stings/crisis-pulse.mp3"></audio></div>
+  <p class="note">Low restrained string tension — <b>security-category events only</b>, kept deliberately rare</p>
+</div>
+
+<h2>Foley — single-recording physical actions</h2>
+<div class="room">
+  <div class="row"><span class="label">Cabinet ability activated 1/3</span><audio controls src="/audio/foley/cabinet-event-01.mp3"></audio></div>
+  <div class="row"><span class="label">Cabinet ability activated 2/3</span><audio controls src="/audio/foley/cabinet-event-02.mp3"></audio></div>
+  <div class="row"><span class="label">Cabinet ability activated 3/3</span><audio controls src="/audio/foley/cabinet-event-03.mp3"></audio></div>
+  <p class="note">Chair movement, 3 takes, picked at random</p>
+</div>
+
+<h2>Composites — layered, multi-source mixes (stems kept in audio-source/composites/)</h2>
+<p class="note">Chair/paper stems inside these are still single takes, not the -01/02/03 variant pools — each composite is already distinctive from its own layering, and these fire rarely enough per game that the extra remix work isn't worth it yet.</p>
+<div class="room">
+  <div class="row"><span class="label">Law failed</span><audio controls src="/audio/composites/law-failed.mp3"></audio></div>
+  <p class="note">0ms pen cap · 150ms paper slide · 400ms piano note (mixed near-inaudible — felt more than heard)</p>
+  <div class="row"><span class="label">Breaking news (major)</span><audio controls src="/audio/composites/breaking-news-major.mp3"></audio></div>
+  <p class="note">0ms keyer tone · 100ms camera burst · 350ms newsroom murmur (rises then fades by ~1.2s)</p>
+  <div class="row"><span class="label">Cabinet meeting opens</span><audio controls src="/audio/composites/cabinet-open.mp3"></audio></div>
+  <p class="note">Chair + coffee cup (500ms later) — fires on every Cabinet Room visit</p>
+  <div class="row"><span class="label">Cabinet dismissal</span><audio controls src="/audio/composites/cabinet-dismissal.mp3"></audio></div>
+  <p class="note">Chair back → pause → door open → door close → silence. Nothing after — only on an active firing, not a resignation</p>
+  <div class="row"><span class="label">Legacy report flourish</span><audio controls src="/audio/composites/legacy-report.mp3"></audio></div>
+  <p class="note">Projector click · archive drawer (300ms) · paper unfolding (700ms) — layered under the game-over music</p>
+</div>
+
+<h2>Music Stings — restrained piano/strings</h2>
+<div class="room">
+  <div class="row"><span class="label">Election victory</span><audio controls src="/audio/music/election-victory.mp3"></audio></div>
+  <p class="note">"Triumph Music" (The_Mountain)</p>
+  <div class="row"><span class="label">Election concession</span><audio controls src="/audio/music/election-concession.mp3"></audio></div>
+  <p class="note">"Regret" (leberch)</p>
+  <div class="row"><span class="label">Inauguration</span><audio controls src="/audio/music/inauguration.mp3"></audio></div>
+  <p class="note">"Noble Reflections" — solemn, ceremonial, distinct from election victory</p>
+  <div class="row"><span class="label">Legacy — triumphant</span><audio controls src="/audio/music/legacy-triumphant.mp3"></audio></div>
+  <p class="note">"Sombre Restrained Celebration" — a muted, dignified triumph rather than a fanfare</p>
+  <div class="row"><span class="label">Legacy — somber</span><audio controls src="/audio/music/legacy-somber.mp3"></audio></div>
+  <p class="note">"Sad Piano" (leberch) — same composer as Election concession, for cohesion</p>
+</div>
+
+</body>
+</html>

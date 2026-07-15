@@ -5,6 +5,7 @@ import { auth, signIn } from '@/lib/auth'
 import { getEnabledOAuthProviders } from '@/lib/oauth-providers'
 import { Seal } from '@/components/Seal'
 import { EmailPasswordAuth } from '@/components/EmailPasswordAuth'
+import { RoomAmbience } from '@/components/game/RoomAmbience'
 
 export default async function LoginPage() {
   const session = await auth()
@@ -26,6 +27,7 @@ export default async function LoginPage() {
         priority
         className="pointer-events-none object-cover"
       />
+      <RoomAmbience src="/audio/ambience/modern/oval-office.mp3" />
 
       {/* Dark overlay for text legibility, darkest at center where the card sits */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_65%_50%_at_50%_50%,rgba(3,5,10,0.82)_0%,rgba(3,5,10,0.55)_55%,rgba(3,5,10,0.35)_100%)]" />

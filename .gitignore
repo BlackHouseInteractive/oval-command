@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# unprocessed audio masters (re-fetchable; kept locally for re-cutting, not worth the repo weight)
+audio-source/raw/

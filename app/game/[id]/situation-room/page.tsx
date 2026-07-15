@@ -8,7 +8,9 @@ import { ConflictBanner } from '@/components/game/ConflictBanner'
 import { CabinetCard } from '@/components/game/CabinetCard'
 import { PendingEventBanner } from '@/components/game/PendingEventBanner'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
+import { RoomAmbience } from '@/components/game/RoomAmbience'
 import { getRoomTreatment, getRoomImage, isTenseMood } from '@/lib/event-backgrounds'
+import { getRoomAmbience } from '@/lib/room-audio'
 
 const MATCHING_CATEGORIES = ['security', 'military', 'disaster']
 
@@ -41,6 +43,7 @@ export default async function SituationRoomPage({ params }: PageProps) {
         backgroundPosition={treatment.backgroundPosition}
         foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
       />
+      <RoomAmbience src={getRoomAmbience('/situation-room-bg.webp', game.campaignEra)} />
       <div>
         <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-cat-military)]">
           National Security

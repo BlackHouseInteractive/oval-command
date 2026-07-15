@@ -6,10 +6,12 @@ import { ALL_EVENTS, ALL_LAWS } from '@/lib/game-engine'
 import { cn, formatDelta, isDeltaGood, getStatLabel, monthToDate } from '@/lib/utils'
 import { PendingEventBanner } from '@/components/game/PendingEventBanner'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
+import { RoomAmbience } from '@/components/game/RoomAmbience'
 import { SocialFeed } from '@/components/game/SocialFeed'
 import { PressConferencePanel } from '@/components/game/PressConferencePanel'
 import { generateSocialFeed } from '@/lib/social-feed'
 import { getRoomTreatment, getRoomImage, isTenseMood } from '@/lib/event-backgrounds'
+import { getRoomAmbience } from '@/lib/room-audio'
 import type { GameStats } from '@/types/game'
 
 const MATCHING_CATEGORIES = ['scandal', 'social']
@@ -61,6 +63,7 @@ export default async function HistoryPage({ params }: PageProps) {
         backgroundPosition={treatment.backgroundPosition}
         foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
       />
+      <RoomAmbience src={getRoomAmbience('/press-room-bg.webp', game.campaignEra)} />
       <div>
         <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-cat-scandal)]">
           Public Relations

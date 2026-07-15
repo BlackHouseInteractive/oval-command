@@ -8,9 +8,12 @@ import { SELECTABLE_SLOT_IDS, type SelectableSlotId } from '@/types/game'
 import { AdvisorConversationPanel } from '@/components/game/AdvisorConversationPanel'
 import { PendingEventBanner } from '@/components/game/PendingEventBanner'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
+import { RoomAmbience } from '@/components/game/RoomAmbience'
+import { RoomEntrySound } from '@/components/game/RoomEntrySound'
 import { getAdvisorRecommendations } from '@/lib/advisor-engine'
 import { canActivateAbility, isActivatableSlot } from '@/lib/cabinet-abilities'
 import { getRoomTreatment, getRoomImage, isTenseMood } from '@/lib/event-backgrounds'
+import { getRoomAmbience } from '@/lib/room-audio'
 import type { MilestoneTier } from '@/lib/npc-milestones'
 
 const MATCHING_CATEGORIES = ['economy']
@@ -65,6 +68,8 @@ export default async function CabinetPage({ params }: PageProps) {
         backgroundPosition={treatment.backgroundPosition}
         foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
       />
+      <RoomAmbience src={getRoomAmbience('/cabinet-room-bg.webp', game.campaignEra)} />
+      <RoomEntrySound src="/audio/composites/cabinet-open.mp3" />
       <div>
         <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-brass)]">
           Administration

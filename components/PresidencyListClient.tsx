@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { PresidencyCard } from '@/components/PresidencyCard'
 import { PurchaseButton } from '@/components/PurchaseButton'
+import { useAudio, pickVariant, CANCEL_VARIANTS } from '@/components/AudioProvider'
 import { Lock } from 'lucide-react'
 import type { Game, GameOverReason, LegacyScore } from '@/types/game'
 import type { PresidentialArchetype } from '@/lib/archetype-engine'
@@ -27,6 +28,7 @@ const MAX_COMPARE = 4
 /** Client wrapper around the presidency list — adds the Chronicles "Compare Presidencies" entry point (a compare-mode toggle with checkboxes) on top of the otherwise-static PresidencyCard list. */
 export function PresidencyListClient({ entries, topPercents, chroniclesLocked, chroniclesProduct }: PresidencyListClientProps) {
   const router = useRouter()
+  const { playSfx } = useAudio()
   const [compareMode, setCompareMode] = useState(false)
   const [selected, setSelected] = useState<string[]>([])
 
@@ -42,6 +44,7 @@ export function PresidencyListClient({ entries, topPercents, chroniclesLocked, c
   }
 
   function handleCancelCompare() {
+    playSfx(pickVariant(CANCEL_VARIANTS))
     setCompareMode(false)
     setSelected([])
   }

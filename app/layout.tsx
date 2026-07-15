@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Cinzel, Inter, JetBrains_Mono, Sacramento } from 'next/font/google'
+import { AudioProvider } from '@/components/AudioProvider'
 import './globals.css'
 
 // Ceremonial/presidential display face — engraved-monument, official-seal
@@ -49,7 +50,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${cinzel.variable} ${inter.variable} ${jetbrainsMono.variable} ${sacramento.variable} h-full`}
     >
-      <body className="min-h-full antialiased">{children}</body>
+      <body className="min-h-full antialiased">
+        <AudioProvider>{children}</AudioProvider>
+      </body>
     </html>
   )
 }

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { useAudio } from '@/components/AudioProvider'
 import { SPEECH_THEMES } from '@/lib/address-nation'
 import { AchievementUnlockToast } from '@/components/game/AchievementUnlockToast'
 import { HeadlineTicker } from '@/components/game/HeadlineTicker'
@@ -27,6 +28,7 @@ interface SpeechResult {
 
 export function PressConferencePanel({ gameId, pendingBriefingTitle }: PressConferencePanelProps) {
   const router = useRouter()
+  const { playSfx } = useAudio()
   const [armedTheme, setArmedTheme] = useState<SpeechTheme | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -45,6 +47,7 @@ export function PressConferencePanel({ gameId, pendingBriefingTitle }: PressConf
 
     setSubmitting(true)
     setError(null)
+    playSfx('/audio/stings/address-camera.mp3')
 
     try {
       const res = await fetch(`/api/game/${gameId}/address-nation`, {

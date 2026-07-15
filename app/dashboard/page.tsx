@@ -7,6 +7,7 @@ import { getEnabledOAuthProviders } from '@/lib/oauth-providers'
 import { computeLegacyScore } from '@/lib/game-engine'
 import { SiteNav } from '@/components/SiteNav'
 import { SaveProgressPrompt } from '@/components/SaveProgressPrompt'
+import { RoomAmbience } from '@/components/game/RoomAmbience'
 import { PartyIcon } from '@/components/game/PartyIcon'
 import type { Party, Game, GameStats, ActiveConflict } from '@/types/game'
 
@@ -67,6 +68,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   return (
     <>
       <SiteNav userName={session.user.name} userImage={session.user.image} />
+      <RoomAmbience src="/audio/ambience/modern/oval-office.mp3" />
       <main className="mx-auto max-w-2xl px-6 py-12">
         <div className="mb-8">
           <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-brass)]">
@@ -153,6 +155,7 @@ function OvalOfficeEntry() {
       overflow: 'hidden',
       fontFamily: 'Georgia, serif',
     }}>
+      <RoomAmbience src="/audio/ambience/modern/oval-office.mp3" />
       {/* Sign out — the only way off this screen otherwise is /new-game, which
           isn't an escape route if the session itself is the problem (e.g. a
           stale session pointing at a deleted account). */}

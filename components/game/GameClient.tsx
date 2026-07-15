@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -16,6 +16,7 @@ import { ApprovalChart } from '@/components/game/ApprovalChart'
 import { ConflictBanner } from '@/components/game/ConflictBanner'
 import { RoomAtmosphere } from '@/components/game/RoomAtmosphere'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
+import { RoomAmbience } from '@/components/game/RoomAmbience'
 import { AchievementUnlockToast } from '@/components/game/AchievementUnlockToast'
 import { ApprovalGauge } from '@/components/game/ApprovalGauge'
 import { ActionCard, type ActionCardTag } from '@/components/game/ActionCard'
@@ -24,6 +25,8 @@ import { DailyBrief } from '@/components/game/DailyBrief'
 import { AnnualReport } from '@/components/game/AnnualReport'
 import { OnboardingWelcome } from '@/components/game/OnboardingWelcome'
 import { GuestExpiryWarning } from '@/components/game/GuestExpiryWarning'
+import { useAudio, pickVariant, DECISION_MADE_VARIANTS } from '@/components/AudioProvider'
+import { getRoomAmbience } from '@/lib/room-audio'
 import { getEventAccentColor, getRoomTreatment, getRoomImage, isTenseMood } from '@/lib/event-backgrounds'
 import { computeLegacyScore, checkGameOver, isBreakingEvent, computePassProbability } from '@/lib/game-engine'
 import { resolveRoster } from '@/lib/cabinet'
@@ -89,15 +92,32 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [replacementResult, setReplacementResult] = useState<{ headline: Headline; rippleReactions: NpcReactionResult[] } | null>(null)
+  const { playSfx, playMusic } = useAudio()
 
   // Recomputed live from current game state every render — pure function,
   // no API round-trip needed, same pattern as the legacy score import.
   const advisorRecommendations = getAdvisorRecommendations(game)
 
+  // Fires once per transition into the gameover view rather than on every
+  // render while already there — view.phase only flips to one of these two
+  // values at the moment the player's term actually ends.
+  useEffect(() => {
+    if (view.phase !== 'gameover' && view.phase !== 'loaded-gameover') return
+    const reason = view.phase === 'gameover' ? view.result.gameOver! : view.reason
+    const legacy = computeLegacyScore(game)
+    const triumphant = reason === 'TERM_COMPLETE' && legacy.total >= 50
+    playMusic(triumphant ? '/audio/music/legacy-triumphant.mp3' : '/audio/music/legacy-somber.mp3')
+    // Projector click + archive drawer + paper unfolding — reinforces that
+    // the player is reviewing history, not just reading a stats screen.
+    window.setTimeout(() => playSfx('/audio/composites/legacy-report.mp3'), 400)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view.phase])
+
   async function handleChoice(choiceIndex: number) {
     if (!event || submitting) return
     setSubmitting(true)
     setError(null)
+    playSfx(pickVariant(DECISION_MADE_VARIANTS))
 
     // Personnel scenes are turn-free and resolved through their own route
     // — no month advance, no next-event pick, no game-over check. Reuses
@@ -152,6 +172,7 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
         { ...result.log, id: `pending-${result.log.month}`, createdAt: new Date().toISOString() },
         ...prev,
       ].slice(0, 8))
+      playSfx('/audio/ui/month-advance.mp3')
 
       if (result.gameOver) {
         setView({ phase: 'gameover', result })
@@ -195,6 +216,10 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
     if (view.phase !== 'replace-cabinet' || submitting) return
     setSubmitting(true)
     setError(null)
+    // The elaborate chair/door sequence is reserved for an active firing —
+    // a resignation is the NPC's own choice, not a dismissal, so it gets
+    // no special sting.
+    if (!view.resigned) playSfx('/audio/composites/cabinet-dismissal.mp3')
 
     try {
       const res = await fetch(`/api/game/${game.id}/cabinet`, {
@@ -238,6 +263,7 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
           backgroundPosition={gameoverTreatment.backgroundPosition}
           foreground={{ style: gameoverTreatment.foregroundStyle, color: gameoverTreatment.foregroundColor }}
         />
+        <RoomAmbience src={getRoomAmbience('/oval-office-bg.webp', game.campaignEra)} />
         <LegacyScreen
           legacy={legacy}
           reason={reason}

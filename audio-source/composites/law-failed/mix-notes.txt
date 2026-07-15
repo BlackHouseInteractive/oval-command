@@ -1,0 +1,20 @@
+Law Failed — composite mix notes
+=================================
+Layers (all offsets relative to t=0):
+
+  0ms      pen-cap.mp3        loudnorm I=-16 TP=-1.5 LRA=11
+  150ms    paper-slide.mp3    loudnorm I=-22 TP=-2 LRA=11
+  400ms    low-piano.mp3      volume 0.35, loudnorm I=-34 TP=-4 LRA=11
+           (deliberately near-inaudible — "felt more than heard")
+
+Mixed with ffmpeg amix (duration=longest), fade-out from 3.2s over 0.5s.
+Total length: 3.3s
+
+Rebuild command (from repo root, FFDIR set to the ffmpeg bin dir):
+  ffmpeg -i pen-cap.mp3 -i paper-slide.mp3 -i low-piano.mp3 \
+    -filter_complex "[0:a]loudnorm=I=-16:TP=-1.5:LRA=11[a0];\
+                      [1:a]adelay=150|150,loudnorm=I=-22:TP=-2:LRA=11[a1];\
+                      [2:a]volume=0.35,adelay=400|400,loudnorm=I=-34:TP=-4:LRA=11[a2];\
+                      [a0][a1][a2]amix=inputs=3:duration=longest:dropout_transition=0,\
+                      afade=t=out:st=3.2:d=0.5[aout]" \
+    -map "[aout]" -q:a 3 law-failed-master.mp3

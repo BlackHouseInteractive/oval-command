@@ -1,12 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { Seal } from '@/components/Seal'
 import { PartyIcon } from '@/components/game/PartyIcon'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
+import { RoomAmbience } from '@/components/game/RoomAmbience'
+import { useAudio, pickVariant, CANCEL_VARIANTS } from '@/components/AudioProvider'
+import { getRoomAmbience } from '@/lib/room-audio'
 import { getRoomTreatment } from '@/lib/event-backgrounds'
 import { CAMPAIGN_SCENARIOS, resolveCampaignChoices, computeElectionResult } from '@/lib/campaign'
 import { CabinetSlotPicker } from '@/components/CabinetSlotPicker'
@@ -78,6 +81,36 @@ export function NewGameForm({ unlockedPerks, ownedContent }: NewGameFormProps) {
   const [phase, setPhase] = useState<Phase>({ step: 'setup' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { playMusic, playSfx, playAmbient } = useAudio()
+
+  // Fires once per election-night reveal (initial or "Try Again" reroll) —
+  // phase identity only changes at those moments, not on every render.
+  useEffect(() => {
+    if (phase.step !== 'election-night') return
+    const result = computeElectionResult(
+      `${presidentName.trim()}:${party}:${difficulty}:${phase.retryCount}`,
+      difficulty,
+      resolveCampaignChoices(phase.choiceIds)
+    )
+    playMusic(result.won ? '/audio/music/election-victory.mp3' : '/audio/music/election-concession.mp3')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase])
+
+  // Fires once on entering the inauguration/cabinet-assembly room, not on
+  // every slot picked within it.
+  useEffect(() => {
+    if (phase.step === 'cabinet-assembly') playMusic('/audio/music/inauguration.mp3')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase.step])
+
+  // Broadcast-studio bed under the election-night reveal — nothing else in
+  // this flow loops, so it's started/stopped directly rather than through
+  // RoomAmbience (which expects a server-rendered room page, not a client
+  // phase machine like this one).
+  useEffect(() => {
+    playAmbient(phase.step === 'election-night' ? '/audio/ambience/election-night.mp3' : undefined)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase.step])
 
   // Shared by both submit paths — skipping still needs a valid name, since
   // it's part of the election-night seed and the game itself.
@@ -127,6 +160,7 @@ export function NewGameForm({ unlockedPerks, ownedContent }: NewGameFormProps) {
   }
 
   function handleBack() {
+    playSfx(pickVariant(CANCEL_VARIANTS))
     if (phase.step === 'campaign') {
       if (phase.scenarioIndex === 0) {
         setPhase({ step: 'setup' })
@@ -300,6 +334,7 @@ export function NewGameForm({ unlockedPerks, ownedContent }: NewGameFormProps) {
           backgroundPosition={treatment.backgroundPosition}
           foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
         />
+        <RoomAmbience src={getRoomAmbience(bgImage, campaignEra)} />
         <div className="w-full max-w-md text-center">
           <button
             type="button"
@@ -384,6 +419,7 @@ export function NewGameForm({ unlockedPerks, ownedContent }: NewGameFormProps) {
           backgroundPosition={treatment.backgroundPosition}
           foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
         />
+        <RoomAmbience src={getRoomAmbience('/inauguration-bg.webp', campaignEra)} />
         <div className="w-full max-w-md">
           <div className="flex items-center justify-between">
             <button

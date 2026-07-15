@@ -1,10 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { cn, formatDelta, isDeltaGood, getStatLabel } from '@/lib/utils'
 import { isBreakingEvent, getEventCallback } from '@/lib/game-engine'
 import { getEventBackground, getEventAccentColor, getRoomTreatment, getRoomImage } from '@/lib/event-backgrounds'
+import { getRoomAmbience } from '@/lib/room-audio'
+import { useAudio } from '@/components/AudioProvider'
 import { RoomBackground, roomAccentStyle } from './RoomBackground'
+import { RoomAmbience } from './RoomAmbience'
 import { CategoryTag } from './CategoryTag'
 import { IntelligenceBriefing } from './IntelligenceBriefing'
 import type { CrisisEvent, EventChoice, StatDelta, GameStats, Npc } from '@/types/game'
@@ -52,6 +55,41 @@ export function CrisisCard({ event, month, gameId, flags, onChoose, disabled, te
   const [selected, setSelected] = useState<number | null>(null)
   const breaking = isBreakingEvent(event)
   const callback = getEventCallback(event, flags)
+  const { playSfx, duckAmbient, unduckAmbient } = useAudio()
+  const hasDialogue = Boolean(event.dialogueSequence && event.dialogueSequence.length > 0)
+
+  // Ducks room ambience ~6dB for the length of a personnel scene's
+  // dialogue exchange — not a mute, just enough that the lines read as
+  // the focus rather than competing with the room. key={event.id} means
+  // this mounts/unmounts once per event, so unduck always fires on the
+  // way out (choice made or event replaced), never left stuck ducked.
+  useEffect(() => {
+    if (!hasDialogue) return
+    duckAmbient()
+    return () => unduckAmbient()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // key={event.id} on this component (see GameClient) means it remounts per
+  // event, so this fires exactly once when a fresh briefing appears.
+  // Breaking events get the phone-buzz notification immediately, then the
+  // bigger camera/newsroom/TV moment right behind it — the notification
+  // is what pulls attention, the "major" cue is the story actually
+  // breaking. The crisis pulse is reserved for 'security' events only
+  // (not the broader scandal/security "High Priority" heuristic used
+  // elsewhere) — CrisisEvent has no explicit severity field, and security
+  // crises are the closest proxy to "severe" without firing on every
+  // routine scandal. Deliberately rare: it should lose meaning if the
+  // player starts expecting it.
+  useEffect(() => {
+    if (breaking) {
+      playSfx('/audio/ui/notification.mp3')
+      window.setTimeout(() => playSfx('/audio/composites/breaking-news-major.mp3'), 250)
+    } else if (event.category === 'security') {
+      playSfx('/audio/stings/crisis-pulse.mp3')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleChoose = (index: number) => {
     if (disabled) return
@@ -71,6 +109,7 @@ export function CrisisCard({ event, month, gameId, flags, onChoose, disabled, te
         backgroundPosition={treatment.backgroundPosition}
         foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
       />
+      <RoomAmbience src={getRoomAmbience(getEventBackground(event.category))} />
 
       <div
         style={roomAccentStyle(accentColor)}

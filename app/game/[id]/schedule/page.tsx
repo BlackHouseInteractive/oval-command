@@ -7,7 +7,9 @@ import { getLegislativeOpportunity } from '@/lib/law-engine'
 import { getOwnedContent } from '@/lib/entitlements'
 import { hashSeed } from '@/lib/utils'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
+import { RoomAmbience } from '@/components/game/RoomAmbience'
 import { getRoomTreatment, getRoomImage, isTenseMood } from '@/lib/event-backgrounds'
+import { getRoomAmbience } from '@/lib/room-audio'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -75,6 +77,7 @@ export default async function SchedulePage({ params }: PageProps) {
         backgroundPosition={treatment.backgroundPosition}
         foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
       />
+      <RoomAmbience src={getRoomAmbience('/oval-office-bg.webp', game.campaignEra)} />
       <Link
         href={`/game/${game.id}`}
         className="font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--color-paper-faint)] hover:text-[var(--color-paper)]"

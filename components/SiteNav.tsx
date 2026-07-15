@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { signOut } from '@/lib/auth'
 import { Seal } from '@/components/Seal'
+import { MuteToggleButton } from '@/components/MuteToggleButton'
 
 interface SiteNavProps {
   userName?: string | null
@@ -55,6 +56,8 @@ export function SiteNav({ userName, userImage }: SiteNavProps) {
               <span className="hidden text-xs text-[var(--color-paper-dim)] sm:inline">{userName}</span>
             </div>
           )}
+
+          <MuteToggleButton />
 
           <form
             action={async () => {
