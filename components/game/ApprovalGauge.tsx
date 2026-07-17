@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { cn, getStatLabel, formatDelta, isDeltaGood } from '@/lib/utils'
 import { getStatTone, TONE_CLASSES } from '@/components/game/StatCard'
 import type { TopMover } from '@/lib/stat-trends'
@@ -12,6 +13,40 @@ const SIZE = 208
 const STROKE = 13
 const RADIUS = (SIZE - STROKE) / 2
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
+
+/**
+ * Animates the displayed number from wherever it last landed to `target`
+ * over `ms` — the ring itself already animates via a CSS transition
+ * (duration-700 below), but CSS can't tween text content, so the number
+ * used to just snap straight to the new value the instant props changed.
+ * Reads its starting point off a ref updated every frame (not the previous
+ * prop value) so a target that changes again mid-animation continues
+ * smoothly from wherever the number actually is, instead of jumping.
+ * Skips the animation entirely on first mount — nothing to count up from.
+ */
+function useCountUp(target: number, ms = 700): number {
+  const [display, setDisplay] = useState(target)
+  const displayRef = useRef(target)
+
+  useEffect(() => {
+    const from = displayRef.current
+    const to = target
+    if (from === to) return
+    const start = performance.now()
+    let frame: number
+    function step(now: number) {
+      const t = Math.min(1, (now - start) / ms)
+      const value = from + (to - from) * t
+      displayRef.current = value
+      setDisplay(value)
+      if (t < 1) frame = requestAnimationFrame(step)
+    }
+    frame = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(frame)
+  }, [target, ms])
+
+  return display
+}
 
 /** A qualitative read on the month-over-month move, not just the raw number. */
 function getApprovalDescriptor(delta: number): string {
@@ -32,6 +67,7 @@ function getApprovalDescriptor(delta: number): string {
  */
 export function ApprovalGauge({ approval, deltaFromLastMonth, topMovers }: ApprovalGaugeProps) {
   const percent = Math.max(0, Math.min(100, approval))
+  const displayPercent = useCountUp(percent)
   const tone = getStatTone('approval', approval)
   const toneClass = TONE_CLASSES[tone]
   const offset = CIRCUMFERENCE * (1 - percent / 100)
@@ -75,7 +111,7 @@ export function ApprovalGauge({ approval, deltaFromLastMonth, topMovers }: Appro
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className={cn('font-mono text-5xl font-semibold tabular-nums', toneClass.text)}>
-            {Math.round(percent)}%
+            {Math.round(displayPercent)}%
           </span>
           <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-paper-faint)]">
             Public Approval

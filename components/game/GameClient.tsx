@@ -10,6 +10,7 @@ import { CrisisCard } from '@/components/game/CrisisCard'
 import { OutcomeCard } from '@/components/game/OutcomeCard'
 import { LegacyScreen } from '@/components/game/LegacyScreen'
 import { HeadlineTicker } from '@/components/game/HeadlineTicker'
+import { ProcessingCard } from '@/components/game/ProcessingCard'
 import { NpcReactionList } from '@/components/game/NpcReactionList'
 import { CabinetSlotPicker } from '@/components/CabinetSlotPicker'
 import { ApprovalChart } from '@/components/game/ApprovalChart'
@@ -34,6 +35,7 @@ import { isMilitaryOptionUnlocked, getMilitaryOptionChoice } from '@/lib/militar
 import { getLegislativeOpportunity } from '@/lib/law-engine'
 import { getAdvisorRecommendations } from '@/lib/advisor-engine'
 import { computeStatTrend, getTopMovers } from '@/lib/stat-trends'
+import { getOutcomeSeverity } from '@/lib/outcome-magnitude'
 import { cn, monthToDate, AVATAR_COLORS } from '@/lib/utils'
 import type { InactivityWarning } from '@/lib/guest-cleanup'
 import type { PresidentialArchetype } from '@/lib/archetype-engine'
@@ -54,6 +56,7 @@ interface GameClientProps {
 
 type ViewState =
   | { phase: 'briefing' }
+  | { phase: 'processing'; result: TurnResult; nextEvent: CrisisEvent | null }
   | { phase: 'outcome'; result: TurnResult; nextEvent: CrisisEvent | null }
   | { phase: 'gameover'; result: TurnResult }
   | { phase: 'loaded-gameover'; reason: import('@/types/game').GameOverReason }
@@ -167,12 +170,32 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
 
       const data: ProcessTurnResponse = await res.json()
       const { nextEvent, ...result } = data
+
+      // A deliberate pause before the reveal — see ProcessingCard. Game
+      // state (approval gauge, month, etc.) deliberately doesn't update
+      // until the reveal either — committing it early would let the gauge
+      // spoil the outcome while the card below still says "awaiting word."
+      // Pause duration and the sound that breaks it both scale with how
+      // big the outcome actually is (lib/outcome-magnitude.ts), so a
+      // routine turn resolves quickly and quietly while a career-defining
+      // swing gets a beat to breathe before it lands.
+      const severity = getOutcomeSeverity(result.log.statDeltas)
+      setView({ phase: 'processing', result, nextEvent: nextEvent ?? null })
+      const pauseMs = severity.level === 'major' ? 1300 : severity.level === 'notable' ? 950 : 650
+      await new Promise(resolve => window.setTimeout(resolve, pauseMs))
+
       setGame(result.game)
       setRecentLogs(prev => [
         { ...result.log, id: `pending-${result.log.month}`, createdAt: new Date().toISOString() },
         ...prev,
       ].slice(0, 8))
-      playSfx('/audio/ui/month-advance.mp3')
+
+      if (severity.level === 'major' && severity.negative) {
+        playSfx('/audio/stings/crisis-pulse.mp3')
+        window.setTimeout(() => playSfx('/audio/ui/month-advance.mp3'), 220)
+      } else {
+        playSfx('/audio/ui/month-advance.mp3')
+      }
 
       if (result.gameOver) {
         setView({ phase: 'gameover', result })
@@ -384,6 +407,12 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
   return (
     <main className="mx-auto max-w-3xl px-6 py-10" style={roomAccentStyle(accentColor)}>
       <RoomAtmosphere color="var(--color-brass)" />
+      {/* Baseline Oval Office tone for this screen — CrisisCard mounts its
+          own RoomAmbience for whatever category backdrop is showing below,
+          and (being declared later in the tree) wins over this one the
+          moment a crisis is pending. Without this, a month with no pending
+          event left the Oval Office's main screen with no ambience at all. */}
+      <RoomAmbience src={getRoomAmbience('/oval-office-bg.webp', game.campaignEra)} />
 
       {view.phase === 'briefing' && !yearInReview && (
         <DailyBrief
@@ -504,6 +533,7 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
                     ? getMilitaryOptionChoice(event, game)
                     : null
                 }
+                campaignEra={game.campaignEra}
               />
             </div>
           )}
@@ -582,6 +612,7 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
       )}
 
       <div className="mt-6">
+        {view.phase === 'processing' && <ProcessingCard />}
         {view.phase === 'outcome' && (
           <OutcomeCard
             narrative={view.result.log.narrative ?? ''}

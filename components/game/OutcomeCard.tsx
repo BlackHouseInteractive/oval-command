@@ -1,4 +1,5 @@
 import { cn, formatDelta, isDeltaGood, getStatLabel } from '@/lib/utils'
+import { getStatMagnitude } from '@/lib/outcome-magnitude'
 import { NpcReactionList } from '@/components/game/NpcReactionList'
 import type { StatDelta, NpcReactionResult, GameStats } from '@/types/game'
 
@@ -33,17 +34,29 @@ export function OutcomeCard({
         </p>
 
         {entries.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-4 flex flex-wrap items-center gap-2">
             {entries.map(([key, value]) => {
               const good = isDeltaGood(key, value)
+              // Routine swings stay as quiet pills; a genuinely big mover
+              // (see lib/outcome-magnitude.ts) earns a bigger, bolder one
+              // instead — the same visual weight a real headline number
+              // would get, rather than every stat reading as equally
+              // important regardless of size.
+              const magnitude = getStatMagnitude(key, value)
               return (
                 <span
                   key={key}
                   className={cn(
-                    'rounded-full px-2.5 py-0.5 font-mono text-[11px] font-medium',
+                    'rounded-full font-mono font-medium',
+                    magnitude === 'major'
+                      ? 'px-3.5 py-1.5 text-[15px]'
+                      : magnitude === 'notable'
+                        ? 'px-3 py-1 text-[12px]'
+                        : 'px-2.5 py-0.5 text-[11px]',
                     good
                       ? 'bg-[var(--color-good-dim)] text-[var(--color-good)]'
-                      : 'bg-[var(--color-bad-dim)] text-[var(--color-bad)]'
+                      : 'bg-[var(--color-bad-dim)] text-[var(--color-bad)]',
+                    magnitude === 'major' && (good ? 'ring-1 ring-[var(--color-good)]/50' : 'ring-1 ring-[var(--color-bad)]/50')
                   )}
                 >
                   {getStatLabel(key)} {formatDelta(key, value)}

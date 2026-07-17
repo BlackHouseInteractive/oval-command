@@ -25,6 +25,8 @@ interface CrisisCardProps {
   roster?: Npc[]
   /** SecDef's Military Option — a 5th, exclusive choice on military-category events, only present when unlocked. See lib/military-option.ts. */
   militaryOptionChoice?: EventChoice | null
+  /** Resolves the era-correct ambience track for this event's backdrop — see lib/room-audio.ts. */
+  campaignEra?: string
 }
 
 function EffectPreview({ effects }: { effects: StatDelta }) {
@@ -51,7 +53,7 @@ function EffectPreview({ effects }: { effects: StatDelta }) {
   )
 }
 
-export function CrisisCard({ event, month, gameId, flags, onChoose, disabled, tense, roster, militaryOptionChoice }: CrisisCardProps) {
+export function CrisisCard({ event, month, gameId, flags, onChoose, disabled, tense, roster, militaryOptionChoice, campaignEra }: CrisisCardProps) {
   const [selected, setSelected] = useState<number | null>(null)
   const breaking = isBreakingEvent(event)
   const callback = getEventCallback(event, flags)
@@ -109,7 +111,7 @@ export function CrisisCard({ event, month, gameId, flags, onChoose, disabled, te
         backgroundPosition={treatment.backgroundPosition}
         foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
       />
-      <RoomAmbience src={getRoomAmbience(getEventBackground(event.category))} />
+      <RoomAmbience src={getRoomAmbience(getEventBackground(event.category), campaignEra)} />
 
       <div
         style={roomAccentStyle(accentColor)}

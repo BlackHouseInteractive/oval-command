@@ -266,6 +266,7 @@ export function NewGameForm({ unlockedPerks, ownedContent, isGuest }: NewGameFor
           backgroundPosition={treatment.backgroundPosition}
           foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
         />
+        <RoomAmbience src={getRoomAmbience(bgImage, campaignEra)} />
         <div className="w-full max-w-md">
           <div className="flex items-center justify-between">
             <button
@@ -336,7 +337,10 @@ export function NewGameForm({ unlockedPerks, ownedContent, isGuest }: NewGameFor
           backgroundPosition={treatment.backgroundPosition}
           foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
         />
-        <RoomAmbience src={getRoomAmbience(bgImage, campaignEra)} />
+        {/* No RoomAmbience here on purpose — the broadcast-studio bed for
+            this screen is started directly by the effect above (election-
+            night.mp3 has no per-room mapping to look up), and a second
+            RoomAmbience call resolving to undefined would just fight it. */}
         <div className="w-full max-w-md text-center">
           <button
             type="button"
