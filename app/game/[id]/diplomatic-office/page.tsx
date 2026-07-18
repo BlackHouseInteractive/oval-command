@@ -8,8 +8,10 @@ import { CabinetCard } from '@/components/game/CabinetCard'
 import { PendingEventBanner } from '@/components/game/PendingEventBanner'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
 import { RoomAmbience } from '@/components/game/RoomAmbience'
+import { SituationMap } from '@/components/game/SituationMap'
 import { getRoomTreatment, getRoomImage, isTenseMood } from '@/lib/event-backgrounds'
 import { getRoomAmbience } from '@/lib/room-audio'
+import { resolveEventRegion } from '@/lib/situation-map'
 
 const MATCHING_CATEGORIES = ['diplomacy']
 
@@ -30,6 +32,7 @@ export default async function DiplomaticOfficePage({ params }: PageProps) {
   const worldLeaders = resolveRoster(game).filter(n => n.faction === 'international')
   const pendingEvent = row.currentEventId ? ALL_EVENTS.find(e => e.id === row.currentEventId) : undefined
   const showBanner = game.status === 'ACTIVE' && pendingEvent && MATCHING_CATEGORIES.includes(pendingEvent.category)
+  const mapRegion = game.status === 'ACTIVE' && pendingEvent ? resolveEventRegion(pendingEvent, game) : null
 
   const roomImage = getRoomImage('/diplomatic-office-bg.webp', isTenseMood(game, pendingEvent), game.campaignEra)
   const treatment = getRoomTreatment(roomImage)
@@ -59,6 +62,7 @@ export default async function DiplomaticOfficePage({ params }: PageProps) {
       {showBanner && pendingEvent && (
         <div className="mt-6">
           <PendingEventBanner event={pendingEvent} gameId={game.id} />
+          {mapRegion && <SituationMap key={pendingEvent.id} region={mapRegion} />}
         </div>
       )}
 

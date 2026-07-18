@@ -78,7 +78,8 @@
         ],
         "outcome": "Congress rallied behind the bill in a rare show of unity. Expensive, but the legislation sets a generational precedent for digital infrastructure protection."
       }
-    ]
+    ],
+    "region": "domestic"
   },
   {
     "id": "stock_market_crash",
@@ -269,7 +270,8 @@
         ],
         "outcome": "The bill collapsed in committee along party lines. You look principled. You got nothing done. The opposition immediately ran ads against you."
       }
-    ]
+    ],
+    "region": "domestic"
   },
   {
     "id": "hurricane_gulf",
@@ -420,7 +422,8 @@
         ],
         "outcome": "The aggressor's economy contracted 8% within a quarter. The war dragged on. The sanctions coalition held. Slow but measurable pressure."
       }
-    ]
+    ],
+    "region": "europe"
   },
   {
     "id": "classified_leak",
@@ -565,7 +568,8 @@
         "sets_flags": [],
         "outcome": "The accusation backfired spectacularly. Moderate voters were disgusted. Congress ground to a halt. Your Chief of Staff called it the worst political decision of the term."
       }
-    ]
+    ],
+    "region": "domestic"
   },
   {
     "id": "pandemic_outbreak",
@@ -1179,7 +1183,8 @@
         "sets_flags": [],
         "outcome": "The secret talks worked but leaked within a month. You were accused of appeasing China. Taiwan felt abandoned. The resolution was real but the political cost was significant."
       }
-    ]
+    ],
+    "region": "east_asia"
   },
   {
     "id": "recession_confirmed",
@@ -1318,7 +1323,8 @@
         "sets_flags": [],
         "outcome": "China vetoed the strongest elements. A watered-down sanctions package passed. North Korea ignored it. The UN pathway was exhausted for the near term."
       }
-    ]
+    ],
+    "region": "east_asia"
   },
   {
     "id": "debt_ceiling_crisis",
@@ -1530,7 +1536,8 @@
         "sets_flags": [],
         "outcome": "Russia vetoed the resolution. The session created international clarity about who the aggressor was. The UN process was exhausted but the diplomatic positioning was solid."
       }
-    ]
+    ],
+    "region": "europe"
   },
   {
     "id": "immigration_raid_controversy",
@@ -2027,7 +2034,8 @@
         "sets_flags": [],
         "outcome": "The diplomatic expulsion sent a clear signal. The foreign government responded in kind, expelling US diplomats. The intelligence operation continued from third-country infrastructure."
       }
-    ]
+    ],
+    "region": "classified"
   },
   {
     "id": "fed_rate_conflict",
@@ -2295,7 +2303,8 @@
         ],
         "outcome": "The FTO designation unlocked new legal tools and froze cartel assets. Mexico called it an insult to their sovereignty. Congress cheered. The cartels adapted."
       }
-    ]
+    ],
+    "region": "latin_america"
   },
   {
     "id": "social_media_regulation",
@@ -2763,7 +2772,8 @@
         "sets_flags": [],
         "outcome": "The demonstration sent a credible deterrent signal. The arms race in space accelerated. The Pentagon called it a necessary investment. Diplomats called it an escalation."
       }
-    ]
+    ],
+    "region": "east_asia"
   },
   {
     "id": "trade_war_china",
@@ -2896,7 +2906,8 @@
         "sets_flags": [],
         "outcome": "Power was restored on the utility's timeline. The quiet approach was criticized as weak. The lack of attribution was later revealed in a leak. The response became a political liability."
       }
-    ]
+    ],
+    "region": "domestic"
   },
   {
     "id": "immigration_visa_backlog",
@@ -3106,7 +3117,8 @@
         "sets_flags": [],
         "outcome": "The technology transfer approach was innovative and broadly praised. It helped countries that mattered. The commitment of clean energy IP created American soft power dividends for years."
       }
-    ]
+    ],
+    "region": "europe"
   },
   {
     "id": "opioid_pharma_settlement",
@@ -3256,7 +3268,8 @@
         "sets_flags": [],
         "outcome": "The evacuation protected American lives but projected weakness across the region. Allies questioned US commitment to the area. Adversaries took note. Rebuilding presence took two years."
       }
-    ]
+    ],
+    "region": "middle_east"
   },
   {
     "id": "reelection_campaign_launch",
@@ -3533,7 +3546,8 @@
         "sets_flags": [],
         "outcome": "Russia and China blocked the strongest measures. A limited resolution passed. International inspectors were given expanded access. The program remained in place but slowed."
       }
-    ]
+    ],
+    "region": "middle_east"
   },
   {
     "id": "water_crisis",
@@ -3728,7 +3742,8 @@
         "sets_flags": [],
         "outcome": "The diplomatic opening produced a partial agreement within three months. The crisis eased. The settlement was imperfect but real. An exit from a bad situation on reasonable terms."
       }
-    ]
+    ],
+    "region": "classified"
   },
   {
     "id": "inflation_emergency",
@@ -3856,7 +3871,8 @@
         "sets_flags": [],
         "outcome": "Both parties felt betrayed by the leak. The negotiations collapsed. The diplomatic community's trust in US discretion was damaged. A historic opportunity was lost for domestic political gain."
       }
-    ]
+    ],
+    "region": "classified"
   },
   {
     "id": "gun_legislation_opposition",
@@ -5047,7 +5063,8 @@
         "sets_flags": [],
         "outcome": "The disengagement created a vacuum that China filled within weeks. US influence in the region declined significantly. The rare earth agreements were voided. A strategic retreat with lasting consequences."
       }
-    ]
+    ],
+    "region": "africa"
   },
   {
     "id": "latin_america_migration",
@@ -5118,7 +5135,8 @@
         "sets_flags": [],
         "outcome": "Mexico accepted the deal under significant economic pressure. Migration flows to the US border dropped 40%. Mexico's relationship with Central American neighbors deteriorated. A transactional success."
       }
-    ]
+    ],
+    "region": "latin_america"
   },
   {
     "id": "middle_east_normalization",
@@ -5188,7 +5206,8 @@
         "sets_flags": [],
         "outcome": "Treating a historic peace deal as a trade negotiation appalled both parties and their international supporters. The deal collapsed. The transactional approach was widely condemned."
       }
-    ]
+    ],
+    "region": "middle_east"
   },
   {
     "id": "g7_leadership_moment",
@@ -5259,7 +5278,8 @@
         "sets_flags": [],
         "outcome": "The China-focused coalition was the summit's defining achievement. Six nations committed to supply chain diversification. China issued sharp diplomatic protests. The strategic shift was real."
       }
-    ]
+    ],
+    "region": "europe"
   },
   {
     "id": "un_security_council_crisis",
@@ -5328,7 +5348,8 @@
         "sets_flags": [],
         "outcome": "The public call-out was effective messaging that isolated the vetoing powers. The crisis remained unresolved through the UN, but America's principled position was clear to the world."
       }
-    ]
+    ],
+    "region": "classified"
   },
   {
     "id": "election_october_surprise",
@@ -5848,7 +5869,8 @@
         "sets_flags": [],
         "outcome": "The quiet approach bought time but drew criticism once it became public that you'd known for days without acting visibly. The missiles came out. The political cost of appearing passive lingered."
       }
-    ]
+    ],
+    "region": "latin_america"
   },
   {
     "id": "hist_oil_embargo",
@@ -6060,7 +6082,8 @@
         "sets_flags": [],
         "outcome": "The offer was rejected by the revolutionary government as insufficient, and was widely condemned domestically as appeasement that betrayed an ally who had trusted American protection. A costly move that achieved nothing."
       }
-    ]
+    ],
+    "region": "classified"
   },
   {
     "id": "hist_steel_strike",
@@ -6357,7 +6380,8 @@
         ],
         "outcome": "Separating civilian space exploration from military rocketry sent a deliberate signal about peaceful intent while still building the underlying technical capability. The new agency became a source of national pride for generations."
       }
-    ]
+    ],
+    "region": "classified"
   },
   {
     "id": "hist_stagflation_squeeze",
@@ -6828,7 +6852,8 @@
         "sets_flags": [],
         "outcome": "The adversary takes it as confirmation of weakness. Allies are stunned. It will be the defining image of the end of your term."
       }
-    ]
+    ],
+    "region": "classified"
   },
   {
     "id": "campaign_fundraising_gala",
@@ -7721,7 +7746,8 @@
         ],
         "outcome": "Deferring costs little at home and something real abroad — allies who were counting on this notice the hesitation."
       }
-    ]
+    ],
+    "region": "east_asia"
   },
   {
     "id": "pacific_framework_negotiations",
@@ -7811,7 +7837,8 @@
         ],
         "outcome": "Walking away preserves the budget and the principle. It also likely costs the framework its most important participant."
       }
-    ]
+    ],
+    "region": "east_asia"
   },
   {
     "id": "pacific_framework_signing",
@@ -7895,7 +7922,8 @@
         ],
         "outcome": "Letting it die avoids the long-term commitment. It also tells every ally watching exactly how far your word travels."
       }
-    ]
+    ],
+    "region": "east_asia"
   },
   {
     "id": "cyber_grid_probe",
@@ -7955,7 +7983,8 @@
         "sets_flags": [],
         "outcome": "The story leaked anyway. \"Why weren’t we told?\" became the week’s dominant headline."
       }
-    ]
+    ],
+    "region": "domestic"
   },
   {
     "id": "border_patrol_ambush",
@@ -8012,7 +8041,8 @@
         "sets_flags": [],
         "outcome": "Border agents’ union called the response \"an insult to the men and women who nearly died out there.\""
       }
-    ]
+    ],
+    "region": "domestic"
   },
   {
     "id": "refinery_explosion",
@@ -8135,7 +8165,8 @@
         "sets_flags": [],
         "outcome": "The vote sent shockwaves through the alliance. Two other partners quietly began hedging their bets."
       }
-    ]
+    ],
+    "region": "classified"
   },
   {
     "id": "foreign_election_meddling",
@@ -8192,7 +8223,8 @@
         "sets_flags": [],
         "outcome": "The meddling worked. When it surfaced months later, the question was why Washington said nothing."
       }
-    ]
+    ],
+    "region": "classified"
   },
   {
     "id": "trade_tariffs_proposed",
@@ -8384,7 +8416,8 @@
         ],
         "outcome": "Ceding the lead to Congress slowed things down but spread the political risk more evenly."
       }
-    ]
+    ],
+    "region": "classified"
   },
   {
     "id": "border_surge",
@@ -8453,7 +8486,8 @@
         ],
         "outcome": "Photos from an overcrowded facility went viral within days, undercutting the \"seasonal\" framing badly."
       }
-    ]
+    ],
+    "region": "domestic"
   },
   {
     "id": "border_crisis_flashpoint",
@@ -8520,7 +8554,8 @@
         ],
         "outcome": "The deflection satisfied no one. \"It’s been years,\" one anchor noted flatly on air."
       }
-    ]
+    ],
+    "region": "domestic"
   },
   {
     "id": "grid_stress_test",
@@ -9525,7 +9560,8 @@
         ],
         "outcome": "The violence kept climbing while Washington treated it as someone else’s problem."
       }
-    ]
+    ],
+    "region": "domestic"
   },
   {
     "id": "cartel_violence_resolution",
@@ -9591,7 +9627,8 @@
         ],
         "outcome": "The wind-down saved money and let the violence creep back up almost immediately."
       }
-    ]
+    ],
+    "region": "domestic"
   },
   {
     "id": "media_scandal_leak",

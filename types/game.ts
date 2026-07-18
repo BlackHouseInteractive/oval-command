@@ -143,6 +143,27 @@ export interface EventChoice {
   opensReplacementPicker?: boolean
 }
 
+/**
+ * Where a crisis is unfolding, for the Situation Room / Diplomatic Office
+ * map (see lib/situation-map.ts) — a stylized briefing-board zone, not a
+ * literal coordinate. 'domestic' is for crises that happen on US soil
+ * regardless of a foreign actor's nationality (a cyberattack attributed to
+ * a foreign government is still domestic — the story is about defending
+ * the homeland, not intervening abroad). 'classified' is for events that
+ * deliberately never name an actor or place (an unnamed "adversary," a
+ * generic "hostile nation") — a real category, not a fallback for missing
+ * data. Most events don't set this at all: only ones whose category is
+ * military/diplomacy/international/security are map-eligible in the
+ * first place, and a couple of those (NPC-relationship scenes gated
+ * behind milestone_* flags) are deliberately excluded since they aren't
+ * about a place. See lib/situation-map.ts's resolveEventRegion for the
+ * couple of chain events whose region depends on which of several
+ * possible root events actually fired, rather than being fixed here.
+ */
+export type RegionTag =
+  | 'north_america' | 'europe' | 'east_asia' | 'middle_east'
+  | 'latin_america' | 'africa' | 'domestic' | 'classified'
+
 export interface CrisisEvent {
   id:            string
   title:         string
@@ -153,6 +174,8 @@ export interface CrisisEvent {
   requires_flags: string[]
   weight:        number
   choices:       EventChoice[]
+  /** See RegionTag's own doc comment. Omitted for events that aren't map-eligible or whose region must be resolved dynamically. */
+  region?: RegionTag
   /**
    * Marks this event as inspired by a real historical situation. When
    * true, `historicalContext` should explain the real-world precedent in
