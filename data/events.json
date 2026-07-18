@@ -1188,14 +1188,14 @@
     "description": "Two consecutive quarters of negative GDP growth. The R-word is official. Unemployment is at 6.8% and climbing. Mortgage delinquencies are rising. The opposition has been saying this was coming for months and they're already running ads.",
     "triggers": {
       "economy": {
-        "max": 35
+        "max": 42
       }
     },
     "sets_flags": [
       "recession_active"
     ],
     "requires_flags": [],
-    "weight": 5,
+    "weight": 15,
     "choices": [
       {
         "index": 0,

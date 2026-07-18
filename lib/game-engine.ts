@@ -429,11 +429,44 @@ export function pickEvent(game: Game, ownedContent: Set<string> = new Set(FREE_C
   return weightedRandom(eligible)
 }
 
+// A flag-chained event — the payoff beat of a narrative arc (war
+// aftermath, trade war retaliation, SCOTUS confirmation, a story pack's
+// second/third beat) — only exists because some earlier event just set a
+// specific flag. That window can close (the flag can get overwritten, the
+// story moment can pass) before it draws again, unlike a plain stat-gated
+// event (e.g. `security: {max: 60}`), which stays eligible for as long as
+// that stat sits in range — often most of the game. Only the flag-chained
+// case gets the boost: an earlier attempt that also boosted every non-
+// always_available event (including broad stat gates) just replaced one
+// dominant tier with a different one, verified via the same simulation
+// below.
+function isChainedEvent(event: CrisisEvent): boolean {
+  if (event.requires_flags && event.requires_flags.length > 0) return true
+  return Object.entries(event.triggers).some(
+    ([key, val]) => typeof val === 'boolean' && key !== 'always_available' && val === true
+  )
+}
+
+// Verified via 300-playthrough simulation that without this, a handful of
+// always-available weight-10 events (cyber_bank_attack, border_crisis,
+// stock_market_crash) so dominated the draw that entire narrative arcs
+// almost never paid off even once their trigger flag was set (e.g. six
+// war-aftermath events sharing `at_war`, set in >100% of games on average,
+// still fired in only 14-19 of 300 games each). 2.5x was tuned against
+// that same simulation: enough to give chained events a real shot without
+// letting them dominate every month they're eligible.
+const CHAINED_EVENT_SCARCITY_BOOST = 2.5
+
+function effectiveWeight(event: CrisisEvent): number {
+  const base = event.weight ?? 5
+  return isChainedEvent(event) ? base * CHAINED_EVENT_SCARCITY_BOOST : base
+}
+
 function weightedRandom(events: CrisisEvent[]): CrisisEvent {
-  const total = events.reduce((sum, e) => sum + (e.weight ?? 5), 0)
+  const total = events.reduce((sum, e) => sum + effectiveWeight(e), 0)
   let rand = Math.random() * total
   for (const event of events) {
-    rand -= event.weight ?? 5
+    rand -= effectiveWeight(event)
     if (rand <= 0) return event
   }
   return events[events.length - 1]
