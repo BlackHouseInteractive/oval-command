@@ -51,9 +51,14 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   // computeLegacyScore only reads these four fields off Game.
   const finishedGames = await prisma.game.findMany({
     where: { userId: session.user.id, status: { in: ['COMPLETE', 'GAMEOVER'] } },
-    select: { presidentName: true, stats: true, passedLaws: true, activeScandals: true, activeConflicts: true },
+    select: { presidentName: true, difficulty: true, stats: true, passedLaws: true, activeScandals: true, activeConflicts: true },
   })
-  const personalBest = finishedGames.reduce<{ presidentName: string; score: number } | null>((best, g) => {
+  // Still a single best across all difficulties, not a best-per-difficulty
+  // breakdown (that's the Leaderboard's job) — but labeled with whichever
+  // difficulty actually earned it, so an Easy-mode score doesn't silently
+  // stand in as "the" personal best when it wasn't the hardest thing
+  // this player has actually done.
+  const personalBest = finishedGames.reduce<{ presidentName: string; difficulty: string; score: number } | null>((best, g) => {
     const legacy = computeLegacyScore({
       stats:           g.stats as unknown as GameStats,
       passedLaws:      (g.passedLaws as unknown as string[]) ?? [],
@@ -61,7 +66,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       activeConflicts: (g.activeConflicts as unknown as ActiveConflict[]) ?? [],
     } as Game)
     return !best || legacy.total > best.score
-      ? { presidentName: g.presidentName, score: legacy.total }
+      ? { presidentName: g.presidentName, difficulty: g.difficulty, score: legacy.total }
       : best
   }, null)
 
@@ -124,6 +129,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             <div className="rounded-sm border border-[var(--color-brass)]/30 bg-[var(--color-brass)]/5 px-4 py-3 text-center">
               <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-brass)]">
                 Personal Best
+                {personalBest.difficulty && personalBest.difficulty !== 'normal' && (
+                  <span className="ml-1.5 text-[var(--color-warn)]">· {personalBest.difficulty}</span>
+                )}
               </div>
               <p className="mt-1 text-sm text-[var(--color-paper-dim)]">
                 President {personalBest.presidentName} scored{' '}
