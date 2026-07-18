@@ -3,7 +3,10 @@
 import { createContext, useContext, useEffect, useRef, useState, useCallback, type ReactNode } from 'react'
 
 const MUTE_STORAGE_KEY = 'oval-command:audio-muted'
-const AMBIENT_VOLUME = 0.35
+// Lowered from 0.35 — at that level, room ambience (some of which has a
+// murmured-conversation texture layered into it) was loud enough to read
+// as actual dialogue instead of background room tone.
+const AMBIENT_VOLUME = 0.18
 // ~-6dB in linear amplitude — a tasteful reduction while something worth
 // focusing on is on screen, not a mute.
 const DUCK_LEVEL = 0.5
