@@ -11,7 +11,7 @@ import { RoomAmbience } from '@/components/game/RoomAmbience'
 import { useAudio, pickVariant, CANCEL_VARIANTS } from '@/components/AudioProvider'
 import { getRoomAmbience } from '@/lib/room-audio'
 import { getRoomTreatment } from '@/lib/event-backgrounds'
-import { CAMPAIGN_SCENARIOS, resolveCampaignChoices, computeElectionResult } from '@/lib/campaign'
+import { pickCampaignScenarios, resolveCampaignChoices, resolveCampaignText, computeElectionResult } from '@/lib/campaign'
 import { CabinetSlotPicker } from '@/components/CabinetSlotPicker'
 import { getDefaultCabinetSelections } from '@/lib/cabinet'
 import { PRIORITY_DEFS, MIN_PRIORITIES, MAX_PRIORITIES } from '@/lib/priorities'
@@ -77,6 +77,10 @@ export function NewGameForm({ unlockedPerks, ownedContent, isGuest }: NewGameFor
   const router = useRouter()
   const [presidentName, setPresidentName] = useState('')
   const [party, setParty] = useState<Party>('DEMOCRAT')
+  // Rolled once per new-game session, not re-rolled on every render — see
+  // pickCampaignScenarios(). Each beat has two variants; which one this
+  // session got is fixed for the rest of the flow.
+  const [scenarios] = useState(() => pickCampaignScenarios())
   const [difficulty, setDifficulty] = useState<Difficulty>('normal')
   const [campaignEra, setCampaignEra] = useState('modern')
   const [perkId, setPerkId] = useState<string | null>(null)
@@ -154,7 +158,7 @@ export function NewGameForm({ unlockedPerks, ownedContent, isGuest }: NewGameFor
   function handleCampaignChoice(optionId: string) {
     if (phase.step !== 'campaign') return
     const choiceIds = [...phase.choiceIds, optionId]
-    if (phase.scenarioIndex + 1 < CAMPAIGN_SCENARIOS.length) {
+    if (phase.scenarioIndex + 1 < scenarios.length) {
       setPhase({ step: 'campaign', scenarioIndex: phase.scenarioIndex + 1, choiceIds })
     } else {
       setPhase({ step: 'election-night', choiceIds, retryCount: 0 })
@@ -170,7 +174,7 @@ export function NewGameForm({ unlockedPerks, ownedContent, isGuest }: NewGameFor
         setPhase({ step: 'campaign', scenarioIndex: phase.scenarioIndex - 1, choiceIds: phase.choiceIds.slice(0, -1) })
       }
     } else if (phase.step === 'election-night') {
-      setPhase({ step: 'campaign', scenarioIndex: CAMPAIGN_SCENARIOS.length - 1, choiceIds: phase.choiceIds.slice(0, -1) })
+      setPhase({ step: 'campaign', scenarioIndex: scenarios.length - 1, choiceIds: phase.choiceIds.slice(0, -1) })
     } else if (phase.step === 'cabinet-assembly') {
       if (phase.slotIndex === 0) {
         setPhase({ step: 'election-night', choiceIds: phase.choiceIds, retryCount: 0 })
@@ -255,7 +259,7 @@ export function NewGameForm({ unlockedPerks, ownedContent, isGuest }: NewGameFor
   }
 
   if (phase.step === 'campaign') {
-    const scenario = CAMPAIGN_SCENARIOS[phase.scenarioIndex]
+    const scenario = scenarios[phase.scenarioIndex]
     const bgImage = SCENARIO_BACKGROUNDS[scenario.id] ?? DEBATE_BG
     const treatment = getRoomTreatment(bgImage)
     return (
@@ -287,13 +291,13 @@ export function NewGameForm({ unlockedPerks, ownedContent, isGuest }: NewGameFor
 
           <div className="mt-4 text-center">
             <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-brass)]">
-              The Campaign · {phase.scenarioIndex + 1} of {CAMPAIGN_SCENARIOS.length}
+              The Campaign · {phase.scenarioIndex + 1} of {scenarios.length}
             </div>
             <h1 className="mt-2 font-[family-name:var(--font-display)] text-2xl font-semibold text-[var(--color-paper)]">
               {scenario.prompt}
             </h1>
             <p className="mt-3 text-sm leading-relaxed text-[var(--color-paper-dim)]">
-              {scenario.flavor}
+              {resolveCampaignText(scenario.flavor, party)}
             </p>
           </div>
 
