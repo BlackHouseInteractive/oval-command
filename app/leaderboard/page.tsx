@@ -7,24 +7,46 @@ import { computePresidentialArchetype } from '@/lib/archetype-engine'
 import { SiteNav } from '@/components/SiteNav'
 import { LeaderboardRow } from '@/components/LeaderboardRow'
 import { Seal } from '@/components/Seal'
-import type { GameLog } from '@/types/game'
+import { cn } from '@/lib/utils'
+import type { GameLog, Difficulty } from '@/types/game'
 
 const LEADERBOARD_SIZE = 50
+
+// No "All" tab on purpose — mixing difficulties back together is exactly
+// the fairness problem this split exists to fix (an Easy 95 outranking an
+// Expert 80 says nothing about who actually played better).
+const DIFFICULTY_TABS: { value: Difficulty; label: string }[] = [
+  { value: 'easy', label: 'Easy' },
+  { value: 'normal', label: 'Normal' },
+  { value: 'hard', label: 'Hard' },
+  { value: 'expert', label: 'Expert' },
+]
+
+interface LeaderboardPageProps {
+  searchParams: Promise<{ difficulty?: string }>
+}
 
 // Deliberately public — no auth() redirect. There's no global middleware
 // enforcing sign-in in this app (every other page opts into its own auth
 // check), so this is the one page that intentionally doesn't.
-export default async function LeaderboardPage() {
+export default async function LeaderboardPage({ searchParams }: LeaderboardPageProps) {
+  const { difficulty: difficultyParam } = await searchParams
+  const difficulty: Difficulty = DIFFICULTY_TABS.some(t => t.value === difficultyParam)
+    ? (difficultyParam as Difficulty)
+    : 'normal'
+
   const session = await auth()
 
   // Cheap, indexed step: rank by the stored Game.legacyScore column rather
   // than recomputing for every user's every finished game — that doesn't
   // scale the way per-account recomputation does on /presidencies. Only
   // the bounded top N below get the richer live recompute (full breakdown
-  // + archetype), matching that page for consistency.
+  // + archetype), matching that page for consistency. Filtered to the
+  // selected difficulty before grouping, so "best per user" is already
+  // scoped correctly without any change to the groupBy shape itself.
   const bestPerUser = await prisma.game.groupBy({
     by: ['userId'],
-    where: { status: { in: ['COMPLETE', 'GAMEOVER'] }, legacyScore: { not: null } },
+    where: { status: { in: ['COMPLETE', 'GAMEOVER'] }, legacyScore: { not: null }, difficulty },
     _max: { legacyScore: true },
     orderBy: { _max: { legacyScore: 'desc' } },
     take: LEADERBOARD_SIZE,
@@ -40,7 +62,6 @@ export default async function LeaderboardPage() {
     id:            string
     presidentName: string
     party:         ReturnType<typeof dbToGame>['party']
-    difficulty:    ReturnType<typeof dbToGame>['difficulty']
     legacyTotal:   number
     archetype:     ReturnType<typeof computePresidentialArchetype>
   }
@@ -48,8 +69,12 @@ export default async function LeaderboardPage() {
   let entries: LeaderboardEntry[] = []
 
   if (bestPerUser.length > 0) {
+    // difficulty included in every OR branch — without it, a user tied at
+    // the same legacyScore in two different difficulties could pull in the
+    // wrong game here (the groupBy above already scoped by difficulty, but
+    // legacyScore alone isn't unique enough to re-find the right row by).
     const rows = await prisma.game.findMany({
-      where: { OR: bestPerUser.map(b => ({ userId: b.userId, legacyScore: b._max.legacyScore })) },
+      where: { OR: bestPerUser.map(b => ({ userId: b.userId, legacyScore: b._max.legacyScore, difficulty })) },
       include: { logs: { orderBy: { month: 'asc' } } },
     })
 
@@ -72,7 +97,6 @@ export default async function LeaderboardPage() {
           id:            game.id,
           presidentName: game.presidentName,
           party:         game.party,
-          difficulty:    game.difficulty,
           legacyTotal:   legacy.total,
           archetype,
         }
@@ -110,14 +134,31 @@ export default async function LeaderboardPage() {
             Leaderboard
           </h1>
           <p className="mt-2 text-sm text-[var(--color-paper-dim)]">
-            The highest legacy score from every presidency ever played.
+            The highest legacy score from every presidency ever played — ranked separately per difficulty, so an Expert-mode term is never buried under an easier one.
           </p>
+        </div>
+
+        <div className="mb-6 flex gap-1 border-b border-[var(--color-border)]">
+          {DIFFICULTY_TABS.map(tab => (
+            <Link
+              key={tab.value}
+              href={`/leaderboard?difficulty=${tab.value}`}
+              className={cn(
+                'border-b-2 px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.06em] transition-colors',
+                tab.value === difficulty
+                  ? 'border-[var(--color-brass)] text-[var(--color-brass)]'
+                  : 'border-transparent text-[var(--color-paper-faint)] hover:text-[var(--color-paper-dim)]'
+              )}
+            >
+              {tab.label}
+            </Link>
+          ))}
         </div>
 
         {entries.length === 0 ? (
           <div className="rounded-sm border border-dashed border-[var(--color-border-strong)] px-6 py-12 text-center">
             <p className="text-sm text-[var(--color-paper-dim)]">
-              No completed terms yet. Be the first.
+              No completed {DIFFICULTY_TABS.find(t => t.value === difficulty)?.label} terms yet. Be the first.
             </p>
           </div>
         ) : (
@@ -128,7 +169,6 @@ export default async function LeaderboardPage() {
                 rank={i + 1}
                 presidentName={e.presidentName}
                 party={e.party}
-                difficulty={e.difficulty}
                 legacyTotal={e.legacyTotal}
                 archetype={e.archetype}
               />
