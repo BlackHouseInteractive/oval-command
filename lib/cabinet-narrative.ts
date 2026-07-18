@@ -99,8 +99,14 @@ export function checkNpcInitiatives(game: Game): CrisisEvent | null {
   // reads as occasional, not a scene every single month.
   if (Math.random() > 0.3) return null
 
+  // 'storyline' events (two-part cabinet arcs — see data/personnel-events.json's
+  // storyline_* entries) belong in this same pool: the second beat is
+  // already gated behind the first beat's own sets_flags via the
+  // requires_flags check below, same mechanism as everything else here.
+  // Omitting the tier here (an earlier oversight) meant five fully-authored
+  // two-part arcs — one per selectable slot — could never fire at all.
   const pool = personnelEvents.filter(e =>
-    (e.personnelMeta?.tier === 'request' || e.personnelMeta?.tier === 'conflict' || e.personnelMeta?.tier === 'room') &&
+    (e.personnelMeta?.tier === 'request' || e.personnelMeta?.tier === 'conflict' || e.personnelMeta?.tier === 'room' || e.personnelMeta?.tier === 'storyline') &&
     e.npcId && isSelectableSlot(e.npcId)
   )
 
