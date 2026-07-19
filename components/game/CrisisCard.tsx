@@ -114,7 +114,10 @@ export function CrisisCard({ event, month, gameId, flags, onChoose, disabled, te
       <RoomAmbience src={getRoomAmbience(getEventBackground(event.category), campaignEra)} />
 
       <div
-        style={roomAccentStyle(accentColor)}
+        style={{
+          ...roomAccentStyle(accentColor),
+          boxShadow: breaking ? '0 0 24px color-mix(in srgb, var(--color-bad) 35%, transparent)' : undefined,
+        }}
         className={cn(
           'rounded-sm border bg-[var(--color-surface)] backdrop-blur-sm',
           breaking ? 'border-[var(--color-bad)]' : 'border-[var(--color-border-strong)]'
@@ -124,14 +127,15 @@ export function CrisisCard({ event, month, gameId, flags, onChoose, disabled, te
       <div className="p-6">
         <div className="flex items-center justify-between">
           <CategoryTag category={event.category} />
-          <span
-            className={cn(
-              'font-mono text-[10px] uppercase tracking-[0.1em]',
-              breaking ? 'animate-pulse text-[var(--color-bad)]' : 'text-[var(--color-paper-faint)]'
-            )}
-          >
-            {breaking ? '🚨 Breaking News' : `Month ${month} Briefing`}
-          </span>
+          {breaking ? (
+            <span className="animate-pulse rounded-sm bg-[var(--color-bad)] px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.06em] text-[var(--color-paper)]">
+              Breaking News
+            </span>
+          ) : (
+            <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--color-paper-faint)]">
+              {`Month ${month} Briefing`}
+            </span>
+          )}
         </div>
 
         <h2 className={cn(
@@ -197,8 +201,8 @@ export function CrisisCard({ event, month, gameId, flags, onChoose, disabled, te
               )}
             >
               <div className="flex gap-3">
-                <span className="mt-0.5 font-mono text-[13px] font-medium text-[var(--color-brass)]">
-                  {String.fromCharCode(65 + i)}
+                <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-[var(--color-brass-dim)] font-mono text-[11px] font-medium text-[var(--color-brass)]">
+                  {i + 1}
                 </span>
                 <div className="flex-1">
                   <p className="text-sm leading-snug text-[var(--color-paper)]">{choice.text}</p>
@@ -221,7 +225,7 @@ export function CrisisCard({ event, month, gameId, flags, onChoose, disabled, te
               )}
             >
               <div className="flex gap-3">
-                <span className="mt-0.5 font-mono text-[13px] font-medium text-[var(--color-bad)]">
+                <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-[var(--color-bad)]/60 font-mono text-[11px] font-medium text-[var(--color-bad)]">
                   ⚔
                 </span>
                 <div className="flex-1">

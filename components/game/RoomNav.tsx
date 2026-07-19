@@ -40,12 +40,16 @@ export function RoomNav({ gameId, breakingEvent }: { gameId: string; breakingEve
       {breakingEvent && !isOvalOffice && (
         <Link
           href={ovalOfficeHref}
-          className="flex animate-pulse items-center justify-between border-t border-[var(--color-bad)] bg-[var(--color-bad-dim)]/90 px-4 py-2 backdrop-blur-sm transition-opacity hover:opacity-90"
+          className="flex items-center gap-3 border-t border-[var(--color-bad)] bg-[var(--color-ink)]/95 px-3 py-2 backdrop-blur-sm transition-opacity hover:opacity-90"
+          style={{ boxShadow: '0 -2px 16px color-mix(in srgb, var(--color-bad) 45%, transparent)' }}
         >
-          <span className="font-mono text-[11px] uppercase tracking-[0.05em] text-[var(--color-bad)]">
-            🚨 Breaking: {breakingEvent.title}
+          <span className="flex-shrink-0 animate-pulse rounded-sm bg-[var(--color-bad)] px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.06em] text-[var(--color-paper)]">
+            Breaking News
           </span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-bad)]">
+          <span className="min-w-0 flex-1 truncate font-mono text-[11px] uppercase tracking-[0.03em] text-[var(--color-paper-dim)]">
+            {breakingEvent.title}
+          </span>
+          <span className="flex-shrink-0 font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-bad)]">
             Respond →
           </span>
         </Link>

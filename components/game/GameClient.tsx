@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import { ShieldAlert, Gavel, Megaphone } from 'lucide-react'
 import { TermProgress } from '@/components/game/TermProgress'
 import { CrisisCard } from '@/components/game/CrisisCard'
@@ -20,6 +19,7 @@ import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackgroun
 import { RoomAmbience } from '@/components/game/RoomAmbience'
 import { AchievementUnlockToast } from '@/components/game/AchievementUnlockToast'
 import { ApprovalGauge } from '@/components/game/ApprovalGauge'
+import { AdvisorSpotlight } from '@/components/game/AdvisorSpotlight'
 import { ActionCard, type ActionCardTag } from '@/components/game/ActionCard'
 import { PresidentialInbox } from '@/components/game/PresidentialInbox'
 import { DailyBrief } from '@/components/game/DailyBrief'
@@ -36,7 +36,7 @@ import { getLegislativeOpportunity } from '@/lib/law-engine'
 import { getAdvisorRecommendations } from '@/lib/advisor-engine'
 import { computeStatTrend, getTopMovers } from '@/lib/stat-trends'
 import { getOutcomeSeverity } from '@/lib/outcome-magnitude'
-import { cn, monthToDate, AVATAR_COLORS } from '@/lib/utils'
+import { monthToDate } from '@/lib/utils'
 import type { InactivityWarning } from '@/lib/guest-cleanup'
 import type { PresidentialArchetype } from '@/lib/archetype-engine'
 import type { YearInReview } from '@/lib/year-in-review'
@@ -62,12 +62,6 @@ type ViewState =
   | { phase: 'loaded-gameover'; reason: import('@/types/game').GameOverReason }
   | { phase: 'personnel-outcome'; outcome: string; npcReactions: import('@/types/game').NpcReactionResult[] }
   | { phase: 'replace-cabinet'; slotId: string; resigned: boolean; outcome: string }
-
-const SEVERITY_DOT: Record<string, string> = {
-  critical: 'bg-[var(--color-bad)]',
-  warning: 'bg-[var(--color-warn)]',
-  opportunity: 'bg-[var(--color-good)]',
-}
 
 export function GameClient({ initialGame, initialEvent, recentLogs: initialRecentLogs, inactivityWarning, githubEnabled, googleEnabled, finishedGameArchetype, yearInReview, ownedContent }: GameClientProps) {
   const router = useRouter()
@@ -558,43 +552,17 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
         </div>
       )}
 
-      {/* 4. Advisor recommendation preview — rendered conversationally */}
+      {/* 4. Advisor Spotlight — one featured relationship, full portrait treatment */}
       {view.phase === 'briefing' && topAdvisorRec && (
         <div className="mt-6">
-          <Link
-            href={`/game/${game.id}/cabinet`}
-            className={cn(
-              'block rounded-sm border border-l-2 bg-[var(--color-surface)] px-4 py-3.5 backdrop-blur-sm transition-colors hover:border-[var(--color-brass-dim)]',
-              'border-[var(--color-border)]'
-            )}
-            style={{ borderLeftColor: `var(--color-${topAdvisorRec.severity === 'critical' ? 'bad' : topAdvisorRec.severity === 'warning' ? 'warn' : 'good'})` }}
-          >
-            <div className="flex items-start gap-3">
-              {topAdvisorNpc?.image ? (
-                <Image
-                  src={topAdvisorNpc.image}
-                  alt={topAdvisorNpc.shortName}
-                  width={32}
-                  height={32}
-                  className="h-8 w-8 flex-shrink-0 rounded-sm object-cover"
-                />
-              ) : (
-                <div className={cn('flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full font-mono text-[11px] font-medium', AVATAR_COLORS[topAdvisorNpc?.avatarColor ?? 'gray'])}>
-                  {topAdvisorRec.npcName.split(' ').map(w => w[0]).join('').slice(0, 2)}
-                </div>
-              )}
-              <div className="min-w-0 flex-1">
-                <span className="text-sm font-medium text-[var(--color-brass)]">{topAdvisorRec.npcName}</span>
-                <p className="mt-1 text-sm italic leading-snug text-[var(--color-paper-dim)]">
-                  “{topAdvisorRec.detail}”
-                </p>
-                <span className="mt-1.5 inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.05em] text-[var(--color-paper-faint)]">
-                  <span className={cn('h-1.5 w-1.5 rounded-full', SEVERITY_DOT[topAdvisorRec.severity])} />
-                  {topAdvisorRec.severity}
-                </span>
-              </div>
-            </div>
-          </Link>
+          <AdvisorSpotlight
+            gameId={game.id}
+            npc={topAdvisorNpc}
+            npcName={topAdvisorRec.npcName}
+            quote={topAdvisorRec.detail}
+            severity={topAdvisorRec.severity}
+            relationship={topAdvisorNpc ? game.npcRelationships[topAdvisorNpc.id] ?? topAdvisorNpc.relationship.start : undefined}
+          />
         </div>
       )}
 

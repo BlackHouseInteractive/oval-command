@@ -24,7 +24,8 @@ interface CabinetCardProps {
   }
 }
 
-function relationshipTone(value: number, min: number, max: number): { label: string; color: string } {
+/** Exported for AdvisorSpotlight, which needs the same tone/label read on a different layout. */
+export function relationshipTone(value: number, min: number, max: number): { label: string; color: string } {
   const pct = (value - min) / (max - min)
   if (pct >= MILESTONE_ALLY_THRESHOLD) return { label: 'Strong ally', color: 'text-[var(--color-good)]' }
   if (pct >= 0.45) return { label: 'Cordial', color: 'text-[var(--color-warn)]' }

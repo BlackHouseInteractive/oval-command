@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { cn, getStatLabel, formatDelta, isDeltaGood } from '@/lib/utils'
-import { getStatTone, TONE_CLASSES } from '@/components/game/StatCard'
+import { TONE_CLASSES } from '@/components/game/StatCard'
 import type { TopMover } from '@/lib/stat-trends'
 
 interface ApprovalGaugeProps {
@@ -9,19 +9,38 @@ interface ApprovalGaugeProps {
   topMovers: TopMover[]
 }
 
-const SIZE = 208
-const STROKE = 13
-const RADIUS = (SIZE - STROKE) / 2
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS
+// A speedometer-style semicircle, not the old full ring: the colored track
+// is a FIXED red->amber->green gradient across the whole 0-100 range (it
+// doesn't fill in as approval rises — the whole gauge face is always
+// visible), and a single marker rides along it to show where the current
+// value actually sits. Matches a real gauge dial rather than a progress
+// ring.
+const WIDTH = 240
+const HEIGHT = 142
+const CX = WIDTH / 2
+const CY = 128
+const RADIUS = 96
+const STROKE = 15
+
+/** Point on the arc for a given 0-100 value — 0 sits at the left end (180deg), 100 at the right end (0deg), sweeping up over the top. */
+function pointOnArc(percent: number, radius: number) {
+  const angleDeg = 180 * (1 - percent / 100)
+  const angleRad = (angleDeg * Math.PI) / 180
+  return {
+    x: CX + radius * Math.cos(angleRad),
+    y: CY - radius * Math.sin(angleRad),
+  }
+}
+
+const ARC_START = pointOnArc(0, RADIUS)
+const ARC_END = pointOnArc(100, RADIUS)
+const ARC_PATH = `M ${ARC_START.x},${ARC_START.y} A ${RADIUS},${RADIUS} 0 0 1 ${ARC_END.x},${ARC_END.y}`
 
 /**
  * Animates the displayed number from wherever it last landed to `target`
- * over `ms` — the ring itself already animates via a CSS transition
- * (duration-700 below), but CSS can't tween text content, so the number
- * used to just snap straight to the new value the instant props changed.
- * Reads its starting point off a ref updated every frame (not the previous
- * prop value) so a target that changes again mid-animation continues
- * smoothly from wherever the number actually is, instead of jumping.
+ * over `ms`. Also drives the marker's position (see JSX below) off this
+ * same tweened value, rather than the raw prop, so the marker and the
+ * number move in lockstep off one animation loop instead of two.
  * Skips the animation entirely on first mount — nothing to count up from.
  */
 function useCountUp(target: number, ms = 700): number {
@@ -58,19 +77,15 @@ function getApprovalDescriptor(delta: number): string {
 }
 
 /**
- * The Oval Office's focal element — deliberately larger and more central
- * than the original mockup's corner placement, per design review. A drop
- * shadow beneath the ring gives it presence/elevation rather than sitting
- * flush on the same plane as everything else. Shows the approval ring, a
- * qualitative descriptor, the month-over-month delta, and a short "why did
- * this change" list of the stats that moved the most this month.
+ * The Oval Office's focal element — a speedometer-style gauge dial. Shows
+ * the approval arc, a qualitative descriptor, the month-over-month delta,
+ * and a short "why did this change" list of the stats that moved the most
+ * this month.
  */
 export function ApprovalGauge({ approval, deltaFromLastMonth, topMovers }: ApprovalGaugeProps) {
   const percent = Math.max(0, Math.min(100, approval))
   const displayPercent = useCountUp(percent)
-  const tone = getStatTone('approval', approval)
-  const toneClass = TONE_CLASSES[tone]
-  const offset = CIRCUMFERENCE * (1 - percent / 100)
+  const marker = pointOnArc(displayPercent, RADIUS)
 
   const deltaGood = deltaFromLastMonth > 0
   const hasDelta = deltaFromLastMonth !== 0
@@ -82,44 +97,47 @@ export function ApprovalGauge({ approval, deltaFromLastMonth, topMovers }: Appro
       <div
         className="relative"
         style={{
-          width: SIZE,
-          height: SIZE,
-          filter: `drop-shadow(0 10px 28px color-mix(in srgb, var(--color-${tone}) 35%, transparent))`,
+          width: WIDTH,
+          height: HEIGHT,
+          filter: 'drop-shadow(0 10px 24px color-mix(in srgb, var(--color-brass) 25%, transparent))',
         }}
       >
-        <svg width={SIZE} height={SIZE} className="-rotate-90">
-          <circle
-            cx={SIZE / 2}
-            cy={SIZE / 2}
-            r={RADIUS}
+        <svg width={WIDTH} height={HEIGHT}>
+          <defs>
+            <linearGradient id="approval-gauge-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="var(--color-bad)" />
+              <stop offset="50%" stopColor="var(--color-warn)" />
+              <stop offset="100%" stopColor="var(--color-good)" />
+            </linearGradient>
+          </defs>
+          <path
+            d={ARC_PATH}
             fill="none"
-            stroke="var(--color-border)"
-            strokeWidth={STROKE}
-          />
-          <circle
-            cx={SIZE / 2}
-            cy={SIZE / 2}
-            r={RADIUS}
-            fill="none"
-            stroke={`var(--color-${tone})`}
+            stroke="url(#approval-gauge-gradient)"
             strokeWidth={STROKE}
             strokeLinecap="round"
-            strokeDasharray={CIRCUMFERENCE}
-            strokeDashoffset={offset}
-            className="transition-[stroke-dashoffset] duration-700 ease-out"
+          />
+          {/* Marker — rides the gradient track at the current (animated) value, like a needle tip resting on the dial face. */}
+          <circle
+            cx={marker.x}
+            cy={marker.y}
+            r={STROKE * 0.62}
+            fill="var(--color-ink)"
+            stroke="var(--color-paper)"
+            strokeWidth={2.5}
           />
         </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className={cn('font-mono text-5xl font-semibold tabular-nums', toneClass.text)}>
+        <div className="absolute inset-x-0 bottom-2 flex flex-col items-center">
+          <span className="font-mono text-4xl font-semibold tabular-nums text-[var(--color-paper)]">
             {Math.round(displayPercent)}%
           </span>
-          <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-paper-faint)]">
+          <span className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-paper-faint)]">
             Public Approval
           </span>
         </div>
       </div>
 
-      <p className={cn('mt-3 font-[family-name:var(--font-display)] text-base font-semibold', deltaTone ? TONE_CLASSES[deltaTone].text : 'text-[var(--color-paper-dim)]')}>
+      <p className={cn('mt-2 font-[family-name:var(--font-display)] text-base font-semibold', deltaTone ? TONE_CLASSES[deltaTone].text : 'text-[var(--color-paper-dim)]')}>
         {descriptor}
       </p>
 
