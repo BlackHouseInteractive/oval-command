@@ -87,6 +87,28 @@ export function SituationMap({ region }: SituationMapProps) {
           backgroundSize: '14px 14px',
         }}
       >
+        {/* Real world coastlines, recolored via CSS mask so the shape stays
+            themeable (paper-faint fill, low opacity) instead of baking in a
+            fixed color. Stretched non-uniformly (mask-size 100% 100%) across
+            the exact same 0-100 coordinate space NODE_POSITIONS uses, so a
+            region's marker lands on its own landmass. */}
+        <div
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          style={{
+            backgroundColor: 'var(--color-paper-faint)',
+            opacity: 0.5,
+            WebkitMaskImage: 'url(/situation-board-world.png)',
+            maskImage: 'url(/situation-board-world.png)',
+            WebkitMaskSize: '100% 100%',
+            maskSize: '100% 100%',
+            WebkitMaskRepeat: 'no-repeat',
+            maskRepeat: 'no-repeat',
+            WebkitMaskPosition: 'center',
+            maskPosition: 'center',
+          }}
+          aria-hidden="true"
+        />
+
         {isClassified ? (
           <button
             type="button"
