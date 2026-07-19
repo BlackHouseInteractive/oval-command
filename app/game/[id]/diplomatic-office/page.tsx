@@ -8,6 +8,7 @@ import { CabinetCard } from '@/components/game/CabinetCard'
 import { PendingEventBanner } from '@/components/game/PendingEventBanner'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
 import { RoomAmbience } from '@/components/game/RoomAmbience'
+import { RoomLayout } from '@/components/game/RoomLayout'
 import { SituationMap } from '@/components/game/SituationMap'
 import { getRoomTreatment, getRoomImage, isTenseMood } from '@/lib/event-backgrounds'
 import { getRoomAmbience } from '@/lib/room-audio'
@@ -38,7 +39,7 @@ export default async function DiplomaticOfficePage({ params }: PageProps) {
   const treatment = getRoomTreatment(roomImage)
 
   return (
-    <main className="mx-auto flex min-h-[calc(100dvh-6rem)] max-w-3xl flex-col justify-center px-6 py-10" style={roomAccentStyle('var(--color-cat-diplomacy)')}>
+    <main className="mx-auto flex min-h-[calc(100dvh-6rem)] max-w-6xl flex-col justify-center px-6 py-10" style={roomAccentStyle('var(--color-cat-diplomacy)')}>
       <RoomBackground
         image={roomImage}
         color="var(--color-cat-diplomacy)"
@@ -59,30 +60,34 @@ export default async function DiplomaticOfficePage({ params }: PageProps) {
         Where the rest of the world forms its opinion of you.
       </p>
 
-      {showBanner && pendingEvent && (
-        <div className="mt-6">
-          <PendingEventBanner event={pendingEvent} gameId={game.id} />
-          {mapRegion && <SituationMap key={pendingEvent.id} region={mapRegion} />}
-        </div>
-      )}
-
       <div className="mt-6">
-        <StatCard statKey="globalReputation" value={game.stats.globalReputation} />
-      </div>
-
-      <div className="mt-7">
-        <h2 className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
-          World Leaders
-        </h2>
-        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {worldLeaders.map(npc => (
-            <CabinetCard
-              key={npc.id}
-              npc={npc}
-              relationship={game.npcRelationships[npc.id] ?? npc.relationship.start}
-            />
-          ))}
-        </div>
+        <RoomLayout
+          left={<StatCard statKey="globalReputation" value={game.stats.globalReputation} />}
+          center={
+            showBanner && pendingEvent ? (
+              <>
+                <PendingEventBanner event={pendingEvent} gameId={game.id} />
+                {mapRegion && <SituationMap key={pendingEvent.id} region={mapRegion} />}
+              </>
+            ) : undefined
+          }
+          right={
+            worldLeaders.length > 0 ? (
+              <>
+                <h2 className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
+                  World Leaders
+                </h2>
+                {worldLeaders.map(npc => (
+                  <CabinetCard
+                    key={npc.id}
+                    npc={npc}
+                    relationship={game.npcRelationships[npc.id] ?? npc.relationship.start}
+                  />
+                ))}
+              </>
+            ) : undefined
+          }
+        />
       </div>
     </main>
   )

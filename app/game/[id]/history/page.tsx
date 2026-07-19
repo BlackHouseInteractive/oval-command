@@ -7,6 +7,7 @@ import { cn, formatDelta, isDeltaGood, getStatLabel, monthToDate } from '@/lib/u
 import { PendingEventBanner } from '@/components/game/PendingEventBanner'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
 import { RoomAmbience } from '@/components/game/RoomAmbience'
+import { RoomLayout } from '@/components/game/RoomLayout'
 import { SocialFeed } from '@/components/game/SocialFeed'
 import { PressConferencePanel } from '@/components/game/PressConferencePanel'
 import { generateSocialFeed } from '@/lib/social-feed'
@@ -56,7 +57,7 @@ export default async function HistoryPage({ params }: PageProps) {
   const treatment = getRoomTreatment(roomImage)
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-10" style={roomAccentStyle('var(--color-cat-scandal)')}>
+    <main className="mx-auto max-w-6xl px-6 py-10" style={roomAccentStyle('var(--color-cat-scandal)')}>
       <RoomBackground
         image={roomImage}
         color="var(--color-cat-scandal)"
@@ -73,81 +74,84 @@ export default async function HistoryPage({ params }: PageProps) {
         </h1>
       </div>
 
-      {showBanner && pendingEvent && (
-        <div className="mt-6">
-          <PendingEventBanner event={pendingEvent} gameId={game.id} />
-        </div>
-      )}
-
       <div className="mt-6">
-        <SocialFeed posts={posts} />
-      </div>
-
-      {game.status === 'ACTIVE' && (
-        <div className="mt-4">
-          <PressConferencePanel gameId={game.id} pendingBriefingTitle={pendingBriefingTitle} />
-        </div>
-      )}
-
-      <div className="mt-8 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
-        The Record
-      </div>
-
-      {logs.length === 0 && (
-        <div className="mt-3 rounded-sm border border-dashed border-[var(--color-border-strong)] px-6 py-12 text-center">
-          <p className="text-sm text-[var(--color-paper-dim)]">
-            No decisions recorded yet. History starts with your first choice.
-          </p>
-        </div>
-      )}
-
-      <div className="mt-4 space-y-0 border-l border-[var(--color-border)] pl-5">
-        {logs.map((log) => {
-          const event = log.eventId ? ALL_EVENTS.find(e => e.id === log.eventId) : undefined
-          const law = log.lawId ? ALL_LAWS.find(l => l.id === log.lawId) : undefined
-          const title = event?.title ?? law?.title ?? ACTION_LABEL[log.actionType] ?? log.actionType
-          const deltas = Object.entries(log.statDeltas).filter(([, v]) => v !== 0) as [keyof GameStats, number][]
-
-          return (
-            <div key={log.id} className="relative pb-6 last:pb-0">
-              <div className="absolute -left-[25px] top-1 h-2.5 w-2.5 rounded-full border-2 border-[var(--color-ink)] bg-[var(--color-brass-dim)]" />
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--color-paper-faint)]">
-                  {monthToDate(log.month)}
-                </span>
-                <span
-                  className={cn(
-                    'rounded-full px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.05em]',
-                    log.actionType === 'LAW_PASSED' && 'bg-[var(--color-good-dim)] text-[var(--color-good)]',
-                    log.actionType === 'LAW_FAILED' && 'bg-[var(--color-bad-dim)] text-[var(--color-bad)]',
-                    log.actionType === 'CRISIS' && 'bg-[var(--color-surface-2)] text-[var(--color-paper-faint)]'
-                  )}
-                >
-                  {ACTION_LABEL[log.actionType] ?? log.actionType}
-                </span>
+        <RoomLayout
+          left={
+            game.status === 'ACTIVE' ? (
+              <PressConferencePanel gameId={game.id} pendingBriefingTitle={pendingBriefingTitle} />
+            ) : undefined
+          }
+          center={
+            <>
+              {showBanner && pendingEvent && <PendingEventBanner event={pendingEvent} gameId={game.id} />}
+              <SocialFeed posts={posts} />
+            </>
+          }
+          right={
+            <>
+              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
+                The Record
               </div>
-              <p className="mt-1.5 text-sm font-medium text-[var(--color-paper)]">{title}</p>
-              {log.narrative && (
-                <p className="mt-1 text-[13px] leading-snug text-[var(--color-paper-dim)]">{log.narrative}</p>
-              )}
-              {deltas.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {deltas.map(([key, value]) => (
-                    <span
-                      key={key}
-                      className={cn(
-                        'font-mono text-[11px]',
-                        isDeltaGood(key, value) ? 'text-[var(--color-good)]' : 'text-[var(--color-bad)]'
-                      )}
-                    >
-                      {getStatLabel(key)} {formatDelta(key, value)}
-                    </span>
-                  ))}
+
+              {logs.length === 0 && (
+                <div className="rounded-sm border border-dashed border-[var(--color-border-strong)] px-4 py-8 text-center">
+                  <p className="text-sm text-[var(--color-paper-dim)]">
+                    No decisions recorded yet. History starts with your first choice.
+                  </p>
                 </div>
               )}
-            </div>
-          )
-        })}
+
+              <div className="space-y-0 border-l border-[var(--color-border)] pl-5">
+                {logs.map((log) => {
+                  const event = log.eventId ? ALL_EVENTS.find(e => e.id === log.eventId) : undefined
+                  const law = log.lawId ? ALL_LAWS.find(l => l.id === log.lawId) : undefined
+                  const title = event?.title ?? law?.title ?? ACTION_LABEL[log.actionType] ?? log.actionType
+                  const deltas = Object.entries(log.statDeltas).filter(([, v]) => v !== 0) as [keyof GameStats, number][]
+
+                  return (
+                    <div key={log.id} className="relative pb-6 last:pb-0">
+                      <div className="absolute -left-[25px] top-1 h-2.5 w-2.5 rounded-full border-2 border-[var(--color-ink)] bg-[var(--color-brass-dim)]" />
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--color-paper-faint)]">
+                          {monthToDate(log.month)}
+                        </span>
+                        <span
+                          className={cn(
+                            'rounded-full px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.05em]',
+                            log.actionType === 'LAW_PASSED' && 'bg-[var(--color-good-dim)] text-[var(--color-good)]',
+                            log.actionType === 'LAW_FAILED' && 'bg-[var(--color-bad-dim)] text-[var(--color-bad)]',
+                            log.actionType === 'CRISIS' && 'bg-[var(--color-surface-2)] text-[var(--color-paper-faint)]'
+                          )}
+                        >
+                          {ACTION_LABEL[log.actionType] ?? log.actionType}
+                        </span>
+                      </div>
+                      <p className="mt-1.5 text-sm font-medium text-[var(--color-paper)]">{title}</p>
+                      {log.narrative && (
+                        <p className="mt-1 text-[13px] leading-snug text-[var(--color-paper-dim)]">{log.narrative}</p>
+                      )}
+                      {deltas.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {deltas.map(([key, value]) => (
+                            <span
+                              key={key}
+                              className={cn(
+                                'font-mono text-[11px]',
+                                isDeltaGood(key, value) ? 'text-[var(--color-good)]' : 'text-[var(--color-bad)]'
+                              )}
+                            >
+                              {getStatLabel(key)} {formatDelta(key, value)}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </>
+          }
+        />
       </div>
     </main>
   )

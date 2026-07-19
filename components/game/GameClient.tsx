@@ -15,6 +15,7 @@ import { CabinetSlotPicker } from '@/components/CabinetSlotPicker'
 import { ApprovalChart } from '@/components/game/ApprovalChart'
 import { ConflictBanner } from '@/components/game/ConflictBanner'
 import { RoomAtmosphere } from '@/components/game/RoomAtmosphere'
+import { RoomLayout } from '@/components/game/RoomLayout'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
 import { RoomAmbience } from '@/components/game/RoomAmbience'
 import { AchievementUnlockToast } from '@/components/game/AchievementUnlockToast'
@@ -399,7 +400,7 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
   const topAdvisorNpc = topAdvisorRec ? resolveRoster(game).find(n => n.id === topAdvisorRec.npcId) : undefined
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-10" style={roomAccentStyle(accentColor)}>
+    <main className="mx-auto max-w-6xl px-6 py-10" style={roomAccentStyle(accentColor)}>
       <RoomAtmosphere color="var(--color-brass)" />
       {/* Baseline Oval Office tone for this screen — CrisisCard mounts its
           own RoomAmbience for whatever category backdrop is showing below,
@@ -408,190 +409,180 @@ export function GameClient({ initialGame, initialEvent, recentLogs: initialRecen
           event left the Oval Office's main screen with no ambience at all. */}
       <RoomAmbience src={getRoomAmbience('/oval-office-bg.webp', game.campaignEra)} />
 
-      {view.phase === 'briefing' && !yearInReview && (
-        <DailyBrief
-          gameId={game.id}
-          month={game.currentMonth}
-          monthLabel={monthLabel}
-          approvalDelta={approvalTrend.deltaFromLastMonth}
-          topMovers={topMovers}
-          pendingCrisisTitle={event?.title ?? null}
-        />
-      )}
-
-      {view.phase === 'briefing' && yearInReview && (
-        <AnnualReport gameId={game.id} review={yearInReview} />
-      )}
-
-      {/* 1. Greeting — no data of its own, just orients the player */}
-      <div>
-        <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-brass)]">
-          Good Morning, Mr. President
-        </div>
-        <p className="mt-1 text-sm text-[var(--color-paper-faint)]">{monthLabel}</p>
-      </div>
-
-      {view.phase === 'briefing' && (
-        <div className="mt-4">
-          <OnboardingWelcome />
-        </div>
-      )}
-
-      {view.phase === 'briefing' && inactivityWarning && (
-        <div className="mt-4">
-          <GuestExpiryWarning warning={inactivityWarning} githubEnabled={githubEnabled} googleEnabled={googleEnabled} />
-        </div>
-      )}
-
-      <div className="mt-4">
-        <TermProgress currentMonth={game.currentMonth} />
-      </div>
-
-      {game.activeConflicts.length > 0 && (
-        <div className="mt-4">
-          <ConflictBanner conflicts={game.activeConflicts} currentMonth={game.currentMonth} />
-        </div>
-      )}
-
-      {/* 2. Approval gauge — the Oval Office's focal element */}
-      <div className="mt-8">
-        <ApprovalGauge
-          approval={game.stats.approval}
-          deltaFromLastMonth={approvalTrend.deltaFromLastMonth}
-          topMovers={topMovers}
-        />
-        <div className="mt-3 space-y-1 text-center">
-          <Link
-            href={`/game/${game.id}/overview`}
-            className="block font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-paper-faint)] hover:text-[var(--color-brass)]"
-          >
-            View Government Overview →
-          </Link>
-          <Link
-            href={`/archive/${game.id}`}
-            className="block font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-paper-faint)] hover:text-[var(--color-brass)]"
-          >
-            View National Archives →
-          </Link>
-        </div>
-      </div>
-
-      {view.phase === 'outcome' && view.result.headlines.length > 0 && (
-        <div className="mt-6">
-          <HeadlineTicker headlines={view.result.headlines} />
-        </div>
-      )}
-
-      {error && (
-        <p className="mt-4 rounded-sm bg-[var(--color-bad-dim)] px-3.5 py-2.5 text-sm text-[var(--color-bad)]">
-          {error}
-        </p>
-      )}
-
-      {/* 3. Choose Your Presidential Action — visually distinct from the
-          bottom nav's free room navigation: these are the things that
-          consume this month's turn. The live crisis briefing renders
-          directly beneath its own card (not after the other two cards and
-          the advisor/inbox sections) so responding to it doesn't feel
-          disconnected from choosing to. */}
-      {view.phase === 'briefing' && (
-        <div className="mt-8">
-          <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--color-paper-faint)]">
-            Choose Your Presidential Action
-          </div>
-          <div className="mt-3">
-            <ActionCard
-              icon={ShieldAlert}
-              title={event?.category === 'personnel' ? 'A Personnel Matter' : 'Respond to Crisis'}
-              label={event ? event.title : 'No briefing this month'}
-              detail={crisisPriority}
-              tag={crisisTag}
-              href={`/game/${game.id}`}
-            />
-          </div>
-
-          {event && (
-            <div className="mt-3">
-              <CrisisCard
-                key={event.id}
-                event={event}
-                month={game.currentMonth}
-                gameId={game.id}
-                flags={game.flags}
-                onChoose={handleChoice}
-                disabled={submitting}
-                tense={isTenseMood(game, event)}
-                roster={resolveRoster(game)}
-                militaryOptionChoice={
-                  isMilitaryOptionUnlocked(game, resolveRoster(game))
-                    ? getMilitaryOptionChoice(event, game)
-                    : null
-                }
-                campaignEra={game.campaignEra}
-              />
+      <RoomLayout
+        left={
+          <>
+            {/* Greeting — no data of its own, just orients the player */}
+            <div>
+              <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-brass)]">
+                Good Morning, Mr. President
+              </div>
+              <p className="mt-1 text-sm text-[var(--color-paper-faint)]">{monthLabel}</p>
             </div>
-          )}
 
-          <div className="mt-5 space-y-2.5">
-            <ActionCard
-              icon={Gavel}
-              title="Propose Legislation"
-              label={lawLabel}
-              detail={lawDetail}
-              tag={lawTag}
-              href={`/game/${game.id}/congress`}
-            />
-            <ActionCard
-              icon={Megaphone}
-              title="Address the Nation"
-              label="Deliver a speech to shape public opinion"
-              tag="Optional"
-              href={`/game/${game.id}/history`}
-            />
-          </div>
-        </div>
-      )}
+            {view.phase === 'briefing' && <OnboardingWelcome />}
 
-      {/* 4. Advisor Spotlight — one featured relationship, full portrait treatment */}
-      {view.phase === 'briefing' && topAdvisorRec && (
-        <div className="mt-6">
-          <AdvisorSpotlight
-            gameId={game.id}
-            npc={topAdvisorNpc}
-            npcName={topAdvisorRec.npcName}
-            quote={topAdvisorRec.detail}
-            severity={topAdvisorRec.severity}
-            relationship={topAdvisorNpc ? game.npcRelationships[topAdvisorNpc.id] ?? topAdvisorNpc.relationship.start : undefined}
-          />
-        </div>
-      )}
+            {view.phase === 'briefing' && inactivityWarning && (
+              <GuestExpiryWarning warning={inactivityWarning} githubEnabled={githubEnabled} googleEnabled={googleEnabled} />
+            )}
 
-      {/* 5. Inbox Summary */}
-      {view.phase === 'briefing' && (
-        <div className="mt-6">
-          <PresidentialInbox
-            gameId={game.id}
-            hasPendingCrisis={Boolean(event)}
-            advisorMemoCount={advisorRecommendations.length}
-            hasCongressionalUpdate={Boolean(opportunity)}
-            showElectionCountdown={showElectionCountdown}
-          />
-        </div>
-      )}
+            <TermProgress currentMonth={game.currentMonth} />
 
-      <div className="mt-6">
-        {view.phase === 'processing' && <ProcessingCard />}
-        {view.phase === 'outcome' && (
-          <OutcomeCard
-            narrative={view.result.log.narrative ?? ''}
-            effects={view.result.log.statDeltas}
-            npcReactions={view.result.npcReactions}
-            onContinue={handleContinue}
-            nextMonth={view.result.game.currentMonth}
-            isGameOver={false}
-          />
-        )}
-      </div>
+            {game.activeConflicts.length > 0 && (
+              <ConflictBanner conflicts={game.activeConflicts} currentMonth={game.currentMonth} />
+            )}
+
+            {/* Approval gauge — the Oval Office's focal status instrument */}
+            <div>
+              <ApprovalGauge
+                approval={game.stats.approval}
+                deltaFromLastMonth={approvalTrend.deltaFromLastMonth}
+                topMovers={topMovers}
+              />
+              <div className="mt-3 space-y-1 text-center">
+                <Link
+                  href={`/game/${game.id}/overview`}
+                  className="block font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-paper-faint)] hover:text-[var(--color-brass)]"
+                >
+                  View Government Overview →
+                </Link>
+                <Link
+                  href={`/archive/${game.id}`}
+                  className="block font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-paper-faint)] hover:text-[var(--color-brass)]"
+                >
+                  View National Archives →
+                </Link>
+              </div>
+            </div>
+          </>
+        }
+        center={
+          <>
+            {view.phase === 'briefing' && !yearInReview && (
+              <DailyBrief
+                gameId={game.id}
+                month={game.currentMonth}
+                monthLabel={monthLabel}
+                approvalDelta={approvalTrend.deltaFromLastMonth}
+                topMovers={topMovers}
+                pendingCrisisTitle={event?.title ?? null}
+              />
+            )}
+
+            {view.phase === 'briefing' && yearInReview && (
+              <AnnualReport gameId={game.id} review={yearInReview} />
+            )}
+
+            {view.phase === 'outcome' && view.result.headlines.length > 0 && (
+              <HeadlineTicker headlines={view.result.headlines} />
+            )}
+
+            {error && (
+              <p className="rounded-sm bg-[var(--color-bad-dim)] px-3.5 py-2.5 text-sm text-[var(--color-bad)]">
+                {error}
+              </p>
+            )}
+
+            {/* Choose Your Presidential Action — visually distinct from the
+                bottom nav's free room navigation: these are the things that
+                consume this month's turn. The live crisis briefing renders
+                directly beneath its own card so responding to it doesn't
+                feel disconnected from choosing to. */}
+            {view.phase === 'briefing' && (
+              <div>
+                <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--color-paper-faint)]">
+                  Choose Your Presidential Action
+                </div>
+                <div className="mt-3">
+                  <ActionCard
+                    icon={ShieldAlert}
+                    title={event?.category === 'personnel' ? 'A Personnel Matter' : 'Respond to Crisis'}
+                    label={event ? event.title : 'No briefing this month'}
+                    detail={crisisPriority}
+                    tag={crisisTag}
+                    href={`/game/${game.id}`}
+                  />
+                </div>
+
+                {event && (
+                  <div className="mt-3">
+                    <CrisisCard
+                      key={event.id}
+                      event={event}
+                      month={game.currentMonth}
+                      gameId={game.id}
+                      flags={game.flags}
+                      onChoose={handleChoice}
+                      disabled={submitting}
+                      tense={isTenseMood(game, event)}
+                      roster={resolveRoster(game)}
+                      militaryOptionChoice={
+                        isMilitaryOptionUnlocked(game, resolveRoster(game))
+                          ? getMilitaryOptionChoice(event, game)
+                          : null
+                      }
+                      campaignEra={game.campaignEra}
+                    />
+                  </div>
+                )}
+
+                <div className="mt-5 space-y-2.5">
+                  <ActionCard
+                    icon={Gavel}
+                    title="Propose Legislation"
+                    label={lawLabel}
+                    detail={lawDetail}
+                    tag={lawTag}
+                    href={`/game/${game.id}/congress`}
+                  />
+                  <ActionCard
+                    icon={Megaphone}
+                    title="Address the Nation"
+                    label="Deliver a speech to shape public opinion"
+                    tag="Optional"
+                    href={`/game/${game.id}/history`}
+                  />
+                </div>
+              </div>
+            )}
+
+            {view.phase === 'processing' && <ProcessingCard />}
+            {view.phase === 'outcome' && (
+              <OutcomeCard
+                narrative={view.result.log.narrative ?? ''}
+                effects={view.result.log.statDeltas}
+                npcReactions={view.result.npcReactions}
+                onContinue={handleContinue}
+                nextMonth={view.result.game.currentMonth}
+                isGameOver={false}
+              />
+            )}
+          </>
+        }
+        right={
+          view.phase === 'briefing' ? (
+            <>
+              {topAdvisorRec && (
+                <AdvisorSpotlight
+                  gameId={game.id}
+                  npc={topAdvisorNpc}
+                  npcName={topAdvisorRec.npcName}
+                  quote={topAdvisorRec.detail}
+                  severity={topAdvisorRec.severity}
+                  relationship={topAdvisorNpc ? game.npcRelationships[topAdvisorNpc.id] ?? topAdvisorNpc.relationship.start : undefined}
+                />
+              )}
+              <PresidentialInbox
+                gameId={game.id}
+                hasPendingCrisis={Boolean(event)}
+                advisorMemoCount={advisorRecommendations.length}
+                hasCongressionalUpdate={Boolean(opportunity)}
+                showElectionCountdown={showElectionCountdown}
+              />
+            </>
+          ) : undefined
+        }
+      />
     </main>
   )
 }

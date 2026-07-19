@@ -7,6 +7,7 @@ import { LawCard } from '@/components/game/LawCard'
 import { HeadlineTicker } from '@/components/game/HeadlineTicker'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
 import { RoomAmbience } from '@/components/game/RoomAmbience'
+import { RoomLayout } from '@/components/game/RoomLayout'
 import { AchievementUnlockToast } from '@/components/game/AchievementUnlockToast'
 import { NpcReactionList } from '@/components/game/NpcReactionList'
 import { useAudio } from '@/components/AudioProvider'
@@ -16,6 +17,7 @@ import { LAW_SECTOR_META, LAW_SECTORS } from '@/lib/law-sectors'
 import { cn } from '@/lib/utils'
 import type { Game, Law, Headline, Achievement, LawSector, NpcReactionResult } from '@/types/game'
 import type { CoverContent } from '@/lib/magazine-covers'
+import type { LegislativeOpportunity } from '@/lib/law-engine'
 
 interface LawWithOdds {
   law: Law
@@ -33,6 +35,7 @@ interface CongressClientProps {
   canUseSenateAbility: boolean
   canUseSpeakerAbility: boolean
   pendingBriefingTitle: string | null
+  opportunity: LegislativeOpportunity | null
 }
 
 const SECTOR_FILTERS = [
@@ -53,7 +56,7 @@ interface ProposeResult {
   month: number
 }
 
-export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUseSpeakerAbility, pendingBriefingTitle }: CongressClientProps) {
+export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUseSpeakerAbility, pendingBriefingTitle, opportunity }: CongressClientProps) {
   const searchParams = useSearchParams()
   const highlightedLawId = searchParams.get('highlight')
 
@@ -204,8 +207,12 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
     )
   }
 
+  const suggestedOdds = opportunity?.suggested
+    ? lawsWithOdds.find(l => l.law.id === opportunity.suggested!.id)
+    : undefined
+
   return (
-    <main className="mx-auto max-w-3xl px-6 py-10" style={roomAccentStyle('var(--color-cat-congress)')}>
+    <main className="mx-auto max-w-6xl px-6 py-10" style={roomAccentStyle('var(--color-cat-congress)')}>
       <RoomBackground
         image={roomImage}
         color="var(--color-cat-congress)"
@@ -221,59 +228,80 @@ export function CongressClient({ game, lawsWithOdds, canUseSenateAbility, canUse
         </h1>
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-2">
-        {SECTOR_FILTERS.map(f => {
-          const counts = f.value === 'all' ? null : sectorCounts[f.value]
-          return (
-            <button
-              key={f.value}
-              onClick={() => setFilter(f.value)}
-              className={cn(
-                'rounded-full px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.05em] transition-colors',
-                filter === f.value
-                  ? 'bg-[var(--color-brass)] text-[var(--color-ink)]'
-                  : 'bg-[var(--color-surface)] text-[var(--color-paper-faint)] backdrop-blur-sm hover:text-[var(--color-paper)]'
-              )}
-            >
-              {f.label}
-              {counts && <span className="ml-1 opacity-70">{counts.passed}/{counts.total}</span>}
-            </button>
-          )
-        })}
-      </div>
-
       {error && (
         <p className="mt-4 rounded-sm bg-[var(--color-bad-dim)] px-3.5 py-2.5 text-sm text-[var(--color-bad)]">
           {error}
         </p>
       )}
 
-      <div className="mt-5 space-y-3">
-        {filtered.map(({ law, probability, alreadyPassed, blocked, locked, contentLocked }) => (
-          <div
-            key={law.id}
-            ref={law.id === highlightedLawId ? highlightRef : undefined}
-            className={cn(
-              law.id === highlightedLawId &&
-                'rounded-sm ring-2 ring-[var(--color-brass)] ring-offset-2 ring-offset-[var(--color-ink)]'
-            )}
-          >
-            <LawCard
-              law={law}
-              probability={probability}
-              alreadyPassed={alreadyPassed}
-              blocked={blocked}
-              locked={locked}
-              contentLocked={contentLocked}
-              canUseSenateAbility={canUseSenateAbility && !alreadyPassed && !blocked && !locked && !contentLocked}
-              canUseSpeakerAbility={canUseSpeakerAbility && !alreadyPassed && !blocked && !locked && !contentLocked}
-              onPropose={handlePropose}
-              disabled={submitting}
-              pendingProposal={pendingProposal}
-              pendingBriefingTitle={pendingBriefingTitle}
-            />
-          </div>
-        ))}
+      <div className="mt-6">
+        <RoomLayout
+          left={
+            <div className="flex flex-wrap gap-2 lg:flex-col lg:flex-nowrap lg:items-stretch">
+              {SECTOR_FILTERS.map(f => {
+                const counts = f.value === 'all' ? null : sectorCounts[f.value]
+                return (
+                  <button
+                    key={f.value}
+                    onClick={() => setFilter(f.value)}
+                    className={cn(
+                      'rounded-full px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.05em] transition-colors lg:rounded-sm lg:text-left',
+                      filter === f.value
+                        ? 'bg-[var(--color-brass)] text-[var(--color-ink)]'
+                        : 'bg-[var(--color-surface)] text-[var(--color-paper-faint)] backdrop-blur-sm hover:text-[var(--color-paper)]'
+                    )}
+                  >
+                    {f.label}
+                    {counts && <span className="ml-1 opacity-70">{counts.passed}/{counts.total}</span>}
+                  </button>
+                )
+              })}
+            </div>
+          }
+          center={
+            <div className="space-y-3">
+              {filtered.map(({ law, probability, alreadyPassed, blocked, locked, contentLocked }) => (
+                <div
+                  key={law.id}
+                  ref={law.id === highlightedLawId ? highlightRef : undefined}
+                  className={cn(
+                    law.id === highlightedLawId &&
+                      'rounded-sm ring-2 ring-[var(--color-brass)] ring-offset-2 ring-offset-[var(--color-ink)]'
+                  )}
+                >
+                  <LawCard
+                    law={law}
+                    probability={probability}
+                    alreadyPassed={alreadyPassed}
+                    blocked={blocked}
+                    locked={locked}
+                    contentLocked={contentLocked}
+                    canUseSenateAbility={canUseSenateAbility && !alreadyPassed && !blocked && !locked && !contentLocked}
+                    canUseSpeakerAbility={canUseSpeakerAbility && !alreadyPassed && !blocked && !locked && !contentLocked}
+                    onPropose={handlePropose}
+                    disabled={submitting}
+                    pendingProposal={pendingProposal}
+                    pendingBriefingTitle={pendingBriefingTitle}
+                  />
+                </div>
+              ))}
+            </div>
+          }
+          right={
+            opportunity && suggestedOdds ? (
+              <div className="rounded-sm border border-[var(--color-brass)]/30 bg-[var(--color-brass)]/5 p-4">
+                <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-brass)]">
+                  Recommended
+                </div>
+                <p className="mt-2 text-sm font-medium text-[var(--color-paper)]">{suggestedOdds.law.title}</p>
+                <p className="mt-1 text-xs text-[var(--color-paper-dim)]">{opportunity.message}</p>
+                <p className="mt-2 font-mono text-[11px] text-[var(--color-paper-faint)]">
+                  {Math.round(suggestedOdds.probability)}% chance of passage
+                </p>
+              </div>
+            ) : undefined
+          }
+        />
       </div>
     </main>
   )

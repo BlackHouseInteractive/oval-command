@@ -10,6 +10,7 @@ import { PendingEventBanner } from '@/components/game/PendingEventBanner'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
 import { RoomAmbience } from '@/components/game/RoomAmbience'
 import { RoomEntrySound } from '@/components/game/RoomEntrySound'
+import { RoomLayout } from '@/components/game/RoomLayout'
 import { getAdvisorRecommendations } from '@/lib/advisor-engine'
 import { canActivateAbility, isActivatableSlot } from '@/lib/cabinet-abilities'
 import { getRoomTreatment, getRoomImage, isTenseMood } from '@/lib/event-backgrounds'
@@ -60,8 +61,49 @@ export default async function CabinetPage({ params }: PageProps) {
   const roomImage = getRoomImage('/cabinet-room-bg.webp', isTenseMood(game, pendingEvent), game.campaignEra)
   const treatment = getRoomTreatment(roomImage)
 
+  // Shared per-NPC card logic — used for both the Inner Circle (left rail)
+  // and every other faction (center), which used to be one flat loop before
+  // the layout split them across columns.
+  function renderCard(npc: ReturnType<typeof resolveRoster>[number]) {
+    const milestoneTier: MilestoneTier | undefined = game.flags[`milestone_${npc.id}_ally`]
+      ? 'ally'
+      : game.flags[`milestone_${npc.id}_estranged`]
+      ? 'estranged'
+      : undefined
+
+    // Dossier extras (goal/breaking point/observations) and the "Discuss"
+    // action only apply to the 5 appointable slots — every other NPC on
+    // this page is fixed and has neither.
+    const isSelectable = (SELECTABLE_SLOT_IDS as readonly string[]).includes(npc.id)
+    const candidate = isSelectable
+      ? getCandidatesForSlot(npc.id as SelectableSlotId, 'all', game.campaignEra).find(c => c.candidateId === game.cabinetSelections[npc.id as SelectableSlotId])
+      : undefined
+    const isFireable = isActive && isSelectable && npc.id !== 'vice_president'
+
+    const activation = isActive && isActivatableSlot(npc.id)
+      ? { gameId: game.id, slotId: npc.id, ...canActivateAbility(game, roster, npc.id) }
+      : undefined
+
+    return (
+      <CabinetCard
+        key={npc.id}
+        npc={npc}
+        relationship={game.npcRelationships[npc.id] ?? npc.relationship.start}
+        milestoneTier={milestoneTier}
+        goal={candidate?.goal}
+        breakingPoint={candidate?.breakingPoint}
+        observations={game.npcObservations[npc.id]}
+        discussHref={isFireable ? `/game/${game.id}?discuss=${npc.id}` : undefined}
+        activation={activation}
+      />
+    )
+  }
+
+  const innerCircle = roster.filter(n => n.faction === 'inner_circle')
+  const otherFactions = FACTION_ORDER.filter(f => f !== 'inner_circle')
+
   return (
-    <main className="mx-auto max-w-3xl px-6 py-10" style={roomAccentStyle('var(--color-brass)')}>
+    <main className="mx-auto max-w-6xl px-6 py-10" style={roomAccentStyle('var(--color-brass)')}>
       <RoomBackground
         image={roomImage}
         color="var(--color-brass)"
@@ -83,71 +125,51 @@ export default async function CabinetPage({ params }: PageProps) {
         Every relationship here has been shaped by what you&rsquo;ve done, not what you&rsquo;ve said.
       </p>
 
-      {showBanner && pendingEvent && (
-        <div className="mt-6">
-          <PendingEventBanner event={pendingEvent} gameId={game.id} />
-        </div>
-      )}
+      <div className="mt-6">
+        <RoomLayout
+          left={
+            innerCircle.length > 0 ? (
+              <>
+                <h2 className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
+                  {FACTION_SECTION_LABEL.inner_circle}
+                </h2>
+                {innerCircle.map(renderCard)}
+              </>
+            ) : undefined
+          }
+          center={
+            <>
+              {showBanner && pendingEvent && <PendingEventBanner event={pendingEvent} gameId={game.id} />}
 
-      {recommendations.length > 0 && (
-        <div className="mt-7">
-          <h2 className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
-            Cabinet Briefing
-          </h2>
-          <div className="mt-3">
-            <AdvisorConversationPanel recommendations={recommendations} gameId={game.id} roster={roster} />
-          </div>
-        </div>
-      )}
-
-      {FACTION_ORDER.map(faction => {
-        const npcsInFaction = roster.filter(n => n.faction === faction)
-        if (npcsInFaction.length === 0) return null
-
-        return (
-          <section key={faction} className="mt-7">
-            <h2 className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
-              {FACTION_SECTION_LABEL[faction]}
-            </h2>
-            <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {npcsInFaction.map(npc => {
-                const milestoneTier: MilestoneTier | undefined = game.flags[`milestone_${npc.id}_ally`]
-                  ? 'ally'
-                  : game.flags[`milestone_${npc.id}_estranged`]
-                  ? 'estranged'
-                  : undefined
-
-                // Dossier extras (goal/breaking point/observations) and the
-                // "Discuss" action only apply to the 5 appointable slots —
-                // every other NPC on this page is fixed and has neither.
-                const isSelectable = (SELECTABLE_SLOT_IDS as readonly string[]).includes(npc.id)
-                const candidate = isSelectable
-                  ? getCandidatesForSlot(npc.id as SelectableSlotId, 'all', game.campaignEra).find(c => c.candidateId === game.cabinetSelections[npc.id as SelectableSlotId])
-                  : undefined
-                const isFireable = isActive && isSelectable && npc.id !== 'vice_president'
-
-                const activation = isActive && isActivatableSlot(npc.id)
-                  ? { gameId: game.id, slotId: npc.id, ...canActivateAbility(game, roster, npc.id) }
-                  : undefined
+              {otherFactions.map(faction => {
+                const npcsInFaction = roster.filter(n => n.faction === faction)
+                if (npcsInFaction.length === 0) return null
 
                 return (
-                  <CabinetCard
-                    key={npc.id}
-                    npc={npc}
-                    relationship={game.npcRelationships[npc.id] ?? npc.relationship.start}
-                    milestoneTier={milestoneTier}
-                    goal={candidate?.goal}
-                    breakingPoint={candidate?.breakingPoint}
-                    observations={game.npcObservations[npc.id]}
-                    discussHref={isFireable ? `/game/${game.id}?discuss=${npc.id}` : undefined}
-                    activation={activation}
-                  />
+                  <section key={faction}>
+                    <h2 className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
+                      {FACTION_SECTION_LABEL[faction]}
+                    </h2>
+                    <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      {npcsInFaction.map(renderCard)}
+                    </div>
+                  </section>
                 )
               })}
-            </div>
-          </section>
-        )
-      })}
+            </>
+          }
+          right={
+            recommendations.length > 0 ? (
+              <>
+                <h2 className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
+                  Cabinet Briefing
+                </h2>
+                <AdvisorConversationPanel recommendations={recommendations} gameId={game.id} roster={roster} />
+              </>
+            ) : undefined
+          }
+        />
+      </div>
     </main>
   )
 }

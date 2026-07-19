@@ -4,7 +4,7 @@ import { auth } from '@/lib/auth'
 import { dbToGame, getGameRow } from '@/lib/db-helpers'
 import { ALL_EVENTS, computePassProbability } from '@/lib/game-engine'
 import { getEligibleLaws } from '@/lib/content-sources'
-import { canUseNpcAbility } from '@/lib/law-engine'
+import { canUseNpcAbility, getLegislativeOpportunity } from '@/lib/law-engine'
 import { getOwnedContent } from '@/lib/entitlements'
 import { CongressClient } from '@/components/game/CongressClient'
 
@@ -41,6 +41,7 @@ export default async function CongressPage({ params }: PageProps) {
 
   const senateAbility = canUseNpcAbility(game, 'senate_leader')
   const speakerAbility = canUseNpcAbility(game, 'speaker')
+  const opportunity = getLegislativeOpportunity(game, ownedContent)
 
   const pendingBriefingTitle = game.status === 'ACTIVE' && row.currentEventId
     ? ALL_EVENTS.find(e => e.id === row.currentEventId)?.title ?? null
@@ -57,6 +58,7 @@ export default async function CongressPage({ params }: PageProps) {
         canUseSenateAbility={senateAbility.eligible}
         canUseSpeakerAbility={speakerAbility.eligible}
         pendingBriefingTitle={pendingBriefingTitle}
+        opportunity={opportunity}
       />
     </Suspense>
   )

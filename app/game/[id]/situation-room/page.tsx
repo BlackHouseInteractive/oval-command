@@ -9,6 +9,7 @@ import { CabinetCard } from '@/components/game/CabinetCard'
 import { PendingEventBanner } from '@/components/game/PendingEventBanner'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
 import { RoomAmbience } from '@/components/game/RoomAmbience'
+import { RoomLayout } from '@/components/game/RoomLayout'
 import { SituationMap } from '@/components/game/SituationMap'
 import { getRoomTreatment, getRoomImage, isTenseMood } from '@/lib/event-backgrounds'
 import { getRoomAmbience } from '@/lib/room-audio'
@@ -39,7 +40,7 @@ export default async function SituationRoomPage({ params }: PageProps) {
   const treatment = getRoomTreatment(roomImage)
 
   return (
-    <main className="mx-auto flex min-h-[calc(100dvh-6rem)] max-w-3xl flex-col justify-center px-6 py-10" style={roomAccentStyle('var(--color-cat-military)')}>
+    <main className="mx-auto flex min-h-[calc(100dvh-6rem)] max-w-6xl flex-col justify-center px-6 py-10" style={roomAccentStyle('var(--color-cat-military)')}>
       <RoomBackground
         image={roomImage}
         color="var(--color-cat-military)"
@@ -60,37 +61,42 @@ export default async function SituationRoomPage({ params }: PageProps) {
         Active conflicts, military readiness, and the people who brief you on them.
       </p>
 
-      {showBanner && pendingEvent && (
-        <div className="mt-6">
-          <PendingEventBanner event={pendingEvent} gameId={game.id} />
-          {mapRegion && <SituationMap key={pendingEvent.id} region={mapRegion} />}
-        </div>
-      )}
-
-      {game.activeConflicts.length > 0 && (
-        <div className="mt-6">
-          <ConflictBanner conflicts={game.activeConflicts} currentMonth={game.currentMonth} />
-        </div>
-      )}
-
-      <div className="mt-6 grid grid-cols-2 gap-2.5">
-        <StatCard statKey="security" value={game.stats.security} />
-        <StatCard statKey="militaryReadiness" value={game.stats.militaryReadiness} />
+      <div className="mt-6">
+        <RoomLayout
+          left={
+            <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-1">
+              <StatCard statKey="security" value={game.stats.security} />
+              <StatCard statKey="militaryReadiness" value={game.stats.militaryReadiness} />
+            </div>
+          }
+          center={
+            <>
+              {showBanner && pendingEvent && (
+                <>
+                  <PendingEventBanner event={pendingEvent} gameId={game.id} />
+                  {mapRegion && <SituationMap key={pendingEvent.id} region={mapRegion} />}
+                </>
+              )}
+              {game.activeConflicts.length > 0 && (
+                <ConflictBanner conflicts={game.activeConflicts} currentMonth={game.currentMonth} />
+              )}
+            </>
+          }
+          right={
+            secDef ? (
+              <>
+                <h2 className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
+                  Defense Briefing
+                </h2>
+                <CabinetCard
+                  npc={secDef}
+                  relationship={game.npcRelationships[secDef.id] ?? secDef.relationship.start}
+                />
+              </>
+            ) : undefined
+          }
+        />
       </div>
-
-      {secDef && (
-        <div className="mt-7">
-          <h2 className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
-            Defense Briefing
-          </h2>
-          <div className="mt-3">
-            <CabinetCard
-              npc={secDef}
-              relationship={game.npcRelationships[secDef.id] ?? secDef.relationship.start}
-            />
-          </div>
-        </div>
-      )}
     </main>
   )
 }
