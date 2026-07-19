@@ -99,9 +99,6 @@ export default async function CabinetPage({ params }: PageProps) {
     )
   }
 
-  const innerCircle = roster.filter(n => n.faction === 'inner_circle')
-  const otherFactions = FACTION_ORDER.filter(f => f !== 'inner_circle')
-
   return (
     <main className="mx-auto max-w-6xl px-6 py-10" style={roomAccentStyle('var(--color-brass)')}>
       <RoomBackground
@@ -127,21 +124,15 @@ export default async function CabinetPage({ params }: PageProps) {
 
       <div className="mt-6">
         <RoomLayout
-          left={
-            innerCircle.length > 0 ? (
-              <>
-                <h2 className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
-                  {FACTION_SECTION_LABEL.inner_circle}
-                </h2>
-                {innerCircle.map(renderCard)}
-              </>
-            ) : undefined
-          }
           center={
             <>
               {showBanner && pendingEvent && <PendingEventBanner event={pendingEvent} gameId={game.id} />}
 
-              {otherFactions.map(faction => {
+              {/* One continuous roster, Inner Circle first — same order as
+                  before the layout split it into its own column. It's all
+                  one list a person scans top to bottom, not a separate kind
+                  of content from the rest of the administration. */}
+              {FACTION_ORDER.map(faction => {
                 const npcsInFaction = roster.filter(n => n.faction === faction)
                 if (npcsInFaction.length === 0) return null
 

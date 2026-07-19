@@ -8,7 +8,6 @@ import { CabinetCard } from '@/components/game/CabinetCard'
 import { PendingEventBanner } from '@/components/game/PendingEventBanner'
 import { RoomBackground, roomAccentStyle } from '@/components/game/RoomBackground'
 import { RoomAmbience } from '@/components/game/RoomAmbience'
-import { RoomLayout } from '@/components/game/RoomLayout'
 import { SituationMap } from '@/components/game/SituationMap'
 import { getRoomTreatment, getRoomImage, isTenseMood } from '@/lib/event-backgrounds'
 import { getRoomAmbience } from '@/lib/room-audio'
@@ -39,7 +38,7 @@ export default async function DiplomaticOfficePage({ params }: PageProps) {
   const treatment = getRoomTreatment(roomImage)
 
   return (
-    <main className="mx-auto flex min-h-[calc(100dvh-6rem)] max-w-6xl flex-col justify-center px-6 py-10" style={roomAccentStyle('var(--color-cat-diplomacy)')}>
+    <main className="mx-auto flex min-h-[calc(100dvh-6rem)] max-w-3xl flex-col justify-center px-6 py-10" style={roomAccentStyle('var(--color-cat-diplomacy)')}>
       <RoomBackground
         image={roomImage}
         color="var(--color-cat-diplomacy)"
@@ -47,48 +46,50 @@ export default async function DiplomaticOfficePage({ params }: PageProps) {
         foreground={{ style: treatment.foregroundStyle, color: treatment.foregroundColor }}
       />
       <RoomAmbience src={getRoomAmbience('/diplomatic-office-bg.webp', game.campaignEra)} />
-      <div>
-        <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-cat-diplomacy)]">
-          Foreign Relations
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-cat-diplomacy)]">
+            Foreign Relations
+          </div>
+          <h1 className="mt-1 font-[family-name:var(--font-display)] text-2xl font-semibold text-[var(--color-paper)]">
+            Diplomatic Office
+          </h1>
         </div>
-        <h1 className="mt-1 font-[family-name:var(--font-display)] text-2xl font-semibold text-[var(--color-paper)]">
-          Diplomatic Office
-        </h1>
+        {/* A compact inline stat rather than its own column — this room
+            doesn't have enough distinct content types to fill three. Stacks
+            below the title on mobile instead of squeezing beside it. */}
+        <div className="w-full sm:w-32 sm:flex-shrink-0">
+          <StatCard statKey="globalReputation" value={game.stats.globalReputation} />
+        </div>
       </div>
 
       <p className="mt-3 text-sm text-[var(--color-paper-dim)]">
         Where the rest of the world forms its opinion of you.
       </p>
 
-      <div className="mt-6">
-        <RoomLayout
-          left={<StatCard statKey="globalReputation" value={game.stats.globalReputation} />}
-          center={
-            showBanner && pendingEvent ? (
-              <>
-                <PendingEventBanner event={pendingEvent} gameId={game.id} />
-                {mapRegion && <SituationMap key={pendingEvent.id} region={mapRegion} />}
-              </>
-            ) : undefined
-          }
-          right={
-            worldLeaders.length > 0 ? (
-              <>
-                <h2 className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
-                  World Leaders
-                </h2>
-                {worldLeaders.map(npc => (
-                  <CabinetCard
-                    key={npc.id}
-                    npc={npc}
-                    relationship={game.npcRelationships[npc.id] ?? npc.relationship.start}
-                  />
-                ))}
-              </>
-            ) : undefined
-          }
-        />
-      </div>
+      {showBanner && pendingEvent && (
+        <div className="mt-6">
+          <PendingEventBanner event={pendingEvent} gameId={game.id} />
+          {mapRegion && <SituationMap key={pendingEvent.id} region={mapRegion} />}
+        </div>
+      )}
+
+      {worldLeaders.length > 0 && (
+        <div className="mt-7">
+          <h2 className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-paper-faint)]">
+            World Leaders
+          </h2>
+          <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {worldLeaders.map(npc => (
+              <CabinetCard
+                key={npc.id}
+                npc={npc}
+                relationship={game.npcRelationships[npc.id] ?? npc.relationship.start}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </main>
   )
 }
