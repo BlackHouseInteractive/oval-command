@@ -43,7 +43,7 @@ const ARC_PATH = `M ${ARC_START.x},${ARC_START.y} A ${RADIUS},${RADIUS} 0 0 1 ${
  * number move in lockstep off one animation loop instead of two.
  * Skips the animation entirely on first mount — nothing to count up from.
  */
-function useCountUp(target: number, ms = 700): number {
+export function useCountUp(target: number, ms = 700): number {
   const [display, setDisplay] = useState(target)
   const displayRef = useRef(target)
 

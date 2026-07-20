@@ -1631,7 +1631,8 @@
       "active_scandal": -8,
       "scandal_resolved": 5,
       "diplomatic_breakthrough": 5,
-      "executive_overreach": -6
+      "executive_overreach": -6,
+      "press_conference_held": 7
     },
     "monthlyDialogue": {
       "high": [
@@ -1927,7 +1928,8 @@
       "active_scandal": -6,
       "scandal_resolved": 5,
       "diplomatic_breakthrough": 4,
-      "executive_overreach": -4
+      "executive_overreach": -4,
+      "press_conference_held": 8
     },
     "monthlyDialogue": {
       "high": [

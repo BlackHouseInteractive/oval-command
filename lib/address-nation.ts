@@ -60,3 +60,32 @@ export function resolveSpeech(theme: SpeechTheme, game: Game): { effects: StatDe
     }
   }
 }
+
+export type ComposureTier = 'strong' | 'steady' | 'shaky'
+
+export function getComposureTier(score: number): ComposureTier {
+  if (score >= 70) return 'strong'
+  if (score <= 30) return 'shaky'
+  return 'steady'
+}
+
+/**
+ * Layers the press-conference mini-game's composure result ON TOP of
+ * resolveSpeech's own effective/effects determination — deliberately
+ * separate from resolveSpeech, which stays pure and untouched, since the
+ * stat-gated effective/hollow check is the primary, balance-critical
+ * result. This is a bounded secondary nudge (well under
+ * outcome-magnitude.ts's NOTABLE_THRESHOLD of 6), not a second crisis-scale
+ * swing — a shaky Q&A can take some shine off an effective speech, or a
+ * strong one can soften a hollow one, but neither flips the outcome.
+ */
+export function applyComposureModifier(
+  effects: StatDelta,
+  composureScore: number
+): { effects: StatDelta; tier: ComposureTier } {
+  const tier = getComposureTier(composureScore)
+  const bump = tier === 'strong' ? 2 : tier === 'shaky' ? -2 : 0
+  const merged = { ...effects }
+  if (bump !== 0) merged.approval = (merged.approval ?? 0) + bump
+  return { effects: merged, tier }
+}
