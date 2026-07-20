@@ -19,11 +19,17 @@
 import { LAWS, ALL_LAWS, computePassProbability, rollLawPassage } from '@/lib/game-engine'
 import { getEligibleLaws, type OwnedContent } from '@/lib/content-sources'
 import { resolveRoster } from '@/lib/cabinet'
-import type { Game, Law, NpcReactionResult } from '@/types/game'
+import { WHIP_TARGETS, type WhipAnswer } from '@/lib/whip-content'
+import type { Game, Law, Npc, NpcReactionResult } from '@/types/game'
 
 export interface LawPassageOptions {
   /** If set, attempt to use this NPC's special ability to guarantee passage */
   useNpcAbility?: 'senate_leader' | 'speaker'
+  /** Pre-scored whip-mini-game bonus (see lib/whip-content.ts's scoreWhipBonus)
+   *  — a bounded additive nudge on top of computePassProbability's result,
+   *  never enough to rescue a hard-blocked (0%) bill. Ignored when
+   *  useNpcAbility short-circuits to a guaranteed pass. */
+  whipBonus?: number
 }
 
 export interface LawPassageResult {
@@ -93,9 +99,16 @@ export function resolveLawPassage(
     // Ability requested but not eligible — fall through to normal roll
   }
 
+  // The whip bonus only ever adjusts an already-possible bill — a hard
+  // block (probability === 0, from blocks_laws/requires_flags) stays
+  // impossible no matter how well the leaders were worked.
+  const finalProbability = probability > 0 && options.whipBonus
+    ? Math.max(1, Math.min(95, Math.round(probability + options.whipBonus)))
+    : probability
+
   return {
-    passed:       rollLawPassage(probability),
-    probability,
+    passed:       rollLawPassage(finalProbability),
+    probability:  finalProbability,
     usedAbility:  null,
     abilityNpcId: null,
   }
@@ -172,6 +185,49 @@ export function resolveLawNpcReactions(
       shortName:         npc.shortName,
       quote:             reaction.quote,
       relationshipDelta: reaction.relationship,
+      newRelationship:   next,
+    })
+  }
+
+  return { reactions, newRelationships: relationships }
+}
+
+/**
+ * Resolves the whip mini-game's 3 leader interactions into relationship
+ * changes + reaction quotes — same clamp-to-min/max idiom as
+ * resolveLawNpcReactions above, but reading from the leader's hand-authored
+ * WHIP_TARGETS content instead of a per-law npc_reactions map.
+ *
+ * IMPORTANT: `game` must be the ORIGINAL pre-whip-session game (the one
+ * loaded from the DB), not a game object that already has one leader's
+ * delta merged in — all 3 answers are independent NPCs scored off one
+ * stable relationships snapshot, so leader order can never affect the
+ * result. The caller applies `newRelationships` afterward to build the
+ * game object that actually proceeds to resolveLawPassage/applyLawPassage.
+ */
+export function resolveWhipReactions(
+  game: Game,
+  roster: Npc[],
+  answers: WhipAnswer[],
+): { reactions: NpcReactionResult[]; newRelationships: Record<string, number> } {
+  const relationships = { ...game.npcRelationships }
+  const reactions: NpcReactionResult[] = []
+
+  for (const answer of answers) {
+    const npc = roster.find(n => n.id === answer.npcId)
+    const option = WHIP_TARGETS[answer.npcId]?.options[answer.styleIndex]
+    if (!npc || !option) continue
+
+    const current = game.npcRelationships[npc.id] ?? npc.relationship.start
+    const next = Math.max(npc.relationship.min, Math.min(npc.relationship.max, current + option.relationshipDelta))
+    relationships[npc.id] = next
+
+    reactions.push({
+      npcId:             npc.id,
+      npcName:           npc.name,
+      shortName:         npc.shortName,
+      quote:             option.followUp,
+      relationshipDelta: option.relationshipDelta,
       newRelationship:   next,
     })
   }

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { dbToGame, gameToDbUpdate, toJson, safeErrorMessage } from '@/lib/db-helpers'
-import { getLawById, resolveLawPassage, applyLawPassage, canUseNpcAbility, resolveLawNpcReactions } from '@/lib/law-engine'
+import { getLawById, resolveLawPassage, applyLawPassage, canUseNpcAbility, resolveLawNpcReactions, resolveWhipReactions } from '@/lib/law-engine'
 import { applyDelta, pickEvent, advanceMonth, computeLegacyScore } from '@/lib/game-engine'
 import { getOwnedContent } from '@/lib/entitlements'
 import { resolveRoster } from '@/lib/cabinet'
@@ -12,6 +12,7 @@ import { computeScandalMitigation } from '@/lib/cabinet-abilities'
 import { generateLawHeadline } from '@/lib/headlines'
 import { unlockAchievements } from '@/lib/achievements'
 import { computeSpecialEditionCovers, type CoverContent } from '@/lib/magazine-covers'
+import { WHIP_ORDER, scoreWhipBonus, type WhipAnswer } from '@/lib/whip-content'
 import type { Headline } from '@/lib/headlines'
 import type { GameOverReason, NpcReactionResult } from '@/types/game'
 
@@ -20,6 +21,38 @@ interface Params { params: Promise<{ id: string }> }
 interface ProposeLawBody {
   lawId: string
   useNpcAbility?: 'senate_leader' | 'speaker'
+  // Optional for one release cycle — see the fallback below. Once the
+  // whip-mini-game client has been live a full cycle, make this required
+  // and delete the fallback branch.
+  whipAnswers?: { npcId: string; styleIndex: number }[]
+}
+
+/**
+ * Validates a client-submitted whip-answers array against the server-owned
+ * leader roster — same "never trust a client-submitted id/index" posture as
+ * VALID_THEMES/validatePressAnswers in address-nation/route.ts. Returns
+ * null (invalid) or the validated array, never a raw client-supplied bonus.
+ *
+ * Known accepted limitation, same as the press-conference mini-game: the
+ * whip content ships in the client bundle, so a scripted client always
+ * knows each leader's best style. Not worth closing — the ceiling is a
+ * bounded probability nudge (see resolveLawPassage's whipBonus clamp), not
+ * a guaranteed pass.
+ */
+function validateWhipAnswers(raw: unknown): WhipAnswer[] | null {
+  if (!Array.isArray(raw) || raw.length !== WHIP_ORDER.length) return null
+  const seen = new Set<string>()
+  const answers: WhipAnswer[] = []
+  for (const entry of raw) {
+    if (typeof entry !== 'object' || entry === null) return null
+    const { npcId, styleIndex } = entry as { npcId?: unknown; styleIndex?: unknown }
+    if (typeof npcId !== 'string' || seen.has(npcId)) return null
+    if (!(WHIP_ORDER as string[]).includes(npcId)) return null
+    if (styleIndex !== 0 && styleIndex !== 1 && styleIndex !== 2) return null
+    seen.add(npcId)
+    answers.push({ npcId: npcId as WhipAnswer['npcId'], styleIndex })
+  }
+  return answers
 }
 
 export async function POST(req: NextRequest, { params }: Params) {
@@ -36,12 +69,25 @@ export async function POST(req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  const { lawId, useNpcAbility } = body
+  const { lawId, useNpcAbility, whipAnswers: rawWhipAnswers } = body
   if (!lawId || typeof lawId !== 'string') {
     return NextResponse.json({ error: 'lawId is required' }, { status: 400 })
   }
   if (useNpcAbility && !['senate_leader', 'speaker'].includes(useNpcAbility)) {
     return NextResponse.json({ error: 'Invalid useNpcAbility value' }, { status: 400 })
+  }
+
+  // Deploy-transition fallback: a client mid-proposal on a stale cached
+  // bundle won't have the whip mini-game and will omit whipAnswers
+  // entirely — treat that as no whip bonus rather than a hard failure.
+  // A malformed (present but invalid) array is still rejected below.
+  let whipAnswers: WhipAnswer[] = []
+  if (rawWhipAnswers !== undefined) {
+    const validated = validateWhipAnswers(rawWhipAnswers)
+    if (!validated) {
+      return NextResponse.json({ error: 'Invalid whip answers' }, { status: 400 })
+    }
+    whipAnswers = validated
   }
 
   const row = await prisma.game.findUnique({ where: { id } })
@@ -83,8 +129,25 @@ export async function POST(req: NextRequest, { params }: Params) {
   let npcReactions: NpcReactionResult[] = []
   let suggestedEvent: ReturnType<typeof pickEvent> = null
   try {
-    passageResult = resolveLawPassage(law, game, { useNpcAbility })
-    updatedGame = applyLawPassage(game, law, passageResult)
+    const roster = resolveRoster(game)
+
+    // Whip bonus and leader reactions are both scored against the
+    // ORIGINAL game (loaded fresh from the DB), never a partially-updated
+    // one — all 3 answers are independent NPCs read off one stable
+    // relationships snapshot, so leader order can't affect the result.
+    const whipBonus = whipAnswers.length > 0 ? scoreWhipBonus(whipAnswers, game.npcRelationships) : 0
+    const whipReactions =
+      whipAnswers.length > 0 ? resolveWhipReactions(game, roster, whipAnswers) : null
+
+    // Routing the whip-adjusted relationships through as the base game
+    // object (rather than merging them in later) means they persist
+    // regardless of whether the bill ultimately passes — applyLawPassage's
+    // ...game spread carries them through either way.
+    const gameForPassage = whipReactions ? { ...game, npcRelationships: whipReactions.newRelationships } : game
+
+    passageResult = resolveLawPassage(law, gameForPassage, { useNpcAbility, whipBonus })
+    updatedGame = applyLawPassage(gameForPassage, law, passageResult)
+    if (whipReactions) npcReactions = [...whipReactions.reactions]
 
     if (passageResult.passed) {
       updatedGame = {
@@ -92,12 +155,11 @@ export async function POST(req: NextRequest, { params }: Params) {
         stats: applyDelta(updatedGame.stats, law.effects.onPass),
       }
       const { reactions, newRelationships } = resolveLawNpcReactions(updatedGame, law)
-      npcReactions = reactions
+      npcReactions = [...npcReactions, ...reactions]
       updatedGame = { ...updatedGame, npcRelationships: newRelationships }
     }
 
     const preNarrativeGame = updatedGame
-    const roster = resolveRoster(game)
     const scandalMitigation = computeScandalMitigation(preNarrativeGame, roster)
     const advance = advanceMonth(updatedGame, [], undefined, scandalMitigation)
     updatedGame = advance.game

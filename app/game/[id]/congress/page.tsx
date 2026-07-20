@@ -6,7 +6,10 @@ import { ALL_EVENTS, computePassProbability } from '@/lib/game-engine'
 import { getEligibleLaws } from '@/lib/content-sources'
 import { canUseNpcAbility, getLegislativeOpportunity } from '@/lib/law-engine'
 import { getOwnedContent } from '@/lib/entitlements'
+import { resolveRoster } from '@/lib/cabinet'
+import { WHIP_ORDER } from '@/lib/whip-content'
 import { CongressClient } from '@/components/game/CongressClient'
+import type { Npc } from '@/types/game'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -43,6 +46,11 @@ export default async function CongressPage({ params }: PageProps) {
   const speakerAbility = canUseNpcAbility(game, 'speaker')
   const opportunity = getLegislativeOpportunity(game, ownedContent)
 
+  const roster = resolveRoster(game)
+  const whipTargets = WHIP_ORDER
+    .map(npcId => roster.find(n => n.id === npcId))
+    .filter((n): n is Npc => n !== undefined)
+
   const pendingBriefingTitle = game.status === 'ACTIVE' && row.currentEventId
     ? ALL_EVENTS.find(e => e.id === row.currentEventId)?.title ?? null
     : null
@@ -59,6 +67,7 @@ export default async function CongressPage({ params }: PageProps) {
         canUseSpeakerAbility={speakerAbility.eligible}
         pendingBriefingTitle={pendingBriefingTitle}
         opportunity={opportunity}
+        whipTargets={whipTargets}
       />
     </Suspense>
   )
